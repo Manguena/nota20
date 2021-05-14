@@ -1,0 +1,67 @@
+/**STYLES FOR THE FIRST PAGE**/
+body{
+    background-color: rgb(226, 226, 235);
+}
+
+html, body, .main{
+    height: 100%;
+}
+
+.main{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@font-face {
+    font-family: 'Audiowide';
+    src: url(Audiowide-Regular.ttf);
+ }
+.main-center h1, .main-center p{
+    text-align: center;
+}
+.main-center h1{
+font-family: 'Audiowide', cursive;
+font-weight: 900;
+font-size: 2.75rem;
+color:#096b71;
+}
+
+
+.main-input{
+    width: 18.75rem;
+}
+.main-buttom{
+
+    margin-top: auto;
+}
+
+/**STLYLES FOR THE SETUP.BLADE FILE*/
+
+.my-ultra-weight{
+    font-weight: 600;
+}
+
+/** END FOR SETUP.BLADE FILE*/
+
+/**
+MEDIA QUERIES FOR THE FIRST PAGE
+**/
+
+@media screen and (max-width:767px){
+.main{
+    flex-direction: column;
+    padding-top: 20%;
+}
+}
+@media screen and (min-width:768px) {
+    .main-formgroup{
+        margin-left: 20px;
+    }
+    
+    .main-buttom{
+    position: absolute;
+    bottom: 0;
+    }
+}
