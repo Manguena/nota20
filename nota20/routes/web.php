@@ -23,7 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 // Route for the main page of the application (The first page when the user visits the website)
-Route::get('/', [App\Http\Controllers\InicioController::class, 'index'])->name('/');// antigo (/inicio)
+Route::get('/', [App\Http\Controllers\InicioController::class, 'index'])->name('/');;// antigo (/inicio)
 //view to register super user-> the first user of the application
 Route::get('/setup', [App\Http\Controllers\SetupController::class, 'index'])->name('setup');
 

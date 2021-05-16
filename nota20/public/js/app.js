@@ -13233,13 +13233,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default
+  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
+  props: ['useraArray'],
+  data: function data() {
+    return {};
+  }
 });
 
 /***/ }),
@@ -17920,7 +17920,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 15px;\r\n    margin-top: 30px;\r\n    border-radius:1px ;\n}\n@media screen and (min-width: 992px){\n.create-user-form{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 3rem;\r\n    border-radius:2px ;\n}\n@media screen and (min-width: 992px){\n.create-user-form{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -53573,7 +53573,31 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _vm._m(2)
+    _vm._m(2),
+    _vm._v(" "),
+    _c("div", { staticClass: "table-responsive-sm" }, [
+      _c("table", { staticClass: "table table-hover table-light user-table" }, [
+        _vm._m(3),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.useraArray, function(userdata) {
+            return _c("tr", { key: userdata.id }, [
+              _c("th", { attrs: { scope: "row" } }, [
+                _vm._v(_vm._s(userdata.numero))
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(userdata.apelido))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(userdata.nome))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(userdata.role) + " ")])
+            ])
+          }),
+          0
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -53617,49 +53641,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "table-responsive-sm" }, [
-      _c("table", { staticClass: "table table-hover table-light user-table" }, [
-        _c("thead", [
-          _c("tr", [
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
-            _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Apelido")]),
-            _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
-            _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Email")])
-          ])
-        ]),
+    return _c("div", { attrs: { id: "example-1" } }, [_c("div")])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nr.")]),
         _vm._v(" "),
-        _c("tbody", [
-          _c("tr", [
-            _c("th", { attrs: { scope: "row" } }, [_vm._v("1")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("Mark")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("Otto")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("@mdo")])
-          ]),
-          _vm._v(" "),
-          _c("tr", [
-            _c("th", { attrs: { scope: "row" } }, [_vm._v("2")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("Jacob")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("Thornton")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("@fat")])
-          ]),
-          _vm._v(" "),
-          _c("tr", [
-            _c("th", { attrs: { scope: "row" } }, [_vm._v("3")]),
-            _vm._v(" "),
-            _c("td", { attrs: { colspan: "2" } }, [_vm._v("Larry the Bird")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("@twitter")])
-          ])
-        ])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Apelido")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Perfil")])
       ])
     ])
   }

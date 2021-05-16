@@ -65,6 +65,7 @@ class HomeController extends Controller
  public function onlyOneUser(){
       // vamos verificar se existe um usuario
     $query=DB::table('users')->orderBy('email')->take(2)->get();
+    dd($query);
     return count($query)==1;
  }
 

@@ -58,9 +58,9 @@ export default {
 <style>
 .create-user-form{
     background-color: #fdfdfe;
-    padding: 15px;
-    margin-top: 30px;
-    border-radius:1px ;
+    padding: 1.25rem;
+    margin-top: 3rem;
+    border-radius:2px ;
 }
 @media screen and (min-width: 992px){
    .create-user-form{

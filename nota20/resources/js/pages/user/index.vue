@@ -16,9 +16,15 @@
                     </div>
                 </div>
             </div>
-                 <inertia-link href="/utilizador/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link> 
-                   
+                 <inertia-link href="/utilizador/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link>  
         </div>
+
+       <div id="example-1">
+            <div >
+                
+            </div>
+      </div>
+
 
         <div class="table-responsive-sm">
             <table class="table table-hover table-light user-table">
@@ -27,27 +33,17 @@
                     <th scope="col">Nr.</th>
                     <th scope="col">Apelido</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">Email</th>
+                    <th scope="col">Perfil</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <tr v-for="userdata in useraArray" :key="userdata.id">
+                    <th scope="row">{{ userdata.numero}}</th>
+                    <td>{{userdata.apelido}}</td>
+                    <td>{{userdata.nome}}</td>
+                    <td>{{userdata.role}} </td>
                     </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                    </tr>
+                 
                 </tbody>
             </table>
         </div>
@@ -56,7 +52,13 @@
 <script>
 import Layout from '../shared/layout';
 export default {
-    layout:Layout
+    layout:Layout,
+    props:['useraArray'],
+    data: function(){
+        return{
+        }
+    }
+    
 }
 </script>
 
