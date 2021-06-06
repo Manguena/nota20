@@ -98,7 +98,7 @@ return [
     'password' => 'A senha está incorreta.',
     'present' => 'O campo ":attribute" deve estar presente.',
     'regex' => 'O campo ":attribute" tem um formato inválido.',
-    'required' => 'O campo ":attribute" é obrigatório.',
+    'required' => 'Insira o :attribute',
     'required_if' => 'O campo ":attribute" é obrigatório quando ":other" for ":value".',
     'required_unless' => 'O campo ":attribute" é obrigatório exceto quando ":other" for ":values".',
     'required_with' => 'O campo ":attribute" é obrigatório quando ":values" está presente.',
@@ -135,6 +135,24 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'password'=>[
+            'required'=>'Insira a Password',
+            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número'
+        ],
+        'password_confirmation'=>[
+            'required'=>'Confirme a password',
+            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número'
+        ],
+        'email'=>[
+            'unique'=>'Email indisponivel'
+        ],
+        'bi'=>[
+            'required'=>'Insira o número do Documento de Identificação',
+            'unique'=>'Documento de Identificação indisponível' 
+        ],
+
+
+
     ],
 
     /*
@@ -150,7 +168,16 @@ return [
 
     'attributes' => [
         'password' => 'Password',
-        'password_confirmation' => 'Confirmar Password',
+        //'password_confirmation' => 'Confirmar Password',
         'current_password' => 'Password Actual',
+        'name'=>'Nome',
+        'apelido' => 'Apelido',
+        'name'=>'Nome',
+        'email'=>'Email',
+        'bi'=>'Documento de Identificação',
+        'password'=>'Password',
+        'password_confirmation'=>'Confirmar a password',
+        'admin'=>'Usuário administrador',
+        'standard'=>'Usuário Standard'
     ],
 ];

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -47,5 +48,17 @@ class User extends Authenticatable
     public function roles(){
         return $this->belongsToMany(Role::class);
     }
+/*
 
+checks  if a user is a type of administrator
+(a SuperAdmin or Admin) and returns true
+
+**/ 
+    public function isAdministrator(){
+       $user =Auth::user();
+      return User::find($user->id)->roles()->get()[0]['name']=='superadmin'||User::find($user->id)->roles()->get()[0]['name']=='admin';
+                
+        
+        
+    }
 }

@@ -9,7 +9,7 @@ use App\Models\User;
 class Role extends Model
 {
     use HasFactory;
-
+    //protected $guarded
    protected $fillable = [
         'name'
    ];
