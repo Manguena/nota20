@@ -9,10 +9,13 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "http-interop/http-factory-guzzle": "^1.0",
         "inertiajs/inertia-laravel": "^0.4.0",
         "laravel/framework": "^8.12",
+        "laravel/scout": "^9.1",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
+        "meilisearch/meilisearch-php": "^0.18.2",
         "square-bit/laravel-pt-localization": "^1.0",
         "tightenco/ziggy": "^1.1"
     },

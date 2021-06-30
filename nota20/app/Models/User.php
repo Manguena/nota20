@@ -8,10 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
-
+use Laravel\Scout\Searchable; 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -60,5 +61,15 @@ checks  if a user is a type of administrator
                 
         
         
+    }
+
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        // Customize the data array...
+   
+      
+        return $array;
     }
 }

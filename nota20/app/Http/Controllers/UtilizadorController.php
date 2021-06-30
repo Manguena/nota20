@@ -14,33 +14,70 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;// retirar depois de realizar testes
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\DB;
+
+   
 class UtilizadorController extends Controller
 {
-    
 
-    public function index(){
-
-        $userCounter=0;
-        $userArray=array();
-        $userArrayCounter=0;
+    public function index(Request $request) {
+        //Check if the array has a search query
+        // This check is only necessary with meilisearh, and will be removed with laravel scout
+        if(array_key_exists('searchbar', $request->toArray())){// check if searchbar has an index
+            if($request->toArray()['searchbar']!=null){// if a words is entered set maximum 20 results
+                        $query=User::search($request->searchbar)->paginate(20)->toArray();
+                    }else{// if a null search is executed by user, paginate with 15 items per page
+                        $query=User::search($request->searchbar)->paginate(1)->toArray();
+                    }
+        }else{
+            $query=User::search($request->searchbar)->paginate(1)->toArray();
+        } 
         
+        // Create pagination content
         
-       foreach (User::all() as $user) {
-           $userCounter++;
+        $userArray=array();// array containig pagination data
+        $userArrayCounter=0;//array index
+        
+        //fiil the pagination content array
+       foreach ($query['data'] as $user) {
+           
            $userArray[$userArrayCounter]=
            array(
-                "numero"=> $userCounter,
-                "id"=>$user->id,
-                "apelido"=>$user->apelido,
-                "nome"=>$user->name,
-                "role"=>User::find($user->id)->roles()->get()[0]['name']
-           );
+                "id"=>$user['id'],
+                "apelido"=>$user['apelido'],
+                "email"=>$user['email'],
+                "nome"=>$user['name'],
+                "role"=>User::find($user['id'])->roles()->get()[0]['name']
+                 );
            $userArrayCounter++;
         }
         
+        // determines if a user entered a search content or a null search which returns all the User Model
+        $url=url()->full();
         
+        $urlArray=explode('=',$url,2);// devides the array in 2 parts
+        $isSearchable=false;
+        $queryString=null;
+       
+        if (count($urlArray)==1){ }
+        elseif (count($urlArray)==2){
+            if(strlen(trim(trim($urlArray[1], "%20")))>0 && strrpos($query['first_page_url'], "query")!=false){// urls convert emptey space to %20 code
+                $queryString=$urlArray[1];//get the text the user searched
+                $isSearchable=true;
+            }
+
+        }        
+      
+        
+        //Return pagination data to the front end (ath, last_page, and the 'current_page')
+
         return Inertia::render('user/index',[
-            'useraArray'=>$userArray
+           'useraArray'=>$userArray,
+           'currentPage'=>$query['current_page'],
+           'lastPage'=>$query['last_page'],
+           'route'=>'utilizador',
+           'isSearchable'=>$isSearchable,
+           'queryString'=>$queryString // query string
         ]);
 
     }
@@ -58,6 +95,7 @@ class UtilizadorController extends Controller
         // otherwise throw error
         Gate::authorize('create-user');
 
+        //validation of input
          $request->validate([
             'apelido' => 'required|max:255|min:3',
             'name' => 'required|max:255|min:3',
@@ -71,8 +109,8 @@ class UtilizadorController extends Controller
 
       
 
-      
-        /**$user= new User;
+      // creating and store the user in the DATABASE
+        $user= new User;
         $user->name=$request->name;
         $user->email=$request->email;
         $user->password=Hash::make($request->password);// deve ser encriptado
@@ -89,8 +127,8 @@ class UtilizadorController extends Controller
 
        $user->roles()->save($role);
         $user->refresh();
-***/
 
+// Redirect to the same page
   return Redirect::route('utilizador.create')->with('message', $request->apelido);
   
 }

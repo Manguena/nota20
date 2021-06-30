@@ -51,10 +51,14 @@
              </div>
              <button class="btn btn-primary" type="submit">Criar Usuário</button>
         </form>
+
+        
     </div>
 </template>
 <script>
 import Layout from '../shared/layout';
+
+
 export default {
     layout:Layout,
     data(){

@@ -35,9 +35,11 @@ Route::post('/out', [App\Http\Controllers\LogUserOut::class, 'index'])->name('ou
 Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth'); //HOME
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// utilizadores (todas rotas devem estar autenticadas)
-
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           UTILIZADOR CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
 //list of users
 Route::get('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'index'])->name('utilizador')->middleware('auth');
 //create user form
@@ -46,6 +48,9 @@ Route::get('/utilizador/create', [App\Http\Controllers\UtilizadorController::cla
 Route::get('/utilizador/edit', [App\Http\Controllers\UtilizadorController::class, 'edit'])->name('utilizador.edit')->middleware('auth');
 //store the new user in the DB
 Route::post('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'store'])->name('utilizador.store')->middleware('auth');
+// search users
+Route::get('/utilizador/search', [App\Http\Controllers\UtilizadorController::class, 'search'])->name('utilizador.search')->middleware('auth');
+
 
 
 
