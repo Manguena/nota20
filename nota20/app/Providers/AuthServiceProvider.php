@@ -29,6 +29,11 @@ class AuthServiceProvider extends ServiceProvider
         //gate para criacao de usuarios
         Gate::define('create-user', [UserPolicy::class, 'create']);
 
+        // edit user who is standard or an admin
+        Gate::define('edit-user', [UserPolicy::class, 'edit']);
+
         //
+       // Gate::define('create-user', [UserPolicy::class, 'create']);
+
     }
 }

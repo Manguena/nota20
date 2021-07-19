@@ -10,7 +10,7 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <inertia-link class="nav-link dashboard-menu" href="/dashboard">Painel<span class="sr-only">(current)</span></inertia-link> 
+        <inertia-link class="nav-link dashboard-menu" href="/">Painel<span class="sr-only">(current)</span></inertia-link> 
       </li>
       <li class="nav-item">
         <inertia-link href="/utilizador" class="nav-link dashboard-menu">Utilizadores</inertia-link> 

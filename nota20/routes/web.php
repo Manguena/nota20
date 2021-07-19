@@ -45,12 +45,14 @@ Route::get('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'in
 //create user form
 Route::get('/utilizador/create', [App\Http\Controllers\UtilizadorController::class, 'create'])->name('utilizador.create')->middleware('auth');
 //edit a certain user
-Route::get('/utilizador/edit', [App\Http\Controllers\UtilizadorController::class, 'edit'])->name('utilizador.edit')->middleware('auth');
+Route::get('/utilizador/{id}/edit', [App\Http\Controllers\UtilizadorController::class, 'edit'])->name('utilizador.edit')->middleware('auth');
 //store the new user in the DB
 Route::post('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'store'])->name('utilizador.store')->middleware('auth');
-// search users
-Route::get('/utilizador/search', [App\Http\Controllers\UtilizadorController::class, 'search'])->name('utilizador.search')->middleware('auth');
+//update the user information
+Route::patch('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'update'])->name('utilizador.update')->middleware('auth');
 
+// delete users
+Route::delete('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'destroy'])->name('utilizador.destroy')->middleware('auth');
 
 
 

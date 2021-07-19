@@ -49,27 +49,27 @@ class User extends Authenticatable
     public function roles(){
         return $this->belongsToMany(Role::class);
     }
-/*
 
-checks  if a user is a type of administrator
-(a SuperAdmin or Admin) and returns true
-
-**/ 
     public function isAdministrator(){
        $user =Auth::user();
       return User::find($user->id)->roles()->get()[0]['name']=='superadmin'||User::find($user->id)->roles()->get()[0]['name']=='admin';
-                
-        
-        
     }
 
+    public function currentUserRole(){
+        $user =Auth::user();
+
+        return User::find($user->id)->roles()->get()[0]['name']; 
+    }
+
+    public function currentUserId(){
+        $user =Auth::user();
+        return $user->id;
+    }
     public function toSearchableArray()
     {
         $array = $this->toArray();
 
         // Customize the data array...
-   
-      
         return $array;
     }
 }

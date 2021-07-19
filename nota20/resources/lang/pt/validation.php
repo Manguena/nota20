@@ -137,11 +137,14 @@ return [
         ],
         'password'=>[
             'required'=>'Insira a Password',
-            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número'
+            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número',
+            'required_unless'=>'insira a Password'
+
         ],
         'password_confirmation'=>[
             'required'=>'Confirme a password',
-            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número'
+            'regex'=>'Verificar Password: Pelo menos uma letra maiúscula, minúscula e um número',
+            'required_unless'=>'insira a Password'
         ],
         'email'=>[
             'unique'=>'Email indisponivel'

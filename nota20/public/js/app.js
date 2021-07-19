@@ -13370,8 +13370,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['roleList'],
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
   data: function data() {
     return {
@@ -13382,21 +13394,14 @@ __webpack_require__.r(__webpack_exports__);
         password: null,
         password_confirmation: null,
         bi: null,
-        admin: null,
-        standard: null,
         role: null
       }
     };
   },
   methods: {
-    checkRole: function checkRole() {
-      if (this.form.standard === 'standard') return this.form.role = 'standard';else this.form.role = 'admin';
-    },
     submit: function submit() {
       var _this = this;
 
-      // before sending the form, set the value for the type of user
-      this.checkRole();
       this.$inertia.post('/utilizador', this.form, {
         onSuccess: function onSuccess() {
           for (var item in _this.form) {
@@ -13441,6 +13446,12 @@ __webpack_require__.r(__webpack_exports__);
       return {
         inputError: this.$page.props.errors.password_confirmation,
         'inputError:focus': this.$page.props.errors.password_confirmation
+      };
+    },
+    inputErrorRole: function inputErrorRole() {
+      return {
+        inputError: this.$page.props.errors.role,
+        'inputError:focus': this.$page.props.errors.focus
       };
     }
   }
@@ -13517,32 +13528,173 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
+  props: ['user', 'userRole'],
   data: function data() {
     return {
       form: {
-        apelido: null,
-        name: null,
-        email: null,
+        apelido: this.user['0']['apelido'],
+        name: this.user['0']['name'],
+        email: this.user['0']['email'],
         password: null,
-        bi: null,
-        admin: null,
-        standard: null,
-        role: null
-      }
+        password_confirmation: null,
+        bi: this.user['0']['bi'],
+        role: this.userRole,
+        passwordctr: false
+      },
+      passwordModal: true
     };
   },
   methods: {
-    checkRole: function checkRole() {
-      if (this.form.standard === 'standard') return this.form.role = 'standard';else this.form.role = 'admin';
-    },
+    /**
+     * THIS METHOD SUBMITS THE FORM
+     * */
     submit: function submit() {
-      // before sending the form, set the value for the type of user
-      this.checkRole();
-      this.$inertia.post('/utilizador', this.form);
+      this.$inertia.patch("/utilizador/".concat(this.user['0']['id']), this.form);
+    },
+
+    /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
+    showPasswordModal: function showPasswordModal() {
+      this.passwordModal;
+
+      if (this.passwordModal) {
+        $('#exampleModal').modal('show');
+      }
+
+      this.passwordModal = false;
+    },
+    showDeleteModal: function showDeleteModal() {
+      $('#showdeletemodal').modal('show');
+    },
+    deleteUser: function deleteUser() {
+      this.$inertia["delete"]("/utilizador/".concat(this.user['0']['id']));
+    },
+
+    /***
+    * THIS METHOD ENABLES THE USER INPUT
+    */
+    changeDisabledInputs: function changeDisabledInputs() {
+      var disabledPasswordInput = document.getElementById('password');
+      disabledPasswordInput.removeAttribute('readonly');
+      var disabledPasswordConfirmInput = document.getElementById('password_confirmation');
+      disabledPasswordConfirmInput.removeAttribute('readonly');
+      this.form.passwordctr = true;
     }
+  },
+  computed: {
+    inputErrorApelido: function inputErrorApelido() {
+      return {
+        inputError: this.$page.props.errors.apelido,
+        'inputError:focus': this.$page.props.errors.apelido
+      };
+    },
+    inputErrorNome: function inputErrorNome() {
+      return {
+        inputError: this.$page.props.errors.name,
+        'inputError:focus': this.$page.props.errors.name
+      };
+    },
+    inputErrorEmail: function inputErrorEmail() {
+      return {
+        inputError: this.$page.props.errors.email,
+        'inputError:focus': this.$page.props.errors.email
+      };
+    },
+    inputErrorDocIdentif: function inputErrorDocIdentif() {
+      return {
+        inputError: this.$page.props.errors.bi,
+        'inputError:focus': this.$page.props.errors.bi
+      };
+    },
+    inputErrorPassword: function inputErrorPassword() {
+      return {
+        inputError: this.$page.props.errors.password,
+        'inputError:focus': this.$page.props.errors.password
+      };
+    },
+    inputErrorPassConf: function inputErrorPassConf() {
+      return {
+        inputError: this.$page.props.errors.password_confirmation,
+        'inputError:focus': this.$page.props.errors.password_confirmation
+      };
+    },
+    inputErrorRole: function inputErrorRole() {
+      return {
+        inputError: this.$page.props.errors.role,
+        'inputError:focus': this.$page.props.errors.focus
+      };
+    }
+  },
+  mounted: function mounted() {
+    this.$nextTick(function () {
+      var _this = this;
+
+      var disabledPasswordInput = document.getElementById('password');
+      disabledPasswordInput.addEventListener('focus', function (event) {
+        _this.showPasswordModal();
+      });
+    });
   }
 });
 
@@ -13561,7 +13713,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
 /* harmony import */ var _shared_pagination__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../shared/pagination */ "./resources/js/Pages/shared/pagination.vue");
-//
 //
 //
 //
@@ -13760,7 +13911,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle);
+
+
+_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserMinus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faKey);
 
 /***/ }),
 
@@ -18354,7 +18507,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 3rem;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .createdAlert{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 3rem;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .createdAlert, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -18378,7 +18531,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 3rem;\r\n    border-radius:2px ;\n}\n@media screen and (min-width: 992px){\n.create-user-form{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -53910,7 +54063,7 @@ var render = function() {
                       "inertia-link",
                       {
                         staticClass: "nav-link dashboard-menu",
-                        attrs: { href: "/dashboard" }
+                        attrs: { href: "/" }
                       },
                       [
                         _vm._v("Painel"),
@@ -54154,6 +54307,46 @@ var render = function() {
           ]
         )
       : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "nav",
+      {
+        staticStyle: { "breadcrumb-divider": "''" },
+        attrs: { "aria-label": "breadcrumb" }
+      },
+      [
+        _c("ol", { staticClass: "breadcrumb page-navigation" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [_c("inertia-link", { attrs: { href: "/" } }, [_vm._v(" Painel")])],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("inertia-link", { attrs: { href: "/utilizador" } }, [
+                _vm._v(" Utilizador")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "breadcrumb-item active",
+              attrs: { "aria-current": "page" }
+            },
+            [_vm._v("Criar: " + _vm._s(_vm.form.apelido) + " ")]
+          )
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "page-navigation font-weight-bold h3 mb-1" }),
     _vm._v(" "),
     _c(
       "form",
@@ -54438,89 +54631,141 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "form-row" }, [
           _c("div", { staticClass: "form-group col-md-6" }, [
-            _c(
-              "div",
-              {
-                staticClass: "custom-control custom-radio custom-control-inline"
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.form.admin,
-                      expression: "form.admin"
-                    }
-                  ],
-                  staticClass: "custom-control-input",
-                  attrs: {
-                    type: "radio",
-                    id: "admin",
-                    value: "admin",
-                    name: "customRadioInline"
-                  },
-                  domProps: { checked: _vm._q(_vm.form.admin, "admin") },
-                  on: {
-                    change: function($event) {
-                      return _vm.$set(_vm.form, "admin", "admin")
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "label",
+            _vm.roleList.includes("superadmin")
+              ? _c(
+                  "div",
                   {
-                    staticClass: "custom-control-label",
-                    attrs: { for: "admin" }
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
                   },
-                  [_vm._v("Usuário administrador")]
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.role,
+                          expression: "form.role"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "radio",
+                        id: "superadmin",
+                        value: "superadmin",
+                        name: "customRadioInline"
+                      },
+                      domProps: {
+                        checked: _vm._q(_vm.form.role, "superadmin")
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.form, "role", "superadmin")
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "superadmin" }
+                      },
+                      [_vm._v("Usuário super administrador")]
+                    )
+                  ]
                 )
-              ]
-            ),
+              : _vm._e(),
             _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "custom-control custom-radio custom-control-inline"
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.form.standard,
-                      expression: "form.standard"
-                    }
-                  ],
-                  staticClass: "custom-control-input",
-                  attrs: {
-                    type: "radio",
-                    id: "standard",
-                    value: "standard",
-                    name: "customRadioInline"
-                  },
-                  domProps: { checked: _vm._q(_vm.form.standard, "standard") },
-                  on: {
-                    change: function($event) {
-                      return _vm.$set(_vm.form, "standard", "standard")
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "label",
+            _vm.roleList.includes("admin")
+              ? _c(
+                  "div",
                   {
-                    staticClass: "custom-control-label",
-                    attrs: { for: "standard" }
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
                   },
-                  [_vm._v("Usuário Standard")]
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.role,
+                          expression: "form.role"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "radio",
+                        id: "admin",
+                        value: "admin",
+                        name: "customRadioInline"
+                      },
+                      domProps: { checked: _vm._q(_vm.form.role, "admin") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.form, "role", "admin")
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "admin" }
+                      },
+                      [_vm._v("Usuário administrador")]
+                    )
+                  ]
                 )
-              ]
-            ),
+              : _vm._e(),
             _vm._v(" "),
-            _vm.$page.props.errors.standard
+            _vm.roleList.includes("standard")
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.role,
+                          expression: "form.role"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: {
+                        type: "radio",
+                        id: "standard",
+                        value: "standard",
+                        name: "customRadioInline"
+                      },
+                      domProps: { checked: _vm._q(_vm.form.role, "standard") },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.form, "role", "standard")
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "standard" }
+                      },
+                      [_vm._v("Usuário Standard")]
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.$page.props.errors.role
               ? _c("div", { staticClass: "text-danger" }, [
                   _c(
                     "small",
@@ -54597,13 +54842,53 @@ var render = function() {
             attrs: { role: "alert" }
           },
           [
-            _vm._v("\n    Usuário "),
+            _vm._v("\n        Utilizador "),
             _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
-            _vm._v(" criado com sucesso \n        "),
+            _vm._v(" Actualizado com sucesso\n        "),
             _vm._m(0)
           ]
         )
       : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "nav",
+      {
+        staticStyle: { "breadcrumb-divider": "''" },
+        attrs: { "aria-label": "breadcrumb" }
+      },
+      [
+        _c("ol", { staticClass: "breadcrumb page-navigation" }, [
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [_c("inertia-link", { attrs: { href: "/" } }, [_vm._v(" Painel")])],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("inertia-link", { attrs: { href: "/utilizador" } }, [
+                _vm._v(" Utilizador")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "breadcrumb-item active",
+              attrs: { "aria-current": "page" }
+            },
+            [_vm._v("Editar: " + _vm._s(_vm.user["0"]["apelido"]))]
+          )
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "page-navigation font-weight-bold h3 mb-1" }),
     _vm._v(" "),
     _c(
       "form",
@@ -54641,7 +54926,22 @@ var render = function() {
                   _vm.$set(_vm.form, "apelido", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.apelido
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s(_vm.$page.props.errors.apelido))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group col-md-8" }, [
@@ -54667,7 +54967,22 @@ var render = function() {
                   _vm.$set(_vm.form, "name", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.name
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s(_vm.$page.props.errors.name))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -54695,7 +55010,22 @@ var render = function() {
                   _vm.$set(_vm.form, "email", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.email
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s(_vm.$page.props.errors.email))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group col-md-6" }, [
@@ -54716,6 +55046,7 @@ var render = function() {
               attrs: { type: "text", id: "bi" },
               domProps: { value: _vm.form.bi },
               on: {
+                click: _vm.changeDisabledInputs,
                 input: function($event) {
                   if ($event.target.composing) {
                     return
@@ -54723,7 +55054,22 @@ var render = function() {
                   _vm.$set(_vm.form, "bi", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.bi
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s(_vm.$page.props.errors.bi))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -54741,7 +55087,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { type: "password", id: "password" },
+              attrs: { type: "password", id: "password", readonly: "" },
               domProps: { value: _vm.form.password },
               on: {
                 input: function($event) {
@@ -54751,10 +55097,77 @@ var render = function() {
                   _vm.$set(_vm.form, "password", $event.target.value)
                 }
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.password
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s(_vm.$page.props.errors.password))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
-          _vm._m(1)
+          _c("div", { staticClass: "form-group col-md-6" }, [
+            _c("label", { attrs: { for: "password_confirmation" } }, [
+              _vm._v("Confirmação da password")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.password_confirmation,
+                  expression: "form.password_confirmation"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "password",
+                id: "password_confirmation",
+                readonly: ""
+              },
+              domProps: { value: _vm.form.password_confirmation },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.form,
+                    "password_confirmation",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.$page.props.errors.password_confirmation
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.$page.props.errors.password_confirmation)
+                      )
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-row" }, [
@@ -54770,8 +55183,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.form.admin,
-                      expression: "form.admin"
+                      value: _vm.form.role,
+                      expression: "form.role"
                     }
                   ],
                   staticClass: "custom-control-input",
@@ -54781,10 +55194,10 @@ var render = function() {
                     value: "admin",
                     name: "customRadioInline"
                   },
-                  domProps: { checked: _vm._q(_vm.form.admin, "admin") },
+                  domProps: { checked: _vm._q(_vm.form.role, "admin") },
                   on: {
                     change: function($event) {
-                      return _vm.$set(_vm.form, "admin", "admin")
+                      return _vm.$set(_vm.form, "role", "admin")
                     }
                   }
                 }),
@@ -54811,8 +55224,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.form.standard,
-                      expression: "form.standard"
+                      value: _vm.form.role,
+                      expression: "form.role"
                     }
                   ],
                   staticClass: "custom-control-input",
@@ -54822,10 +55235,10 @@ var render = function() {
                     value: "standard",
                     name: "customRadioInline"
                   },
-                  domProps: { checked: _vm._q(_vm.form.standard, "standard") },
+                  domProps: { checked: _vm._q(_vm.form.role, "standard") },
                   on: {
                     change: function($event) {
-                      return _vm.$set(_vm.form, "standard", "standard")
+                      return _vm.$set(_vm.form, "role", "standard")
                     }
                   }
                 }),
@@ -54839,15 +55252,178 @@ var render = function() {
                   [_vm._v("Usuário Standard")]
                 )
               ]
-            )
+            ),
+            _vm._v(" "),
+            _vm.$page.props.errors.role
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _c(
+                    "small",
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "exclamation-circle"] }
+                      }),
+                      _vm._v(" " + _vm._s("Escolha o perfil do Usuário"))
+                    ],
+                    1
+                  )
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
         _c(
           "button",
           { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("Criar Usuário")]
+          [_vm._v("Actualizar")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-danger ml-3",
+            attrs: { type: "button" },
+            on: { click: _vm.showDeleteModal }
+          },
+          [_vm._v("Excluir")]
         )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "exampleModal",
+          tabindex: "-1",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c(
+                "h5",
+                {
+                  staticClass: "modal-title",
+                  attrs: { id: "exampleModalLabel" }
+                },
+                [
+                  _c(
+                    "span",
+                    { staticClass: "badge badge badge-danger" },
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "key"] }
+                      }),
+                      _vm._v(" Password")
+                    ],
+                    1
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(1)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm._v(
+                "\n             Deseja alterar a Password do utilizador?\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Não")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button", "data-dismiss": "modal" },
+                  on: { click: _vm.changeDisabledInputs }
+                },
+                [_vm._v("Sim")]
+              )
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "showdeletemodal",
+          tabindex: "-1",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c(
+                "h5",
+                {
+                  staticClass: "modal-title",
+                  attrs: { id: "exampleModalLabel" }
+                },
+                [
+                  _c(
+                    "span",
+                    { staticClass: "badge badge badge-danger" },
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "user-minus"] }
+                      }),
+                      _vm._v(" Excluir")
+                    ],
+                    1
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(2)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm._v("\n             Deseja excluir o usuário?\n            ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Não")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button", "data-dismiss": "modal" },
+                  on: { click: _vm.deleteUser }
+                },
+                [_vm._v("Sim")]
+              )
+            ])
+          ])
+        ])
       ]
     )
   ])
@@ -54874,16 +55450,35 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group col-md-6" }, [
-      _c("label", { attrs: { for: "password-confirm" } }, [
-        _vm._v("Confirmação da password")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "password", id: "password-confirm" }
-      })
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
@@ -54912,6 +55507,23 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
+      _vm.$page.props.flash.message
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "alert alert-success alert-dismissible fade show mt-4 mb-1",
+              attrs: { role: "alert" }
+            },
+            [
+              _vm._v("\n        Utilizador "),
+              _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
+              _vm._v(" Excluido com sucesso\n        "),
+              _vm._m(0)
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "div",
         { staticClass: "search-create" },
@@ -54979,11 +55591,7 @@ var render = function() {
                     })
                   ],
                   1
-                ),
-                _vm._v(" "),
-                _vm._m(0),
-                _vm._v(" "),
-                _vm._m(1)
+                )
               ])
             ]
           ),
@@ -55000,26 +55608,78 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm._m(2),
+      _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "table-responsive-sm" }, [
         _c(
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(3),
+            _vm._m(2),
             _vm._v(" "),
             _c(
               "tbody",
               _vm._l(_vm.useraArray, function(userdata) {
                 return _c("tr", { key: userdata.id }, [
-                  _c("td", [_vm._v(_vm._s(userdata.apelido))]),
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass: "text-dark",
+                          attrs: { href: userdata.editUri }
+                        },
+                        [_vm._v(_vm._s(userdata.apelido))]
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(userdata.nome))]),
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass: "text-dark",
+                          attrs: { href: userdata.editUri }
+                        },
+                        [_vm._v(_vm._s(userdata.nome))]
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(userdata.email))]),
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass: "text-dark",
+                          attrs: { href: userdata.editUri }
+                        },
+                        [_vm._v(_vm._s(userdata.email))]
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(userdata.role) + " ")])
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass: "text-dark",
+                          attrs: { href: userdata.editUri }
+                        },
+                        [_vm._v(_vm._s(userdata.role))]
+                      )
+                    ],
+                    1
+                  )
                 ])
               }),
               0
@@ -55049,34 +55709,15 @@ var staticRenderFns = [
     return _c(
       "button",
       {
-        staticClass: "btn btn-primary dropdown-toggle dropdown-toggle-split",
+        staticClass: "close",
         attrs: {
           type: "button",
-          "data-toggle": "dropdown",
-          "aria-haspopup": "true",
-          "aria-expanded": "false"
+          "data-dismiss": "alert",
+          "aria-label": "Close"
         }
       },
-      [_c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])]
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "dropdown-menu" }, [
-      _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-        _vm._v("Super Admin")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-        _vm._v("Admin")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-        _vm._v("Standard")
-      ])
-    ])
   },
   function() {
     var _vm = this

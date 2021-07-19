@@ -1,5 +1,12 @@
 <template>
     <div class="container">
+
+        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
+            Utilizador <strong>{{$page.props.flash.message}}</strong> Excluido com sucesso
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
             <div class="search-create">
             
             <form @submit.prevent="submit" class="input-group data-table-input">
@@ -13,14 +20,6 @@
                     <button type="submit" class="btn btn-primary search-group-btn">
                         <span>Pesquisar</span><font-awesome-icon :icon="['fas', 'search']" class="search-img" />
                     </button>
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Super Admin</a>
-                    <a class="dropdown-item" href="#">Admin</a>
-                    <a class="dropdown-item" href="#">Standard</a>
-                    </div>
                 </div>
             </form>
                  <inertia-link href="/utilizador/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link>  
@@ -45,10 +44,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="userdata in useraArray" :key="userdata.id">
-                    <td>{{userdata.apelido}}</td>
-                    <td>{{userdata.nome}}</td>
-                    <td>{{userdata.email}}</td>
-                    <td>{{userdata.role}} </td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.apelido}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.nome}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.email}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.role}}</inertia-link></td>
                     </tr>
                  
                 </tbody>
