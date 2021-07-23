@@ -1,7 +1,7 @@
 <template>
     <div class="container">
        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
-        Usuário <strong>{{$page.props.flash.message}}</strong> criado com sucesso 
+        <span class="center-msg">Usuário&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;criado com sucesso</span> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -161,6 +161,13 @@ export default {
     margin-top: 3rem;
     border-radius:2px ;
 }
+
+.center-msg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .inputError, .inputError:focus {
  border-color: #e3342f;
  box-shadow: 0px 0px 3px 0px #e3342f;

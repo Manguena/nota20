@@ -7,10 +7,13 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons'
 import { faKey } from '@fortawesome/free-solid-svg-icons'
+import { faCogs } from '@fortawesome/free-solid-svg-icons'
+
+
 
 
 library.add(faUsers,faArrowRight,faSearch,faExclamationCircle,faUserMinus,
-    faKey
+    faKey,faCogs  
     )
 
 

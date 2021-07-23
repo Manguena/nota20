@@ -50,9 +50,17 @@ Route::get('/utilizador/{id}/edit', [App\Http\Controllers\UtilizadorController::
 Route::post('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'store'])->name('utilizador.store')->middleware('auth');
 //update the user information
 Route::patch('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'update'])->name('utilizador.update')->middleware('auth');
-
 // delete users
 Route::delete('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'destroy'])->name('utilizador.destroy')->middleware('auth');
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           SETTINGS CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+  //ilst the user configurations 
+  Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config')->middleware('auth');
+  // store user configurations
+  Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');
 
 
 

@@ -180,7 +180,8 @@ return [
         'bi'=>'Documento de Identificação',
         'password'=>'Password',
         'password_confirmation'=>'Confirmar a password',
-        'admin'=>'Usuário administrador',
-        'standard'=>'Usuário Standard'
+        'admin'=>'Usuário Admin',
+        'standard'=>'Usuário Standard',
+        'superadmin'=>'Usuário Superadmin'
     ],
 ];

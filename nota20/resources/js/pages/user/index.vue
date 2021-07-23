@@ -2,7 +2,7 @@
     <div class="container">
 
         <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
-            Utilizador <strong>{{$page.props.flash.message}}</strong> Excluido com sucesso
+            <span class="center-msg">Utilizador&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Excluido com sucesso</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -97,6 +97,12 @@ export default {
     display: flex;
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.center-msg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .data-table-input{
