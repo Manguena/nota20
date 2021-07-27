@@ -9,7 +9,7 @@
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-            <li class="breadcrumb-item"><inertia-link href="/utilizador"> Utilizador</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link href="/user"> Utilizador</inertia-link></li>
             <li class="breadcrumb-item active" aria-current="page">Criar: {{form.apelido}} </li>
         </ol>
         </nav>
@@ -94,7 +94,7 @@ export default {
 
     methods:{
       submit(){
-        this.$inertia.post('/utilizador',this.form,{
+        this.$inertia.post('/user',this.form,{
             onSuccess: () => {
                 for(const item in this.form){
                     this.form[item]=null;

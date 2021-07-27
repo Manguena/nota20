@@ -75,7 +75,7 @@ export default {
              $('#showdeletemodal').modal('show');
         },
         deleteUser(){
-            this.$inertia.delete(`/utilizador/${this.user['0']['id']}`);
+            this.$inertia.delete(`/user/${this.user['0']['id']}`);
         },
 
     /***

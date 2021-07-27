@@ -37,37 +37,31 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="bi">Documento de Identificação</label>
-                    <input type="text" class="form-control" id="bi" v-on:click="changeDisabledInputs" v-model="form.bi">
+                    <input type="text" class="form-control" id="bi" v-model="form.bi">
                     <div class="text-danger" v-if="$page.props.errors.bi"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.bi}}</small></div>
                 </div>
              </div>
              <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="password">Password</label>
+                    <label for="password">Password actual</label>
                     <input type="password" class="form-control" id="password" v-model="form.password" readonly>
                     <div class="text-danger" v-if="$page.props.errors.password"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.password}}</small></div>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="password_confirmation">Confirmação da password</label>
-                    <input type="password" class="form-control" id="password_confirmation" v-model="form.password_confirmation" readonly>
-                    <div class="text-danger" v-if="$page.props.errors.password_confirmation"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.password_confirmation}}</small></div>
+                    <label for="new_password">Nova password</label>
+                    <input type="password" class="form-control" id="new_password" v-model="form.new_password" readonly>
+                    <div class="text-danger" v-if="$page.props.errors.new_password"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.new_password}}</small></div>
                 </div>
              </div>
-             <div class="form-row">
+            <div class="form-row">
                 <div class="form-group col-md-6">
                     <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="admin" value="admin" name="customRadioInline" class="custom-control-input" v-model="form.role">
-                    <label class="custom-control-label" for="admin">Usuário administrador</label>
+                    <input type="radio" id="role" value="" name="customRadioInline" class="custom-control-input" checked>
+                    <label class="custom-control-label" for="role">Usuário {{userRole}}</label>
                     </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="standard" value="standard" name="customRadioInline" class="custom-control-input" v-model="form.role">
-                    <label class="custom-control-label" for="standard">Usuário Standard</label>
-                    </div>
-                    <div class="text-danger" v-if="$page.props.errors.role"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{`Escolha o perfil do Usuário`}}</small></div>
                 </div>
-             </div>
+            </div>
              <button class="btn btn-primary" type="submit">Actualizar</button>
-             <button class="btn btn-danger ml-3" type="button" v-on:click="showDeleteModal">Excluir</button>
         </form>
         <!---MODAL ASKING THE USER IF HE/SHE REALLY WANTS TO CHANGE THE USER PASSWORD--->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,28 +84,6 @@
             </div>
         </div>
         <!---MODAL ASKING THE USER IF HE/SHE REALLY WANTS TO CHANGE THE USER PASSWORD--->
-        <!----MODAL ASKING USER IF HE/SHE REALLY WANT TO MAKE A DELETE -->
-         <div class="modal fade" id="showdeletemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><span class="badge badge badge-danger"> <font-awesome-icon :icon="['fas', 'user-minus']" /> Excluir</span></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                 Deseja excluir o usuário?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
-                    <button type="button" v-on:click="deleteUser" class="btn btn-primary" data-dismiss="modal">Sim</button>
-                </div>
-                </div>
-            </div>
-        </div>
-        <!---MODAL ASKING USER IF HE/SHE REALLY WANT TO MAKE A DELETE---->
     </div>
 </template>
 <script>
@@ -128,9 +100,8 @@ export default {
                 name:this.user['0']['name'],
                 email:this.user['0']['email'],
                 password:null,
-                password_confirmation:null,
+                new_password:null,
                 bi:this.user['0']['bi'],
-                role:this.userRole,
                 passwordctr:false
             },
                passwordModal:true
@@ -142,7 +113,7 @@ export default {
          * THIS METHOD SUBMITS THE FORM
          * */ 
       submit(){
-        this.$inertia.patch(`/user/${this.user['0']['id']}`,this.form);
+        this.$inertia.patch(`/profile/${this.user['0']['id']}`,this.form);
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){
@@ -154,13 +125,6 @@ export default {
 
           this.passwordModal=false;
         },
-        showDeleteModal(){
-             $('#showdeletemodal').modal('show');
-        },
-        deleteUser(){
-            this.$inertia.delete(`/user/${this.user['0']['id']}`);
-        },
-
     /***
     * THIS METHOD ENABLES THE USER INPUT
     */
@@ -168,7 +132,7 @@ export default {
       let disabledPasswordInput=document.getElementById('password');
         disabledPasswordInput.removeAttribute('readonly');
 
-        let disabledPasswordConfirmInput=document.getElementById('password_confirmation');
+        let disabledPasswordConfirmInput=document.getElementById('new_password');
         disabledPasswordConfirmInput.removeAttribute('readonly');
 
         this.form.passwordctr=true;
@@ -205,10 +169,10 @@ export default {
             'inputError:focus': this.$page.props.errors.password
             }
         },
-        inputErrorPassConf() {
+        inputErrorNewPass() {
             return {
-            inputError: this.$page.props.errors.password_confirmation,
-            'inputError:focus': this.$page.props.errors.password_confirmation
+            inputError: this.$page.props.errors.new_password,
+            'inputError:focus': this.$page.props.errors.new_password
             }
         },
         inputErrorRole(){

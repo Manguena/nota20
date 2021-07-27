@@ -153,6 +153,9 @@ return [
             'required'=>'Insira o número do Documento de Identificação',
             'unique'=>'Documento de Identificação indisponível' 
         ],
+        'abbreviation'=>[
+            'required'=>'Insira a Abreviatura'
+        ]
 
 
 
@@ -182,6 +185,8 @@ return [
         'password_confirmation'=>'Confirmar a password',
         'admin'=>'Usuário Admin',
         'standard'=>'Usuário Standard',
-        'superadmin'=>'Usuário Superadmin'
+        'superadmin'=>'Usuário Superadmin',
+        'new_password'=>'Nova Password',
+        'abbreviation'=>'Abreviatura'
     ],
 ];

@@ -65,7 +65,7 @@ export default {
             if(this.isSearchable){// user info from a search word/sentence
                 this.paginationData[i]={
                 number:i+1,
-                link:`#`//`utilizador?query=${this.queryString}&page=${i+1}` this is for algoria search
+                link:`#`//`user?query=${this.queryString}&page=${i+1}` this is for algoria search
               }; 
               break;// remover quando utilizar algoria search
             } 

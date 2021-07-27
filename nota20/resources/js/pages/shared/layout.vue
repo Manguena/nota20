@@ -13,7 +13,7 @@
         <inertia-link class="nav-link dashboard-menu" href="/">Painel<span class="sr-only">(current)</span></inertia-link> 
       </li>
       <li class="nav-item">
-        <inertia-link href="/utilizador" class="nav-link dashboard-menu">Utilizador</inertia-link> 
+        <inertia-link href="/user" class="nav-link dashboard-menu">Utilizador</inertia-link> 
       </li>
       <li class="nav-item">
         <a class="nav-link dashboard-menu" href="#">Turma</a>
@@ -27,7 +27,7 @@
     </ul>
     <span class="navbar-text">
 
-      <inertia-link href="#">Olá {{$page.props.sharedAuthuserName}}</inertia-link> | <inertia-link href="/out" method="post" >Sair</inertia-link>
+      <inertia-link v-bind:href="editUserLink">Olá {{$page.props.sharedAuthuserName}}</inertia-link> | <inertia-link href="/out" method="post" >Sair</inertia-link>
     </span>
   </div>
 </nav>
@@ -42,6 +42,11 @@
 
 <script>
 export default {
+  data(){
+    return{
+      editUserLink:`/profile/${this.$page.props.sharedAuthUserId}/edit`
+    }
+  }
     
 }
 

@@ -37,24 +37,36 @@ Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->nam
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
- *                                           UTILIZADOR CONTROLLER                                                               *
+ *                                           USER CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
 //list of users
-Route::get('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'index'])->name('utilizador')->middleware('auth');
+Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user')->middleware('auth');
 //create user form
-Route::get('/utilizador/create', [App\Http\Controllers\UtilizadorController::class, 'create'])->name('utilizador.create')->middleware('auth');
+Route::get('/user/create', [App\Http\Controllers\UserController::class, 'create'])->name('user.create')->middleware('auth');
 //edit a certain user
-Route::get('/utilizador/{id}/edit', [App\Http\Controllers\UtilizadorController::class, 'edit'])->name('utilizador.edit')->middleware('auth');
+Route::get('/user/{id}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit')->middleware('auth');
 //store the new user in the DB
-Route::post('/utilizador', [App\Http\Controllers\UtilizadorController::class, 'store'])->name('utilizador.store')->middleware('auth');
+Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store')->middleware('auth');
 //update the user information
-Route::patch('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'update'])->name('utilizador.update')->middleware('auth');
+Route::patch('/user/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update')->middleware('auth');
 // delete users
-Route::delete('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::class, 'destroy'])->name('utilizador.destroy')->middleware('auth');
+Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy')->middleware('auth');
+
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
- *                                           SETTINGS CONTROLLER                                                               *
+ *                                           PROFILE CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+// Edit the current user profile
+  Route::get('/profile/{id}/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+  // update the user profile
+  Route::patch('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           CONFIG CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
   //ilst the user configurations 
@@ -62,5 +74,15 @@ Route::delete('/utilizador/{id}', [App\Http\Controllers\UtilizadorController::cl
   // store user configurations
   Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');
 
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           SCHOOL CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+  
+  // GET THE SCHOOL CREATION FORM
+  Route::get('/school/create', [App\Http\Controllers\SchoolController::class, 'create'])->name('school.create')->middleware('auth');
+// USER CREATES THE SCHOOL
+Route::post('/school', [App\Http\Controllers\SchoolController::class, 'store'])->name('school.store')->middleware('auth');
 
 

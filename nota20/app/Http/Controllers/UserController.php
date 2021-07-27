@@ -18,7 +18,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 
    
-class UtilizadorController extends Controller
+class UserController extends Controller
 {   
 
     public function index(Request $request) {
@@ -37,7 +37,6 @@ class UtilizadorController extends Controller
         } 
         
         // Create pagination content
-        
         $userArray=array();// array containig pagination data
         $userArrayCounter=0;//array index
       
@@ -53,7 +52,7 @@ class UtilizadorController extends Controller
                 "apelido"=>$user['apelido'],
                 "email"=>$user['email'],
                 "nome"=>$user['name'],
-                "editUri"=>"utilizador/".$user['id']."/edit",
+                "editUri"=>"user/".$user['id']."/edit",
                 "role"=>User::find($user['id'])->roles()->get()[0]['name']
                  );
            $userArrayCounter++;
@@ -83,7 +82,7 @@ class UtilizadorController extends Controller
            'useraArray'=>$userArray,
            'currentPage'=>$query['current_page'],
            'lastPage'=>$query['last_page'],
-           'route'=>'utilizador',
+           'route'=>'user',
            'isSearchable'=>$isSearchable,
            'queryString'=>$queryString // query string
         ]);
@@ -163,7 +162,7 @@ class UtilizadorController extends Controller
         $user->refresh();
 
 // Redirect to the same page
-  return Redirect::route('utilizador.create')->with('message', $request->apelido);
+  return Redirect::route('user.create')->with('message', $request->apelido);
   
 }
 
@@ -231,7 +230,7 @@ public function update(Request $request, $id){
     $role->name=$userUpdateArray['role'];
     $role->save();
   
-  return Redirect::route('utilizador.edit', ['id' => $id])->with('message', $user->apelido);
+  return Redirect::route('user.edit', ['id' => $id])->with('message', $user->apelido);
 
 }
 
@@ -239,7 +238,7 @@ public function destroy($id){
     $removedUser=User::find($id)->apelido;    
     User::destroy($id);
 
-    return Redirect::route('utilizador')->with('message', $removedUser);
+    return Redirect::route('user')->with('message', $removedUser);
 }
 }
 

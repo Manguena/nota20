@@ -22,7 +22,7 @@
                     </button>
                 </div>
             </form>
-                 <inertia-link href="/utilizador/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link>  
+                 <inertia-link href="/user/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link>  
         </div>
 
        <div id="example-1">
@@ -85,7 +85,7 @@ export default {
     },
     methods:{
         submit(){
-            this.$inertia.get('/utilizador', this.form)}
+            this.$inertia.get('/user', this.form)}
         }
     }
     
