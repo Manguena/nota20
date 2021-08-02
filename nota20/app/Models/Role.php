@@ -13,10 +13,9 @@ class Role extends Model
     use HasFactory;
     use Searchable;
     //protected $guarded
-   protected $fillable = [
+    protected $guarded = [
         'name'
-   ];
-
+   ];  
     public function users(){
         return $this->belongsToMany(User::class);
     }

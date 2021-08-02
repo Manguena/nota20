@@ -155,7 +155,8 @@ return [
         ],
         'abbreviation'=>[
             'required'=>'Insira a Abreviatura'
-        ]
+        ],
+        
 
 
 
@@ -187,6 +188,8 @@ return [
         'standard'=>'Usuário Standard',
         'superadmin'=>'Usuário Superadmin',
         'new_password'=>'Nova Password',
-        'abbreviation'=>'Abreviatura'
+        'abbreviation'=>'Abreviatura',
+         'courseName'=>'Nome',
+         'schoolId'=>'Nome da Escola, no campo apropriado'// change this in English version
     ],
 ];

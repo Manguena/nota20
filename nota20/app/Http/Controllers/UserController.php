@@ -149,14 +149,14 @@ class UserController extends Controller
         $user= new User;
         $user->name=$request->name;
         $user->email=$request->email;
-        $user->password=Hash::make($request->password);// deve ser encriptado
+        $user->password=Hash::make($request->password);
         $user->bi=$request->bi;
         $user->apelido=$request->apelido;
         $user->save();
 
-        //The Id of the user just created
         $userId=$user->id;
-        $role=new Role(['name'=>$request->role]);
+        $role=new Role();
+        $role->name=$request->role;
         $user=User::find($userId);
         $user->roles()->save($role);
         $user->refresh();

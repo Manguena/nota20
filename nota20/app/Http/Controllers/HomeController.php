@@ -30,7 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        self::createRole();
+        self::createSuperAdminRole();
        
         return view('home');
     }
@@ -38,15 +38,12 @@ class HomeController extends Controller
   * CRIA O ROLE DO USUA'RIO ADMINISTRADOR 
 
   */
-    public function createRole(){
+    public function createSuperAdminRole(){
 
             if(self::onlyOneUser() && self::checkNoRole()){
 
-                
-                $superAdminRole= new Role([
-                    'name'=>'superadmin'
-                ]);
-            
+                $superAdminRole= new Role();
+                $superAdminRole->name='superadmin';
                 $user=User::find(Auth::id());
                 
                 $user->roles()->save($superAdminRole);

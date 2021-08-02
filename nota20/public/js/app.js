@@ -13464,16 +13464,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
-  props: ['configArray', 'editUser'],
+  props: ['schoolConfigArray', 'createSchool'],
   data: function data() {
     return {
+      courseError: null,
+      storeCourseSpinner: false,
+      deleteCourseSpinner: false,
+      schoolAction: this.createSchool ? 'criada' : 'actualizada',
+      courseConfigArray: [],
       schoolForm: {
-        name: this.configArray['name'],
-        abbreviation: this.configArray['abbreviation'],
-        id: this.configArray['id']
+        name: this.schoolConfigArray['name'],
+        abbreviation: this.schoolConfigArray['abbreviation'],
+        id: this.schoolConfigArray['id']
+      },
+      courseForm: {
+        courseName: '',
+        schoolName: ''
       }
     };
   },
@@ -13481,8 +13536,54 @@ __webpack_require__.r(__webpack_exports__);
     /**
      * THIS METHOD SUBMITS THE FORM
      * */
+    listCourse: function listCourse() {
+      //this.$inertia.get(`/course`); 
+      var that = this;
+      axios.get("/course").then(function (response) {
+        that.courseConfigArray = response['data']; //console.log(that.courseConfigArray);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     submit: function submit() {
       this.$inertia.post("/school", this.schoolForm);
+    },
+    updateSchool: function updateSchool() {
+      this.$inertia.patch("/school/".concat(this.schoolForm.id), this.schoolForm);
+    },
+    storeCourse: function storeCourse() {
+      var that = this;
+      that.storeCourseSpinner = true;
+      this.courseForm.schoolId = this.schoolConfigArray['id']; // this.$inertia.post(`/course`,this.courseForm);->used for testing
+
+      axios.post('/course', this.courseForm).then(function (response) {
+        if (response['data'].hasOwnProperty('schoolName') && response['data'].hasOwnProperty('courseName')) {
+          that.courseError = response['data']['schoolName'][0];
+        } else if (response['data'].hasOwnProperty('schoolName')) {
+          that.courseError = response['data']['schoolName'][0];
+        } else if (response['data'].hasOwnProperty('courseName')) {
+          that.courseError = response['data']['courseName'][0];
+        } else {
+          that.courseConfigArray.push(response['data']);
+          that.courseForm.courseName = '';
+          that.storeCourseSpinner = false;
+          that.courseError = null;
+        }
+
+        that.storeCourseSpinner = false;
+      })["catch"](function (error) {//console.log(error);
+      });
+    },
+    removeCourse: function removeCourse(item) {
+      //this.$inertia.delete(`/course/${item}`);
+      var that = this;
+      this.deleteCourseSpinner = true;
+      axios["delete"]("/course/".concat(item)).then(function (response) {
+        that.courseConfigArray = response['data'];
+        that.deleteCourseSpinner = false; //console.log(that.courseConfigArray);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
 
     /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
@@ -13526,12 +13627,15 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.$page.props.errors.abbreviation
       };
     },
-    inputErrorStandard: function inputErrorStandard() {
+    inputErrorCourse: function inputErrorCourse() {
       return {
-        inputError: this.$page.props.errors.standard,
-        'inputError:focus': this.$page.props.errors.standard
+        inputError: this.courseError,
+        'inputError:focus': this.courseError
       };
     }
+  },
+  mounted: function mounted() {
+    this.listCourse();
   }
 });
 
@@ -14413,7 +14517,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserMinus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faKey, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faCogs, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSchool);
+
+
+_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserMinus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faKey, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faCogs, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSchool, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faEdit, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faTrash);
 
 /***/ }),
 
@@ -19007,7 +19113,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n.center-msg{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\nform h4{\r\n    font-weight: 700;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n.center-msg{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\nform h4{\r\n    font-weight: 700;\n}\n.table-light, .table-light > th, .table-light > td {\r\n    background-color: #e2e2eb;\n}\n.table-delete{\r\n    color: #dc2020;\n}\n.table-edit{\r\n    color: #6b6316;\n}\n.table-button{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -55746,7 +55852,7 @@ var render = function() {
             _c("span", { staticClass: "center-msg" }, [
               _vm._v("Escola  "),
               _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
-              _vm._v("  Criada com sucesso")
+              _vm._v("  " + _vm._s(_vm.schoolAction) + " com sucesso")
             ]),
             _vm._v(" "),
             _vm._m(0)
@@ -55813,7 +55919,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              class: _vm.inputErrorAbbreviation,
+              class: _vm.inputErrorSchoolName,
               attrs: { type: "text", id: "school_name" },
               domProps: { value: _vm.schoolForm.name },
               on: {
@@ -55885,7 +55991,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm.editUser === false
+        _vm.createSchool
           ? _c(
               "button",
               { staticClass: "btn btn-primary", attrs: { type: "submit" } },
@@ -55893,10 +55999,14 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm.editUser === true
+        _vm.createSchool === false
           ? _c(
               "button",
-              { staticClass: "btn btn-primary", attrs: { type: "button" } },
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.updateSchool }
+              },
               [_vm._v("Actualizar")]
             )
           : _vm._e()
@@ -55905,22 +56015,61 @@ var render = function() {
     _vm._v(" "),
     _vm._m(1),
     _vm._v(" "),
+    _vm.$page.props.flash.courseCreatedMessage
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-success alert-dismissible fade show mt-4 mb-1",
+            attrs: { role: "alert" }
+          },
+          [
+            _c("span", { staticClass: "center-msg" }, [
+              _vm._v("Curso  "),
+              _c("strong", [
+                _vm._v(_vm._s(_vm.$page.props.flash.courseCreatedMessage))
+              ]),
+              _vm._v("  Criado com sucesso")
+            ]),
+            _vm._v(" "),
+            _vm._m(2)
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
       _c("h4", [_vm._v("Cursos")]),
       _vm._v(" "),
       _c("p"),
       _vm._v(" "),
       _c("div", { staticClass: "form-row " }, [
-        _c("div", { staticClass: "form-group col-md-8" }, [
+        _c("div", { staticClass: "form-group col-md-9" }, [
           _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
           _vm._v(" "),
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.courseForm.courseName,
+                expression: "courseForm.courseName"
+              }
+            ],
             staticClass: "form-control",
-            class: _vm.inputErrorSchoolName,
-            attrs: { type: "text", id: "superadmin" }
+            class: _vm.inputErrorCourse,
+            attrs: { type: "text", id: "superadmin" },
+            domProps: { value: _vm.courseForm.courseName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.courseForm, "courseName", $event.target.value)
+              }
+            }
           }),
           _vm._v(" "),
-          _vm.$page.props.errors.superadmin
+          _vm.courseError
             ? _c("div", { staticClass: "text-danger" }, [
                 _c(
                   "small",
@@ -55928,7 +56077,7 @@ var render = function() {
                     _c("font-awesome-icon", {
                       attrs: { icon: ["fas", "exclamation-circle"] }
                     }),
-                    _vm._v(" " + _vm._s(_vm.$page.props.errors.superadmin))
+                    _vm._v(" " + _vm._s(_vm.courseError))
                   ],
                   1
                 )
@@ -55936,16 +56085,61 @@ var render = function() {
             : _vm._e()
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { attrs: { for: "name" } }, [_vm._v("Abreviatura")]),
+        _c("div", { staticClass: "form-group col-md-3" }, [
+          _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
+            _vm._v(" ")
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary form-control",
+              attrs: { type: "button" },
+              on: { click: _vm.storeCourse }
+            },
+            [
+              _vm.storeCourseSpinner
+                ? _c("span", {
+                    staticClass: "spinner-grow spinner-grow-sm",
+                    attrs: { role: "status", "aria-hidden": "true" }
+                  })
+                : _vm._e(),
+              _vm._v(
+                "                            \n                        Introduzir\n                    "
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-row " }, [
+        _c("div", { staticClass: "form-group col-md-9" }, [
+          _c("label", { attrs: { for: "apelido" } }, [_vm._v("Editar")]),
           _vm._v(" "),
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.courseForm.courseName,
+                expression: "courseForm.courseName"
+              }
+            ],
             staticClass: "form-control",
-            class: _vm.inputErrorSchoolName,
-            attrs: { type: "text", id: "admin" }
+            class: _vm.inputErrorCourse,
+            attrs: { type: "text", id: "superadmin" },
+            domProps: { value: _vm.courseForm.courseName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.courseForm, "courseName", $event.target.value)
+              }
+            }
           }),
           _vm._v(" "),
-          _vm.$page.props.errors.admin
+          _vm.courseError
             ? _c("div", { staticClass: "text-danger" }, [
                 _c(
                   "small",
@@ -55953,23 +56147,109 @@ var render = function() {
                     _c("font-awesome-icon", {
                       attrs: { icon: ["fas", "exclamation-circle"] }
                     }),
-                    _vm._v(" " + _vm._s(_vm.$page.props.errors.admin))
+                    _vm._v(" " + _vm._s(_vm.courseError))
                   ],
                   1
                 )
               ])
             : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group col-md-3" }, [
+          _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
+            _vm._v(" ")
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-warning form-control",
+              attrs: { type: "button" },
+              on: { click: _vm.storeCourse }
+            },
+            [
+              _vm.storeCourseSpinner
+                ? _c("span", {
+                    staticClass: "spinner-grow spinner-grow-sm",
+                    attrs: { role: "status", "aria-hidden": "true" }
+                  })
+                : _vm._e(),
+              _vm._v(
+                "                            \n                        Actualizar\n                    "
+              )
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "button" } },
-        [_vm._v("Criar")]
-      )
+      _c("div", { staticClass: "table-responsive-sm" }, [
+        _c(
+          "table",
+          { staticClass: "table table-hover table-light user-table" },
+          [
+            _vm._m(3),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.courseConfigArray, function(item) {
+                return _c("tr", { key: item.id }, [
+                  _c("td", [_vm._v(_vm._s(item.name))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "table-button",
+                        attrs: { type: "button" }
+                      },
+                      [
+                        _c("font-awesome-icon", {
+                          staticClass: "table-edit",
+                          attrs: { icon: ["fas", "edit"] }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "table-button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.removeCourse(item.id)
+                          }
+                        }
+                      },
+                      [
+                        _vm.deleteCourseSpinner
+                          ? _c("span", {
+                              staticClass: "spinner-grow spinner-grow-sm",
+                              attrs: { role: "status", "aria-hidden": "true" }
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("font-awesome-icon", {
+                          staticClass: "table-delete",
+                          attrs: { icon: ["fas", "trash"] }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ])
+              }),
+              0
+            )
+          ]
+        )
+      ])
     ]),
     _vm._v(" "),
-    _vm._m(2),
+    _vm._m(4),
     _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
       _c("h4", [_vm._v("Níveis")]),
@@ -56059,6 +56339,37 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", [_c("br"), _vm._v(" "), _c("br")])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Editar")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Excluir")])
+      ])
+    ])
   },
   function() {
     var _vm = this

@@ -13,7 +13,7 @@ class CreateRolesUsersTable extends Migration
      */
     public function up()
     {
-        //if (!Schema::hasTable('role_user')) {// temporariamente para evitar erros
+        if (!Schema::hasTable('role_user')) {// temporariamente para evitar erros
         Schema::create('role_user', function (Blueprint $table) {
             $table->foreignId('role_id')
             ->constrained()
@@ -28,7 +28,7 @@ class CreateRolesUsersTable extends Migration
             
             $table->timestamps();
         });
-   // }// temporariamente para evitar erros
+    }// temporariamente para evitar erros
     }
 
     /**

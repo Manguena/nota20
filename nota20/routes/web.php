@@ -2,7 +2,7 @@
 
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\View\Middleware\ShareErrorsFromSession ;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -80,9 +80,22 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
   
-  // GET THE SCHOOL CREATION FORM
+// GET THE SCHOOL CREATION FORM
   Route::get('/school/create', [App\Http\Controllers\SchoolController::class, 'create'])->name('school.create')->middleware('auth');
 // USER CREATES THE SCHOOL
 Route::post('/school', [App\Http\Controllers\SchoolController::class, 'store'])->name('school.store')->middleware('auth');
+//updates the school
+Route::patch('/school/{id}', [App\Http\Controllers\SchoolController::class, 'update'])->name('school.update')->middleware('auth');
 
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           COURSES CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+// List the courses
+Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course.index')->middleware('auth');
+//inserts the courses into the database
+Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])->name('course.store')->middleware('auth');
+//deletes courses
+Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth');
 

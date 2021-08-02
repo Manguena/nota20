@@ -13,21 +13,21 @@ class SchoolController extends Controller
     
     public function create(){
 
-        $editUser=false;
+       $createSchool=true;
         if(count(School::all()->toArray())<1){
-            $configArray=[
+            $schoolConfigArray=[
                 'name'=>'',
                 'abbreviation'=>''
             ];
             
-            return Inertia::render('school/index',['configArray'=>$configArray, 'editUser'=>$editUser]);
+            return Inertia::render('school/index',['schoolConfigArray'=>$schoolConfigArray, 'createSchool'=>$createSchool]);
         }
         
-        $editUser=true;
+        $createSchool=false;
 
-        $configArray=School::all()->toArray()[0];
+        $schoolConfigArray=School::all()->toArray()[0];
 
-        return Inertia::render('school/index',['configArray'=>$configArray, 'editUser'=>$editUser]);
+        return Inertia::render('school/index',['schoolConfigArray'=>$schoolConfigArray, 'createSchool'=>$createSchool]);
     }
 
     public function store(Request $request){
@@ -42,7 +42,28 @@ class SchoolController extends Controller
         $school->abbreviation=$request->abbreviation;
         $school->save();
 
-        return Redirect::route('school.create')->with('message', $request->abbreviation);
+       return Redirect::route('school.create')->with('message', $request->abbreviation);
+
+    }
+
+    public function update(Request $request,$id){
+        if($id==='undefined'){
+           $id= School::all()->toArray()[0]['id'];
+        }
+
+        $request->validate([
+            'name'=>'required|string|min:5',
+            'abbreviation' => 'required|string|min:1',
+        ]);
+
+        
+        
+        $school=School::find($id);
+        $school->name=$request->name;
+        $school->abbreviation=$request->abbreviation;
+        $school->save();
+
+        return Redirect:: route('school.create')->with('message', $request->abbreviation);
 
     }
 }

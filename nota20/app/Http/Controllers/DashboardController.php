@@ -21,39 +21,37 @@ class DashboardController extends Controller
 */
     public function index(){
     
-        self::createRole();
+        self::createSuperAdminRole();
 
         return Inertia::render('dashboard/index');
     }
 
 
 
-    /*****
-  * CRIA O ROLE DO USUA'RIO ADMINISTRADOR 
-
+/*****
+  * creates super admin user, if there is only one user in DB
+    and the same user has no role assigned
   */
-  public function createRole(){
+  public function createSuperAdminRole(){
 
-    //if(self::onlyOneUser() && self::checkNoRole()){
+    if(self::onlyOneUser() && self::checkNoRole()){
 
-        
-        $superAdminRole= new Role([
-            'name'=>'superadmin'
-        ]);
-    
+       $superAdminRole= new Role();
+       $superAdminRole->name='superadmin';
+
         $user=User::find(Auth::id());
         
         $user->roles()->save($superAdminRole);
         
         $user->refresh();
         
-    //}
+    }
 
 }
 
 
 /**
-* this functions checks if there is only one user in the database
+* this function checks if there is only one user in the database
 * and returns true or false according to the result
 */
 public function onlyOneUser(){
