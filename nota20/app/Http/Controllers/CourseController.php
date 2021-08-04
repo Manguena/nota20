@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\School;
+use Illuminate\Validation\Rule;
 use  Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,6 +50,27 @@ class CourseController extends Controller
 
         return response(['id'=>$course->id, 'name'=>$course->name]);
       
+    }
+
+    public function update(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'courseName' => [
+                'required',
+                'string',
+                'min:3',
+                Rule::unique('courses','name')->ignore($id)
+            ]
+        ]);
+
+         if ($validator->fails()){
+            return response($validator->errors());
+        }
+
+        $course=Course::find($id);
+        $course->name=$request->courseName;
+        $course->save();
+
+        return response(['id'=>$id, 'name'=>$course->name]);
     }
 
     public function destroy($id){

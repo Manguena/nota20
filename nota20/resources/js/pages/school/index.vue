@@ -45,7 +45,7 @@
         <form class="create-user-form" >
            <h4>Cursos</h4>
            <p></p>
-            <div class="form-row ">
+            <div class="form-row" v-if="createCourse">
                 <div class="form-group col-md-9">
                     <label for="apelido">Nome</label>
                     <input type="text" class="form-control" v-bind:class="inputErrorCourse" v-model="courseForm.courseName"  id="superadmin">
@@ -59,18 +59,26 @@
                         </button>
                 </div>
              </div>
-             <div class="form-row ">
-                <div class="form-group col-md-9">
+             <div class="form-row" v-if="!createCourse">
+                <div class="form-group col-md-8">
                     <label for="apelido">Editar</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorCourse" v-model="courseForm.courseName"  id="superadmin">
-                    <div class="text-danger" v-if="courseError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{courseError}}</small></div>
+                    <input type="text" class="form-control" v-bind:class="inputErrorUpdateCourse" v-model="courseForm.courseName"  id="superadmin">
+                    <div class="text-danger" v-if="updateCourseError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{updateCourseError}}</small></div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="name" class="remove_label">&nbsp;</label>
-                        <button class="btn btn-warning form-control" v-on:click="storeCourse" type="button">
-                            <span v-if="storeCourseSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
+                    <div class="btn-group">
+                        <button class="btn btn-success form-control" v-on:click="updateCourse()" type="button">
+                            <span v-if="updateCourseSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
                             Actualizar
                         </button>
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item" v-on="cancelCourseUpdate()">Cancelar</button>
+                        </div>
+                    </div>
                 </div>
              </div>
               <div class="table-responsive-sm">
@@ -85,8 +93,8 @@
                 <tbody>
                     <tr v-for="item in courseConfigArray" :key="item.id">
                     <td>{{item.name}}</td>
-                    <td><button class="table-button"  type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
-                    <td><button class="table-button" v-on:click="removeCourse(item.id)" type="button">
+                    <td><button class="table-button" v-on:click="editCourse(item.id,item.name)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
+                    <td><button class="table-button" v-on:click="deleteCourse(item.id)" type="button">
                             <span v-if="deleteCourseSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
                             <font-awesome-icon class="table-delete" :icon="['fas', 'trash']"/>
                         </button>
@@ -130,9 +138,13 @@ export default {
     props:['schoolConfigArray', 'createSchool'],
      data(){
         return{
+            couseId:null,//veriable to store the id for update purpose
+            createCourse: true,
             courseError:null,
+            updateCourseError:null,
             storeCourseSpinner:false,
             deleteCourseSpinner:false,
+            updateCourseSpinner:false,
             schoolAction:this.createSchool ? 'criada':'actualizada',
             courseConfigArray:[],
             schoolForm: {
@@ -150,7 +162,13 @@ export default {
     methods:{
         /**
          * THIS METHOD SUBMITS THE FORM
-         * */ 
+         * */  
+        submit(){
+        this.$inertia.post(`/school`, this.schoolForm);
+        },
+      updateSchool(){
+        this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm)
+      },
     listCourse(){
         //this.$inertia.get(`/course`); 
         let that=this; 
@@ -163,12 +181,7 @@ export default {
                 console.log(error);
             }) 
          },
-      submit(){
-        this.$inertia.post(`/school`, this.schoolForm);
-      },
-      updateSchool(){
-        this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm)
-      },
+     
       storeCourse(){
           
           let that=this;
@@ -200,12 +213,46 @@ export default {
                 //console.log(error);
             });
       },
-      removeCourse(item){
+        editCourse(id, name){
+            this.createCourse=false;
+            this.courseForm.courseName=name;
+            this.couseId=id;
+            this.courseError=null;
+            this.updateCourseError=null;
+        },
+        updateCourse(){
+            let that=this;
+            this.updateCourseSpinner=true;
+            axios.patch(`/course/${this.couseId}`, this.courseForm)
+            .then((response)=>{
+
+                if(response['data'].hasOwnProperty('courseName')){
+                    this.updateCourseError=response['data']['courseName'][0];
+                }else{ 
+                for(let i=0; i<that.courseConfigArray.length; i++){
+                    if (that.courseConfigArray[i]['id']==response['data']['id']){
+                        that.courseConfigArray[i]['name']=response['data']['name']
+                    }
+                }
+                    }
+                that.updateCourseSpinner=false;
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+
+        },
+        cancelCourseUpdate(){
+            this.storeCourseSpinner=true;
+        },
+      deleteCourse(item){
           //this.$inertia.delete(`/course/${item}`);
           let that=this; 
           this.deleteCourseSpinner=true;
         axios.delete(`/course/${item}`)
             .then((response)=>{
+                this.courseError=null;
+                this.updateCourseError=null;
                 that.courseConfigArray=response['data'];
                 that.deleteCourseSpinner=false;
                 //console.log(that.courseConfigArray);
@@ -214,35 +261,6 @@ export default {
                 console.log(error);
             }) 
 
-      },
-      /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
-      showPasswordModal(){
-          this.passwordModal;
-          if(this.passwordModal){
-            $('#exampleModal').modal('show');
-
-          }
-
-          this.passwordModal=false;
-        },
-        showDeleteModal(){
-             $('#showdeletemodal').modal('show');
-        },
-        deleteUser(){
-            this.$inertia.delete(`/user/${this.user['0']['id']}`);
-        },
-
-    /***
-    * THIS METHOD ENABLES THE USER INPUT
-    */
-      changeDisabledInputs(){
-      let disabledPasswordInput=document.getElementById('password');
-        disabledPasswordInput.removeAttribute('readonly');
-
-        let disabledPasswordConfirmInput=document.getElementById('password_confirmation');
-        disabledPasswordConfirmInput.removeAttribute('readonly');
-
-        this.form.passwordctr=true;
       }
     },
     computed: {
@@ -262,6 +280,12 @@ export default {
             return {
             inputError: this.courseError,
             'inputError:focus': this.courseError
+            }
+        },
+        inputErrorUpdateCourse() {
+            return {
+            inputError: this.updateCourseError,
+            'inputError:focus': this.updateCourseError
             }
         }
 },
@@ -301,6 +325,11 @@ mounted(){
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.btn-group, .btn-group-vertical {
+    position: relative;
+    display: flex;
+    vertical-align: middle;
 }
 
 form h4{

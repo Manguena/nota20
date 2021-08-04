@@ -96,6 +96,8 @@ Route::patch('/school/{id}', [App\Http\Controllers\SchoolController::class, 'upd
 Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course.index')->middleware('auth');
 //inserts the courses into the database
 Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])->name('course.store')->middleware('auth');
+//updates courses
+Route::patch('/course/{id}', [App\Http\Controllers\courseController::class, 'update'])->name('course.update')->middleware('auth');
 //deletes courses
 Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth');
 

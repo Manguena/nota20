@@ -13510,15 +13510,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
   props: ['schoolConfigArray', 'createSchool'],
   data: function data() {
     return {
+      couseId: null,
+      //veriable to store the id for update purpose
+      createCourse: true,
       courseError: null,
+      updateCourseError: null,
       storeCourseSpinner: false,
       deleteCourseSpinner: false,
+      updateCourseSpinner: false,
       schoolAction: this.createSchool ? 'criada' : 'actualizada',
       courseConfigArray: [],
       schoolForm: {
@@ -13536,6 +13549,12 @@ __webpack_require__.r(__webpack_exports__);
     /**
      * THIS METHOD SUBMITS THE FORM
      * */
+    submit: function submit() {
+      this.$inertia.post("/school", this.schoolForm);
+    },
+    updateSchool: function updateSchool() {
+      this.$inertia.patch("/school/".concat(this.schoolForm.id), this.schoolForm);
+    },
     listCourse: function listCourse() {
       //this.$inertia.get(`/course`); 
       var that = this;
@@ -13544,12 +13563,6 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-    submit: function submit() {
-      this.$inertia.post("/school", this.schoolForm);
-    },
-    updateSchool: function updateSchool() {
-      this.$inertia.patch("/school/".concat(this.schoolForm.id), this.schoolForm);
     },
     storeCourse: function storeCourse() {
       var that = this;
@@ -13574,44 +13587,51 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {//console.log(error);
       });
     },
-    removeCourse: function removeCourse(item) {
+    editCourse: function editCourse(id, name) {
+      this.createCourse = false;
+      this.courseForm.courseName = name;
+      this.couseId = id;
+      this.courseError = null;
+      this.updateCourseError = null;
+    },
+    updateCourse: function updateCourse() {
+      var _this = this;
+
+      var that = this;
+      this.updateCourseSpinner = true;
+      axios.patch("/course/".concat(this.couseId), this.courseForm).then(function (response) {
+        if (response['data'].hasOwnProperty('courseName')) {
+          _this.updateCourseError = response['data']['courseName'][0];
+        } else {
+          for (var i = 0; i < that.courseConfigArray.length; i++) {
+            if (that.courseConfigArray[i]['id'] == response['data']['id']) {
+              that.courseConfigArray[i]['name'] = response['data']['name'];
+            }
+          }
+        }
+
+        that.updateCourseSpinner = false;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    cancelCourseUpdate: function cancelCourseUpdate() {
+      this.storeCourseSpinner = true;
+    },
+    deleteCourse: function deleteCourse(item) {
+      var _this2 = this;
+
       //this.$inertia.delete(`/course/${item}`);
       var that = this;
       this.deleteCourseSpinner = true;
       axios["delete"]("/course/".concat(item)).then(function (response) {
+        _this2.courseError = null;
+        _this2.updateCourseError = null;
         that.courseConfigArray = response['data'];
         that.deleteCourseSpinner = false; //console.log(that.courseConfigArray);
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-
-    /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
-    showPasswordModal: function showPasswordModal() {
-      this.passwordModal;
-
-      if (this.passwordModal) {
-        $('#exampleModal').modal('show');
-      }
-
-      this.passwordModal = false;
-    },
-    showDeleteModal: function showDeleteModal() {
-      $('#showdeletemodal').modal('show');
-    },
-    deleteUser: function deleteUser() {
-      this.$inertia["delete"]("/user/".concat(this.user['0']['id']));
-    },
-
-    /***
-    * THIS METHOD ENABLES THE USER INPUT
-    */
-    changeDisabledInputs: function changeDisabledInputs() {
-      var disabledPasswordInput = document.getElementById('password');
-      disabledPasswordInput.removeAttribute('readonly');
-      var disabledPasswordConfirmInput = document.getElementById('password_confirmation');
-      disabledPasswordConfirmInput.removeAttribute('readonly');
-      this.form.passwordctr = true;
     }
   },
   computed: {
@@ -13631,6 +13651,12 @@ __webpack_require__.r(__webpack_exports__);
       return {
         inputError: this.courseError,
         'inputError:focus': this.courseError
+      };
+    },
+    inputErrorUpdateCourse: function inputErrorUpdateCourse() {
+      return {
+        inputError: this.updateCourseError,
+        'inputError:focus': this.updateCourseError
       };
     }
   },
@@ -19113,7 +19139,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n.center-msg{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\nform h4{\r\n    font-weight: 700;\n}\n.table-light, .table-light > th, .table-light > td {\r\n    background-color: #e2e2eb;\n}\n.table-delete{\r\n    color: #dc2020;\n}\n.table-edit{\r\n    color: #6b6316;\n}\n.table-button{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError, .inputError:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation{\r\n    margin-top: 2rem;\n}\n.center-msg{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.btn-group, .btn-group-vertical {\r\n    position: relative;\r\n    display: flex;\r\n    vertical-align: middle;\n}\nform h4{\r\n    font-weight: 700;\n}\n.table-light, .table-light > th, .table-light > td {\r\n    background-color: #e2e2eb;\n}\n.table-delete{\r\n    color: #dc2020;\n}\n.table-edit{\r\n    color: #6b6316;\n}\n.table-button{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form, .page-navigation{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -56042,152 +56068,179 @@ var render = function() {
       _vm._v(" "),
       _c("p"),
       _vm._v(" "),
-      _c("div", { staticClass: "form-row " }, [
-        _c("div", { staticClass: "form-group col-md-9" }, [
-          _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.courseForm.courseName,
-                expression: "courseForm.courseName"
-              }
-            ],
-            staticClass: "form-control",
-            class: _vm.inputErrorCourse,
-            attrs: { type: "text", id: "superadmin" },
-            domProps: { value: _vm.courseForm.courseName },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+      _vm.createCourse
+        ? _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "form-group col-md-9" }, [
+              _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.courseForm.courseName,
+                    expression: "courseForm.courseName"
+                  }
+                ],
+                staticClass: "form-control",
+                class: _vm.inputErrorCourse,
+                attrs: { type: "text", id: "superadmin" },
+                domProps: { value: _vm.courseForm.courseName },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.courseForm, "courseName", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.courseForm, "courseName", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.courseError
-            ? _c("div", { staticClass: "text-danger" }, [
-                _c(
-                  "small",
-                  [
-                    _c("font-awesome-icon", {
-                      attrs: { icon: ["fas", "exclamation-circle"] }
-                    }),
-                    _vm._v(" " + _vm._s(_vm.courseError))
-                  ],
-                  1
-                )
-              ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-3" }, [
-          _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
-            _vm._v(" ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary form-control",
-              attrs: { type: "button" },
-              on: { click: _vm.storeCourse }
-            },
-            [
-              _vm.storeCourseSpinner
-                ? _c("span", {
-                    staticClass: "spinner-grow spinner-grow-sm",
-                    attrs: { role: "status", "aria-hidden": "true" }
-                  })
-                : _vm._e(),
-              _vm._v(
-                "                            \n                        Introduzir\n                    "
+              }),
+              _vm._v(" "),
+              _vm.courseError
+                ? _c("div", { staticClass: "text-danger" }, [
+                    _c(
+                      "small",
+                      [
+                        _c("font-awesome-icon", {
+                          attrs: { icon: ["fas", "exclamation-circle"] }
+                        }),
+                        _vm._v(" " + _vm._s(_vm.courseError))
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group col-md-3" }, [
+              _c(
+                "label",
+                { staticClass: "remove_label", attrs: { for: "name" } },
+                [_vm._v(" ")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary form-control",
+                  attrs: { type: "button" },
+                  on: { click: _vm.storeCourse }
+                },
+                [
+                  _vm.storeCourseSpinner
+                    ? _c("span", {
+                        staticClass: "spinner-grow spinner-grow-sm",
+                        attrs: { role: "status", "aria-hidden": "true" }
+                      })
+                    : _vm._e(),
+                  _vm._v(
+                    "                            \n                        Introduzir\n                    "
+                  )
+                ]
               )
-            ]
-          )
-        ])
-      ]),
+            ])
+          ])
+        : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "form-row " }, [
-        _c("div", { staticClass: "form-group col-md-9" }, [
-          _c("label", { attrs: { for: "apelido" } }, [_vm._v("Editar")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.courseForm.courseName,
-                expression: "courseForm.courseName"
-              }
-            ],
-            staticClass: "form-control",
-            class: _vm.inputErrorCourse,
-            attrs: { type: "text", id: "superadmin" },
-            domProps: { value: _vm.courseForm.courseName },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+      !_vm.createCourse
+        ? _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "form-group col-md-8" }, [
+              _c("label", { attrs: { for: "apelido" } }, [_vm._v("Editar")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.courseForm.courseName,
+                    expression: "courseForm.courseName"
+                  }
+                ],
+                staticClass: "form-control",
+                class: _vm.inputErrorUpdateCourse,
+                attrs: { type: "text", id: "superadmin" },
+                domProps: { value: _vm.courseForm.courseName },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.courseForm, "courseName", $event.target.value)
+                  }
                 }
-                _vm.$set(_vm.courseForm, "courseName", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.courseError
-            ? _c("div", { staticClass: "text-danger" }, [
+              }),
+              _vm._v(" "),
+              _vm.updateCourseError
+                ? _c("div", { staticClass: "text-danger" }, [
+                    _c(
+                      "small",
+                      [
+                        _c("font-awesome-icon", {
+                          attrs: { icon: ["fas", "exclamation-circle"] }
+                        }),
+                        _vm._v(" " + _vm._s(_vm.updateCourseError))
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group col-md-4" }, [
+              _c(
+                "label",
+                { staticClass: "remove_label", attrs: { for: "name" } },
+                [_vm._v(" ")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "btn-group" }, [
                 _c(
-                  "small",
+                  "button",
+                  {
+                    staticClass: "btn btn-success form-control",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.updateCourse()
+                      }
+                    }
+                  },
                   [
-                    _c("font-awesome-icon", {
-                      attrs: { icon: ["fas", "exclamation-circle"] }
-                    }),
-                    _vm._v(" " + _vm._s(_vm.courseError))
-                  ],
-                  1
-                )
+                    _vm.updateCourseSpinner
+                      ? _c("span", {
+                          staticClass: "spinner-grow spinner-grow-sm",
+                          attrs: { role: "status", "aria-hidden": "true" }
+                        })
+                      : _vm._e(),
+                    _vm._v(
+                      "                            \n                        Actualizar\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(3),
+                _vm._v(" "),
+                _c("div", { staticClass: "dropdown-menu" }, [
+                  _c(
+                    "button",
+                    _vm._g(
+                      { staticClass: "dropdown-item" },
+                      _vm.cancelCourseUpdate()
+                    ),
+                    [_vm._v("Cancelar")]
+                  )
+                ])
               ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-3" }, [
-          _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
-            _vm._v(" ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-warning form-control",
-              attrs: { type: "button" },
-              on: { click: _vm.storeCourse }
-            },
-            [
-              _vm.storeCourseSpinner
-                ? _c("span", {
-                    staticClass: "spinner-grow spinner-grow-sm",
-                    attrs: { role: "status", "aria-hidden": "true" }
-                  })
-                : _vm._e(),
-              _vm._v(
-                "                            \n                        Actualizar\n                    "
-              )
-            ]
-          )
-        ])
-      ]),
+            ])
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "table-responsive-sm" }, [
         _c(
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(3),
+            _vm._m(4),
             _vm._v(" "),
             _c(
               "tbody",
@@ -56200,7 +56253,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "table-button",
-                        attrs: { type: "button" }
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editCourse(item.id, item.name)
+                          }
+                        }
                       },
                       [
                         _c("font-awesome-icon", {
@@ -56220,7 +56278,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            return _vm.removeCourse(item.id)
+                            return _vm.deleteCourse(item.id)
                           }
                         }
                       },
@@ -56249,7 +56307,7 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(4),
+    _vm._m(5),
     _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
       _c("h4", [_vm._v("Níveis")]),
@@ -56355,6 +56413,24 @@ var staticRenderFns = [
         }
       },
       [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-success dropdown-toggle dropdown-toggle-split",
+        attrs: {
+          type: "button",
+          "data-toggle": "dropdown",
+          "aria-haspopup": "true",
+          "aria-expanded": "false"
+        }
+      },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])]
     )
   },
   function() {
