@@ -156,7 +156,10 @@ return [
         'abbreviation'=>[
             'required'=>'Insira a Abreviatura'
         ],
-        
+        'levelName'=>[
+            'required'=>'Insira o Nível',
+            'unique'=>'Nível indisponível'
+        ]
 
 
 

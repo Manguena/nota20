@@ -35,13 +35,75 @@
             <br>
             <br>
         </div>
+        <!--- LEVEL FORM--->
+        <form class="create-user-form" >
+           <h4>Nívels</h4>
+           <p></p>
+            <div class="form-row" v-if="createLevel">
+                <div class="form-group col-md-9" >
+                    <label for="apelido">Nome</label>
+                    <input type="text" class="form-control" v-bind:class="inputErrorLevel" v-model="levelForm.levelName"  id="superadmin">
+                    <div class="text-danger" v-if="levelError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{levelError}}</small></div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="name" class="remove_label">&nbsp;</label>
+                        <button class="btn btn-primary form-control" v-on:click="storeLevel" type="button">
+                            <span v-if="storeLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
+                            Introduzir
+                        </button>
+                </div>
+             </div>
+             <div class="form-row" v-if="!createLevel">
+                <div class="form-group col-md-8">
+                    <label for="apelido">Editar</label>
+                    <input type="text" class="form-control" v-bind:class="inputErrorUpdateLevel" v-model="levelForm.levelName"  id="superadmin">
+                    <div class="text-danger" v-if="updateLevelError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{updateLevelError}}</small></div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="name" class="remove_label">&nbsp;</label>
+                    <div class="btn-group">
+                        <button class="btn btn-success form-control" v-on:click="updateLevel()" type="button">
+                            <span v-if="updateLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
+                            Actualizar
+                        </button>
+                        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" v-on:click="cancelLevelUpdate()">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+             </div>
+              <div class="table-responsive-sm">
+            <table class="table table-hover table-light user-table">
+                <thead>
+                    <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in levelConfigArray" :key="item.id">
+                    <td> {{item.name}}</td>
+                    <td><button class="table-button" v-on:click="editLevel(item.id,item.name)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
+                    <td><button class="table-button" v-on:click="deleteLevel(item.id)" type="button">
+                            <span v-if="deleteLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
+                            <font-awesome-icon class="table-delete" :icon="['fas', 'trash']"/>
+                        </button>
+                    </td>
+                    </tr>
+                 
+                </tbody>
+            </table>
+        </div>  
+        </form>
         <!--- COURSES FORM--->
-        <div v-if="$page.props.flash.courseCreatedMessage" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
-                    <span class="center-msg">Curso &nbsp;<strong >{{$page.props.flash.courseCreatedMessage}}</strong>&nbsp; Criado com sucesso</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-         </div>
+        <div>
+            <br>
+            <br>
+        </div>
         <form class="create-user-form" >
            <h4>Cursos</h4>
            <p></p>
@@ -76,7 +138,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu">
-                            <button class="dropdown-item" v-on="cancelCourseUpdate()">Cancelar</button>
+                            <a class="dropdown-item" v-on:click="cancelCourseUpdate()">Cancelar</a>
                         </div>
                     </div>
                 </div>
@@ -92,7 +154,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in courseConfigArray" :key="item.id">
-                    <td>{{item.name}}</td>
+                    <td> <inertia-link href="/subject">{{item.name}}</inertia-link></td>
                     <td><button class="table-button" v-on:click="editCourse(item.id,item.name)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
                     <td><button class="table-button" v-on:click="deleteCourse(item.id)" type="button">
                             <span v-if="deleteCourseSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
@@ -103,29 +165,7 @@
                  
                 </tbody>
             </table>
-        </div>
-                
-        </form>
-        <div>
-            <br>
-            <br>
-        </div>
-        <form class="create-user-form">
-           <h4>Níveis</h4>
-           <p></p>
-            <div class="form-row ">
-                <div class="form-group col-md-8">
-                    <label for="apelido">Nome</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorSchoolName" id="superadmin">
-                    <div class="text-danger" v-if="$page.props.errors.superadmin"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.superadmin}}</small></div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="name">Abreviatura</label>
-                    <input type="text" class="form-control" id="admin" v-bind:class="inputErrorSchoolName">
-                     <div class="text-danger" v-if="$page.props.errors.admin"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.admin}}</small></div>
-                </div>
-             </div>
-             <button class="btn btn-primary" type="button">Criar</button>
+        </div>  
         </form>
     </div>
 </template>
@@ -138,6 +178,19 @@ export default {
     props:['schoolConfigArray', 'createSchool'],
      data(){
         return{
+            //level variables
+            levelError:null,
+            createLevel:true,
+            storeLevelSpinner:false,
+            levelId:null,
+            updateLevelError:null,
+            updateLevelSpinner:false,
+            deleteLevelSpinner:false,
+            levelConfigArray:[],
+            levelForm:{
+                levelName:''
+            },
+            //course variables
             couseId:null,//veriable to store the id for update purpose
             createCourse: true,
             courseError:null,
@@ -145,23 +198,24 @@ export default {
             storeCourseSpinner:false,
             deleteCourseSpinner:false,
             updateCourseSpinner:false,
-            schoolAction:this.createSchool ? 'criada':'actualizada',
             courseConfigArray:[],
+              courseForm:{
+                courseName:'',
+                schoolId:''
+            },
+            //school varibles
+            schoolAction:this.createSchool ? 'criada':'actualizada',
             schoolForm: {
                 name:this.schoolConfigArray['name'],
                 abbreviation:this.schoolConfigArray['abbreviation'],
                 id:this.schoolConfigArray['id']
-            },
-            courseForm:{
-                courseName:'',
-                schoolName:''
             }
         }
     },
 
     methods:{
         /**
-         * THIS METHOD SUBMITS THE FORM
+         * school methods
          * */  
         submit(){
         this.$inertia.post(`/school`, this.schoolForm);
@@ -169,6 +223,97 @@ export default {
       updateSchool(){
         this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm)
       },
+      /*
+      Level methods
+      */ 
+      storeLevel(){
+          console.log(this.levelForm.levelName);
+          let that=this;
+          this.storeLevelSpinner=true;
+        // this.$inertia.post(`/course`,this.courseForm);->used for testing
+ 
+          axios.post('/level',this.levelForm)
+            .then(function (response) {
+                     if(response['data'].hasOwnProperty('levelName')){
+                        that.levelError=response['data']['levelName'][0];
+                    }else{
+                    that.levelConfigArray.unshift(response['data'])
+                    that.levelForm.levelName='';
+                    that.storeLevelSpinner=false;
+                    that.levelError=null;
+                    }
+
+                    that.storeLevelSpinner=false
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+      },
+      listLevel(){
+        //this.$inertia.get(`/course`); 
+        let that=this; 
+        axios.get(`/level`)
+            .then((response)=>{
+                that.levelConfigArray=response['data'];
+                //console.log(that.courseConfigArray);
+            })
+            .catch((error)=>{
+                console.log(error);
+            }) 
+         },
+         editLevel(id, name){
+            this.createLevel=false;
+            this.levelForm.levelName=name;
+            this.levelId=id;
+            this.levelError=null;
+            this.updateLevelError=null;
+        },
+        updateLevel(){
+            let that=this;
+            this.updateLevelSpinner=true;
+            //this.$inertia.patch(`/level/${this.levelId}`, this.levelForm);
+
+            axios.patch(`/level/${this.levelId}`, this.levelForm)
+            .then((response)=>{
+                if(response['data'].hasOwnProperty('levelName')){
+                    this.updateLevelError=response['data']['levelName'][0];
+                }else{ 
+                for(let i=0; i<that.levelConfigArray.length; i++){
+                    if (that.levelConfigArray[i]['id']==response['data']['id']){
+                        that.levelConfigArray[i]['name']=response['data']['name']
+                    }
+                }
+                    }
+                that.updateLevelSpinner=false;
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+
+        },
+        cancelLevelUpdate(){
+            this.createLevel=true;
+        },
+         deleteLevel(item){
+          //this.$inertia.delete(`/level/${item}`);
+          let that=this; 
+          this.deleteLevelSpinner=true;
+        axios.delete(`/level/${item}`)
+            .then((response)=>{
+                this.levelError=null;
+                this.updateLevelError=null;
+                that.levelConfigArray=response['data'];
+                that.deleteLevelSpinner=false;
+                //console.log(that.courseConfigArray);
+            })
+            .catch((error)=>{
+                console.log(error);
+            }) 
+
+      },
+      /**
+       * course methods
+      */
     listCourse(){
         //this.$inertia.get(`/course`); 
         let that=this; 
@@ -192,16 +337,16 @@ export default {
  
           axios.post('/course',this.courseForm)
             .then(function (response) {
-                    if (response['data'].hasOwnProperty('schoolName')&& response['data'].hasOwnProperty('courseName')){
-                        that.courseError=response['data']['schoolName'][0];
+                    if (response['data'].hasOwnProperty('schoolId')&& response['data'].hasOwnProperty('courseName')){
+                        that.courseError=response['data']['schoolId'][0];
                         
-                    }else if (response['data'].hasOwnProperty('schoolName')){
-                        that.courseError=response['data']['schoolName'][0];
+                    }else if (response['data'].hasOwnProperty('schoolId')){
+                        that.courseError=response['data']['schoolId'][0];
                     }
                     else if(response['data'].hasOwnProperty('courseName')){
                         that.courseError=response['data']['courseName'][0];
                     }else{
-                    that.courseConfigArray.push(response['data'])
+                    that.courseConfigArray.unshift(response['data'])
                     that.courseForm.courseName='';
                     that.storeCourseSpinner=false;
                     that.courseError=null;
@@ -243,7 +388,7 @@ export default {
 
         },
         cancelCourseUpdate(){
-            this.storeCourseSpinner=true;
+            this.createCourse=true;
         },
       deleteCourse(item){
           //this.$inertia.delete(`/course/${item}`);
@@ -287,18 +432,28 @@ export default {
             inputError: this.updateCourseError,
             'inputError:focus': this.updateCourseError
             }
+        },
+    inputErrorLevel(){
+         return {
+            inputError: this.levelError,
+            'inputError:focus': this.levelError
         }
+    }, 
+    inputErrorUpdateLevel(){
+        return {
+            inputError: this.updateLevelError,
+            'inputError:focus': this.updateLevelError
+        }
+    }
 },
 mounted(){
+    this.listLevel();
     this.listCourse();   
 }
-}
-
-
- 
+} 
 </script>
 
-<style>
+<style scoped>
 .breadcrumb{
     background-color: #e2e2eb;
     font-size:large;

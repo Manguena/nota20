@@ -11,16 +11,15 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
-
     /*
     
         list stored courses
     */
 
     public function index(){
-        $schoolConfigArray=self::listCourse();
+        $courseConfigArray=self::listCourse();
        
-        return response($schoolConfigArray);
+        return response($courseConfigArray);
     }
 
     // store the new course into the database
@@ -76,9 +75,9 @@ class CourseController extends Controller
     public function destroy($id){
         Course::destroy($id);
 
-        $schoolConfigArray=self::listCourse();
+        $courseConfigArray=self::listCourse();
 
-      return response($schoolConfigArray);
+      return response($courseConfigArray);
 
     }
 
@@ -87,15 +86,15 @@ class CourseController extends Controller
      * 
      * */ 
     public function listCourse(){
-        $schoolConfigArray=array();
+        $courseConfigArray=array();
         $courseArray=Course::all()->toArray();
         for ($i=0; $i<count($courseArray); $i++){
-            $schoolConfigArray[$i]=[
+            $courseConfigArray[$i]=[
                 'id'=>$courseArray[$i]['id'],
                 'name'=>$courseArray[$i]['name']
             ];
         }
  
-        return $schoolConfigArray;
+        return $courseConfigArray;
     }
 }

@@ -12,13 +12,13 @@ use Illuminate\View\Middleware\ShareErrorsFromSession ;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-/*
-Route::get('/', function () {
+
+
+Route::get('/welcome', function () {
    return view('welcome'); 
     
-});
-**/
+})->name('welcome');
+*/
 
 Auth::routes();
 
@@ -86,6 +86,21 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
 Route::post('/school', [App\Http\Controllers\SchoolController::class, 'store'])->name('school.store')->middleware('auth');
 //updates the school
 Route::patch('/school/{id}', [App\Http\Controllers\SchoolController::class, 'update'])->name('school.update')->middleware('auth');
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           LEVELS CONTROLLER CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+  // List the levels
+  Route::get('/level', [App\Http\Controllers\LevelController::class, 'index'])->name('level.index')->middleware('auth');  
+  //inserts the levels into the database
+Route::post('/level', [App\Http\Controllers\LevelController::class, 'store'])->name('level.store')->middleware('auth');
+//updates levels
+Route::patch('/level/{id}', [App\Http\Controllers\LevelController::class, 'update'])->name('level.update')->middleware('auth');
+//deletes levels
+Route::delete('/level/{id}', [App\Http\Controllers\LevelController::class, 'destroy'])->name('level.destroy')->middleware('auth');
+
+
 
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
@@ -100,4 +115,12 @@ Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])-
 Route::patch('/course/{id}', [App\Http\Controllers\courseController::class, 'update'])->name('course.update')->middleware('auth');
 //deletes courses
 Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth');
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           SUBJECT CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+// get the page to create the subjects
+Route::get('/subject', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');
+Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth');
 

@@ -116,7 +116,6 @@ class UserController extends Controller
                 array_push($roleList, 'standard');
             }
         }
-
         // Define message of rejection of possibility of creating users
         if(count($roleList)==0){
             $userCreationMsg='Esgotou o número de possiveis de criar';
