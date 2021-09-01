@@ -13558,14 +13558,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
   props: ['schoolConfigArray', 'createSchool'],
   data: function data() {
     return {
+      // orderNr:'',
       //level variables
-      levelError: null,
+      levelErrorName: null,
+      levelErrorOrder: null,
       createLevel: true,
       storeLevelSpinner: false,
       levelId: null,
@@ -13574,7 +13591,8 @@ __webpack_require__.r(__webpack_exports__);
       deleteLevelSpinner: false,
       levelConfigArray: [],
       levelForm: {
-        levelName: ''
+        levelName: '',
+        orderNr: ''
       },
       //course variables
       couseId: null,
@@ -13614,18 +13632,28 @@ __webpack_require__.r(__webpack_exports__);
     Level methods
     */
     storeLevel: function storeLevel() {
-      console.log(this.levelForm.levelName);
       var that = this;
-      this.storeLevelSpinner = true; // this.$inertia.post(`/course`,this.courseForm);->used for testing
+      this.storeLevelSpinner = true; //this.$inertia.post(`/level`,this.levelForm); 
 
       axios.post('/level', this.levelForm).then(function (response) {
-        if (response['data'].hasOwnProperty('levelName')) {
-          that.levelError = response['data']['levelName'][0];
+        //console.log(response['data'].hasOwnProperty('orderNr')); 
+        if (response['data'].hasOwnProperty('levelName') && response['data'].hasOwnProperty('orderNr')) {
+          that.levelErrorName = response['data']['levelName'][0];
+          that.levelErrorOrder = response['data']['orderNr'][0];
+        } else if (response['data'].hasOwnProperty('levelName')) {
+          that.levelErrorName = response['data']['levelName'][0];
+          that.levelErrorOrder = null;
+        } else if (response['data'].hasOwnProperty('orderNr')) {
+          // that.levelErrorOrder=response['data']['orderNr'][0];
+          that.levelErrorOrder = response['data']['orderNr'][0];
+          that.levelErrorName = null;
         } else {
           that.levelConfigArray.unshift(response['data']);
           that.levelForm.levelName = '';
+          that.levelForm.orderNr = '';
           that.storeLevelSpinner = false;
-          that.levelError = null;
+          that.levelErrorName = null;
+          that.levelErrorOrder = null;
         }
 
         that.storeLevelSpinner = false;
@@ -13634,7 +13662,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     listLevel: function listLevel() {
-      //this.$inertia.get(`/course`); 
+      //this.$inertia.get(`/level`); 
       var that = this;
       axios.get("/level").then(function (response) {
         that.levelConfigArray = response['data']; //console.log(that.courseConfigArray);
@@ -13646,7 +13674,8 @@ __webpack_require__.r(__webpack_exports__);
       this.createLevel = false;
       this.levelForm.levelName = name;
       this.levelId = id;
-      this.levelError = null;
+      this.levelErrorName = null;
+      this.levelErrorOrder = null;
       this.updateLevelError = null;
     },
     updateLevel: function updateLevel() {
@@ -13681,7 +13710,8 @@ __webpack_require__.r(__webpack_exports__);
       var that = this;
       this.deleteLevelSpinner = true;
       axios["delete"]("/level/".concat(item)).then(function (response) {
-        _this2.levelError = null;
+        _this2.levelErrorName = null;
+        _this2.levelErrorOrder = null;
         _this2.updateLevelError = null;
         that.levelConfigArray = response['data'];
         that.deleteLevelSpinner = false; //console.log(that.courseConfigArray);
@@ -13703,27 +13733,33 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     storeCourse: function storeCourse() {
+      console.log(this.levelForm.levelName);
       var that = this;
       that.storeCourseSpinner = true;
-      this.courseForm.schoolId = this.schoolConfigArray['id']; // this.$inertia.post(`/course`,this.courseForm);->used for testing
+      this.courseForm.schoolId = this.schoolConfigArray['id']; //this.$inertia.post(`/course`,this.courseForm);
 
-      axios.post('/course', this.courseForm).then(function (response) {
-        if (response['data'].hasOwnProperty('schoolId') && response['data'].hasOwnProperty('courseName')) {
-          that.courseError = response['data']['schoolId'][0];
-        } else if (response['data'].hasOwnProperty('schoolId')) {
-          that.courseError = response['data']['schoolId'][0];
-        } else if (response['data'].hasOwnProperty('courseName')) {
-          that.courseError = response['data']['courseName'][0];
-        } else {
-          that.courseConfigArray.unshift(response['data']);
-          that.courseForm.courseName = '';
-          that.storeCourseSpinner = false;
-          that.courseError = null;
-        }
-
-        that.storeCourseSpinner = false;
-      })["catch"](function (error) {//console.log(error);
-      });
+      /*
+        axios.post('/course',this.courseForm)
+          .then(function (response) {
+                  if (response['data'].hasOwnProperty('schoolId')&& response['data'].hasOwnProperty('courseName')){
+                      that.courseError=response['data']['schoolId'][0];
+                      
+                  }else if (response['data'].hasOwnProperty('schoolId')){
+                      that.courseError=response['data']['schoolId'][0];
+                  }
+                  else if(response['data'].hasOwnProperty('courseName')){
+                      that.courseError=response['data']['courseName'][0];
+                  }else{
+                  that.courseConfigArray.unshift(response['data'])
+                  that.courseForm.courseName='';
+                  that.storeCourseSpinner=false;
+                  that.courseError=null;
+                  }
+                    that.storeCourseSpinner=false
+          })
+          .catch(function (error) {
+              //console.log(error);
+          });***/
     },
     editCourse: function editCourse(id, name) {
       this.createCourse = false;
@@ -13797,10 +13833,16 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.updateCourseError
       };
     },
-    inputErrorLevel: function inputErrorLevel() {
+    inputErrorLevelName: function inputErrorLevelName() {
       return {
-        inputError: this.levelError,
-        'inputError:focus': this.levelError
+        inputError: this.levelErrorName,
+        'inputError:focus': this.levelErrorName
+      };
+    },
+    inputErrorLevelOrder: function inputErrorLevelOrder() {
+      return {
+        inputError: this.levelErrorOrder,
+        'inputError:focus': this.levelErrorOrder
       };
     },
     inputErrorUpdateLevel: function inputErrorUpdateLevel() {
@@ -14176,53 +14218,205 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
-  props: ['schoolConfigArray', 'createSchool'],
+  props: ['courseName', 'courseId', 'subjectConfigArray'],
   data: function data() {
     return {
+      //subjcet variables
+      subjectUpdateForm: {
+        subjectName: '',
+        subjectId: ''
+      },
+      subjectName: null,
+      enableSubjetUpdateForm: false,
       levelSearchPane: true,
-      searchCourse: '',
+      levelId: '',
       searchCourseArray: [],
-      searchLevelSpinner: false
+      subjectError: null,
+      subjectUpdateError: null,
+      searchLevelError: null,
+      userFeedBack: [],
+      //user feedback array after creating subjects
+      subjectUpdateSpinner: false,
+      subjectFeedbackSpinner: false,
+      deleteSubjectSpinner: false,
+      //level variables
+      searchLevelSpinner: false,
+      // spiner for the level search input field
+      searchLevel: ''
     };
   },
   methods: {
-    getLevel: function getLevel(levelName) {
+    //takes the text from the input and assigns to the variable that sends it the to the 
+    //search engine
+    getLevel: function getLevel(levelName, id) {
       this.searchLevelSpinner = true;
-      this.searchCourse = levelName;
+      this.searchLevel = levelName;
+      this.levelId = id;
       this.levelSearchPane = false;
-      this.searchLevelSpinner = false; //fim
+      this.searchLevelSpinner = false;
     },
-
-    /***
-    * enabling the searchpane if the input gets focus
-     */
-    enableSearchPane: function enableSearchPane() {
+    // enables and disables the searchPane
+    enableDisableSearchPane: function enableDisableSearchPane() {
       var _this = this;
 
-      var levelSearchInput = document.getElementById('levelSearch'); //  console.log(levelSearchInput);
+      document.querySelector('body').addEventListener('click', function (event) {
+        if (event.target.getAttribute('class') === 'levelItem') {
+          _this.levelSearchPane = false;
+        } else if (event.target.getAttribute('class') != 'levelItem' && event.target.getAttribute('id') === 'levelSearch') {
+          _this.levelSearchPane = true;
+        } else {
+          _this.levelSearchPane = false;
+        }
+      });
+    },
+    // Submits the form
+    submit: function submit() {
+      /* this.$inertia.post('/subject',
+        {
+              subjectName:this.subjectName,
+              searchLevel:this.searchLevel,
+              levelId:this.levelId,
+              courseId:this.courseId
+          } 
+        );***/
+      var that = this;
+      that.subjectFeedbackSpinner = true;
+      axios.post('/subject', {
+        subjectName: that.subjectName,
+        searchLevel: that.searchLevel,
+        levelId: that.levelId,
+        courseId: that.courseId
+      }).then(function (response) {
+        //CHECK FOR ERROR MESSAGES
+        if (response['data'].hasOwnProperty('subjectName') && response['data'].hasOwnProperty('searchLevel')) {
+          that.subjectError = response['data']['subjectName']['0'];
+          that.searchLevelError = response['data']['searchLevel']['0'];
+          that.subjectFeedbackSpinner = false;
+        } else if (response['data'].hasOwnProperty('subjectName')) {
+          that.subjectError = response['data']['subjectName']['0'];
+          that.searchLevelError = null;
+          that.subjectFeedbackSpinner = false;
+        } else if (response['data'].hasOwnProperty('searchLevel')) {
+          that.searchLevelError = response['data']['searchLevel']['0'];
+          that.subjectError = null;
+          that.subjectFeedbackSpinner = false;
+        } else {
+          that.subjectError = null;
+          that.searchLevelError = null;
+        } //GET THE CREATED COURSE  AND LEVEL FOR USER FEEDBACK
 
-      levelSearchInput.addEventListener('focus', function (event) {
-        _this.levelSearchPane = true;
-        console.log("i got focus");
+
+        if (response['data'].hasOwnProperty('subject') && response['data'].hasOwnProperty('level')) {
+          that.userFeedBack.push({
+            id: response['data']['id'],
+            subject: response['data']['subject'],
+            level: response['data']['level']
+          });
+          that.subjectFeedbackSpinner = false;
+        }
+      })["catch"](function (error) {});
+    },
+    //edit the selected subject
+    editSubject: function editSubject(id, subject) {
+      this.enableSubjetUpdateForm = true;
+      document.getElementById('viewEditForm').scrollIntoView();
+      this.subjectUpdateForm.subjectId = id;
+      this.subjectUpdateForm.subjectName = subject;
+    },
+    //disable the subjcet update form
+    cancelSubjectUpdate: function cancelSubjectUpdate() {
+      this.enableSubjetUpdateForm = false;
+    },
+    //Update the subject name
+    updateSubject: function updateSubject() {
+      var that = this;
+      this.subjectUpdateSpinner = true;
+      axios.patch("/subject/".concat(that.subjectUpdateForm.subjectId), that.subjectUpdateForm).then(function (response) {
+        if (response['data'].hasOwnProperty('subjectName')) {
+          that.subjectUpdateError = response['data']['subjectName'][0];
+        } else {
+          that.subjectConfigArray.forEach(function (item, index, array) {
+            if (item['id'] == response['data']['id']) {
+              item['subject'] = response['data']['name'];
+            }
+          });
+        }
+
+        that.subjectUpdateSpinner = false;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    // delete the selected subject
+    deleteSubject: function deleteSubject(id, courseId) {
+      var _this2 = this;
+
+      var that = this;
+      this.deleteSubjectSpinner = true; //this.$inertia.delete(`/subject/${id}/${courseId}`);//for testing
+
+      axios["delete"]("/subject/".concat(id, "/").concat(courseId)).then(function (response) {
+        that.subjectConfigArray = response['data'];
+        _this2.deleteSubjectSpinner = false;
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   },
   watch: {
     /**
-     * The method searches courses in the database and returns to the user
+     * Searches courses in the database and returns to the user
     */
-    test: function test() {
-      console.log("Test has changed");
-    },
-    searchCourse: function searchCourse() {
+    searchLevel: function searchLevel() {
       var that = this;
-      var a = this.searchCourse; //this.$inertia.get('/subject/search', {a});
-
       this.searchLevelSpinner = true;
-      axios.get("/subject/search?searchLevelData=".concat(that.searchCourse)).then(function (response) {
+      axios.get("/subject/search?searchLevelData=".concat(that.searchLevel)).then(function (response) {
         if (response['data'].hasOwnProperty('searchLevelData')) {
           that.searchCourseArray = [{
             id: 1001,
@@ -14240,70 +14434,36 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         that.searchLevelSpinner = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      })["catch"](function (error) {});
     }
   },
   computed: {
-    inputErrorSchoolName: function inputErrorSchoolName() {
+    inputSubjectNameError: function inputSubjectNameError() {
       return {
-        inputError: this.$page.props.errors.name,
-        'inputError:focus': this.$page.props.errors.name
+        inputError: this.subjectError,
+        'inputError:focus': this.subjectError
       };
     },
-    inputErrorAbbreviation: function inputErrorAbbreviation() {
+    updateSubjectnameError: function updateSubjectnameError() {
       return {
-        inputError: this.$page.props.errors.abbreviation,
-        'inputError:focus': this.$page.props.errors.abbreviation
+        inputError: this.subjectUpdateError,
+        'inputError:focus': this.subjectUpdateError
       };
     },
-    inputErrorCourse: function inputErrorCourse() {
+    inputSearchLevelError: function inputSearchLevelError() {
       return {
-        inputError: this.courseError,
-        'inputError:focus': this.courseError
+        inputError: this.searchLevelError,
+        'inputError:focus': this.searchLevelError
       };
     },
-    inputErrorUpdateCourse: function inputErrorUpdateCourse() {
-      return {
-        inputError: this.updateCourseError,
-        'inputError:focus': this.updateCourseError
-      };
-    },
-    inputErrorLevel: function inputErrorLevel() {
-      return {
-        inputError: this.levelError,
-        'inputError:focus': this.levelError
-      };
-    },
-    inputErrorUpdateLevel: function inputErrorUpdateLevel() {
-      return {
-        inputError: this.updateLevelError,
-        'inputError:focus': this.updateLevelError
-      };
-    },
-    searchPaneUl: function searchPaneUl() {
+    searchPaneUlError: function searchPaneUlError() {
       return {
         'search-pane-ul': this.searchCourseArray.length >= 1
       };
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
-
-    //this.enableSearchPane();
-    //this.disableSearchPane();
-    document.querySelector('body').addEventListener('click', function (event) {
-      //button.textContent = `Click count: ${event.detail}`;
-      if (event.target.getAttribute('class') === 'levelItem') {
-        console.log("level selected");
-        _this2.levelSearchPane = false;
-      } else if (event.target.getAttribute('class') != 'levelItem' && event.target.getAttribute('id') === 'levelSearch') {
-        _this2.levelSearchPane = true;
-      } else {
-        _this2.levelSearchPane = false;
-      }
-    });
+    this.enableDisableSearchPane(); //console.log(this.subjectConfigArray);
   }
 });
 
@@ -19525,7 +19685,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-4b7fe100]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-4b7fe100]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError[data-v-4b7fe100], .inputError[data-v-4b7fe100]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-4b7fe100]{\r\n    margin-top: 2rem;\n}\n.center-msg[data-v-4b7fe100]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.btn-group[data-v-4b7fe100], .btn-group-vertical[data-v-4b7fe100] {\r\n    position: relative;\r\n    display: flex;\r\n    vertical-align: middle;\n}\nform h4[data-v-4b7fe100]{\r\n    font-weight: 700;\n}\n.table-light[data-v-4b7fe100], .table-light > th[data-v-4b7fe100], .table-light > td[data-v-4b7fe100] {\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-4b7fe100]{\r\n    color: #dc2020;\n}\n.table-edit[data-v-4b7fe100]{\r\n    color: #6b6316;\n}\n.table-button[data-v-4b7fe100]{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-4b7fe100], .page-navigation[data-v-4b7fe100]{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-4b7fe100]{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-4b7fe100]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-4b7fe100]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError[data-v-4b7fe100], .inputError[data-v-4b7fe100]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-4b7fe100]{\r\n    margin-top: 2rem;\n}\n.center-msg[data-v-4b7fe100]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.btn-group[data-v-4b7fe100], .btn-group-vertical[data-v-4b7fe100] {\r\n    position: relative;\r\n    display: flex;\r\n    vertical-align: middle;\n}\nform h4[data-v-4b7fe100]{\r\n    font-weight: 700;\n}\n.table-light[data-v-4b7fe100], .table-light > th[data-v-4b7fe100], .table-light > td[data-v-4b7fe100] {\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-4b7fe100]{\r\n    color: #dc2020;\n}\n.table-edit[data-v-4b7fe100]{\r\n    color: #6b6316;\n}\n.table-button[data-v-4b7fe100]{\r\n    background-color: #e2e2eb;\n}\n.level[data-v-4b7fe100]{\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin-right: 0;\r\n    margin-left: 0;\r\n    justify-content: space-between;\n}\n.level-input[data-v-4b7fe100]{\r\n    flex-grow: 10;\n}\n.level-option[data-v-4b7fe100]{\r\n    flex-grow: 1;\r\n    margin-right: 5px;\r\n    margin-left: 5px;\r\n    width: 70px;\n}\n.level-btn[data-v-4b7fe100]{\r\n    flex-grow: 2;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-4b7fe100], .page-navigation[data-v-4b7fe100]{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\r\n   /*.remove_label{\r\n      display: none;     \r\n   }**/\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -19597,7 +19757,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-f2057814]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-f2057814]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError[data-v-f2057814], .inputError[data-v-f2057814]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-f2057814]{\r\n    margin-top: 2rem;\n}\n.center-msg[data-v-f2057814]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.btn-group[data-v-f2057814], .btn-group-vertical[data-v-f2057814] {\r\n    position: relative;\r\n    display: flex;\r\n    vertical-align: middle;\n}\nform h4[data-v-f2057814]{\r\n    font-weight: 700;\n}\n.table-light[data-v-f2057814], .table-light > th[data-v-f2057814], .table-light > td[data-v-f2057814] {\r\n    background-color: #e2e2eb;\n}\n.search-input-wrapper[data-v-f2057814]{\r\n    position:relative;\r\n    display: flex;\r\n    flex-direction: column;\n}\n.search-input-wrapper span[data-v-f2057814]{\r\n    position: absolute;\r\n    z-index: 100;\r\n    right: 15px;\r\n    top: 42px;\n}\n.search-pane[data-v-f2057814]{\r\n    position: relative;\r\n    display: flex;\n}\n.search-pane li[data-v-f2057814]{\r\n    list-style-type: none;\r\n    margin-left: -40px;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n    padding-top: 0.34rem;\n}\n.search-pane li[data-v-f2057814]:hover{\r\n        background: grey;\n}\n.search-pane label[data-v-f2057814]{\r\n    margin-left: 1.5rem;\r\n    cursor: pointer;\n}\n.search-pane-ul[data-v-f2057814]{\r\n    position: absolute;\r\n    width: 100%;\r\n    z-index: 5;\r\n    border-radius: 5px;\r\n    border-left: 1px solid #cac4bb;\r\n    border-right: 1px solid #cac4bb;\r\n    border-bottom: 1px solid #cac4bb;\r\n    background: #f8f9fa;\n}\n.search-pane a[data-v-f2057814]{\r\n    display: block;\n}\n.table-delete[data-v-f2057814]{\r\n    color: #dc2020;\n}\n.table-edit[data-v-f2057814]{\r\n    color: #6b6316;\n}\n.table-button[data-v-f2057814]{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-f2057814], .page-navigation[data-v-f2057814]{\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-f2057814]{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-f2057814]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-f2057814]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.course-name[data-v-f2057814]{\r\n    margin-bottom: 1rem;\r\n    margin-top: 1.5rem;\n}\n.inputError[data-v-f2057814], .inputError[data-v-f2057814]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-f2057814]{\r\n    margin-top: 2rem;\n}\n.center-msg[data-v-f2057814]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.btn-group[data-v-f2057814], .btn-group-vertical[data-v-f2057814] {\r\n    position: relative;\r\n    display: flex;\r\n    vertical-align: middle;\n}\nform h4[data-v-f2057814]{\r\n    font-weight: 700;\n}\n.table-light[data-v-f2057814], .table-light > th[data-v-f2057814], .table-light > td[data-v-f2057814] {\r\n    background-color: #e2e2eb;\n}\n.search-input-wrapper[data-v-f2057814]{\r\n    position:relative;\r\n    display: flex;\r\n    flex-direction: column;\n}\n.search-input-wrapper span[data-v-f2057814]{\r\n    position: absolute;\r\n    z-index: 100;\r\n    right: 15px;\r\n    top: 42px;\n}\n.search-pane[data-v-f2057814]{\r\n    position: relative;\r\n    display: flex;\n}\n.search-pane li[data-v-f2057814]{\r\n    list-style-type: none;\r\n    margin-left: -40px;\r\n    height: 2rem;\r\n    cursor: pointer;\r\n    padding-top: 0.34rem;\n}\n.search-pane li[data-v-f2057814]:hover{\r\n        background: grey;\n}\n.search-pane label[data-v-f2057814]{\r\n    margin-left: 1.5rem;\r\n    cursor: pointer;\n}\n.search-pane-ul[data-v-f2057814]{\r\n    position: absolute;\r\n    width: 100%;\r\n    z-index: 5;\r\n    border-radius: 5px;\r\n    border-left: 1px solid #cac4bb;\r\n    border-right: 1px solid #cac4bb;\r\n    border-bottom: 1px solid #cac4bb;\r\n    box-shadow: -5px 5px 10px 1px #cac4bb  , 5px 5px 10px 1px #cac4bb;\r\n    background: #f8f9fa;\n}\n.search-pane a[data-v-f2057814]{\r\n    display: block;\n}\n.table-delete[data-v-f2057814]{\r\n    color: #dc2020;\n}\n.table-edit[data-v-f2057814]{\r\n    color: #6b6316;\n}\n.table-button[data-v-f2057814]{\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-f2057814], .page-navigation[data-v-f2057814], .course-name[data-v-f2057814] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-f2057814]{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -56569,13 +56729,13 @@ var render = function() {
     _vm._m(1),
     _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
-      _c("h4", [_vm._v("Nívels")]),
+      _c("h4", [_vm._v("Níveis")]),
       _vm._v(" "),
       _c("p"),
       _vm._v(" "),
       _vm.createLevel
-        ? _c("div", { staticClass: "form-row" }, [
-            _c("div", { staticClass: "form-group col-md-9" }, [
+        ? _c("div", { staticClass: "form-row level" }, [
+            _c("div", { staticClass: "form-group level-input" }, [
               _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
               _vm._v(" "),
               _c("input", {
@@ -56588,7 +56748,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                class: _vm.inputErrorLevel,
+                class: _vm.inputErrorLevelName,
                 attrs: { type: "text", id: "superadmin" },
                 domProps: { value: _vm.levelForm.levelName },
                 on: {
@@ -56601,7 +56761,7 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _vm.levelError
+              _vm.levelErrorName
                 ? _c("div", { staticClass: "text-danger" }, [
                     _c(
                       "small",
@@ -56609,7 +56769,7 @@ var render = function() {
                         _c("font-awesome-icon", {
                           attrs: { icon: ["fas", "exclamation-circle"] }
                         }),
-                        _vm._v(" " + _vm._s(_vm.levelError))
+                        _vm._v(" " + _vm._s(_vm.levelErrorName))
                       ],
                       1
                     )
@@ -56617,7 +56777,56 @@ var render = function() {
                 : _vm._e()
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group col-md-3" }, [
+            _c("div", { staticClass: "form-group level-option" }, [
+              _c("label", { attrs: { for: "order" } }, [_vm._v("Ordem")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.levelForm.orderNr,
+                    expression: "levelForm.orderNr"
+                  }
+                ],
+                staticClass: "form-control",
+                class: _vm.inputErrorLevelOrder,
+                attrs: {
+                  type: "text",
+                  list: "level-order",
+                  id: "super",
+                  autocomplete: "off"
+                },
+                domProps: { value: _vm.levelForm.orderNr },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.levelForm, "orderNr", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.levelErrorOrder
+                ? _c("div", { staticClass: "text-danger" }, [
+                    _c(
+                      "small",
+                      [
+                        _c("font-awesome-icon", {
+                          attrs: { icon: ["fas", "exclamation-circle"] }
+                        }),
+                        _vm._v(" " + _vm._s(_vm.levelErrorOrder))
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._m(2)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group level-btn" }, [
               _c(
                 "label",
                 { staticClass: "remove_label", attrs: { for: "name" } },
@@ -56723,7 +56932,7 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _vm._m(2),
+                _vm._m(3),
                 _vm._v(" "),
                 _c("div", { staticClass: "dropdown-menu" }, [
                   _c(
@@ -56749,13 +56958,15 @@ var render = function() {
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(3),
+            _vm._m(4),
             _vm._v(" "),
             _c(
               "tbody",
               _vm._l(_vm.levelConfigArray, function(item) {
                 return _c("tr", { key: item.id }, [
                   _c("td", [_vm._v(" " + _vm._s(item.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(" " + _vm._s(item.order))]),
                   _vm._v(" "),
                   _c("td", [
                     _c(
@@ -56816,7 +57027,7 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(4),
+    _vm._m(5),
     _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
       _c("h4", [_vm._v("Cursos")]),
@@ -56973,7 +57184,7 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _vm._m(5),
+                _vm._m(6),
                 _vm._v(" "),
                 _c("div", { staticClass: "dropdown-menu" }, [
                   _c(
@@ -56999,7 +57210,7 @@ var render = function() {
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(6),
+            _vm._m(7),
             _vm._v(" "),
             _c(
               "tbody",
@@ -57008,9 +57219,15 @@ var render = function() {
                   _c(
                     "td",
                     [
-                      _c("inertia-link", { attrs: { href: "/subject" } }, [
-                        _vm._v(_vm._s(item.name))
-                      ])
+                      _c(
+                        "inertia-link",
+                        {
+                          attrs: {
+                            href: "/subject/" + item.name + "/" + item.id
+                          }
+                        },
+                        [_vm._v(_vm._s(item.name))]
+                      )
                     ],
                     1
                   ),
@@ -57103,6 +57320,26 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("datalist", { attrs: { id: "level-order" } }, [
+      _c("option", { attrs: { value: "1" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "2" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "3" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "4" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "5" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "6" } }),
+      _vm._v(" "),
+      _c("option", { attrs: { value: "7" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
       "button",
       {
@@ -57124,6 +57361,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Ordem")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Editar")]),
         _vm._v(" "),
@@ -57493,195 +57732,395 @@ var render = function() {
           _c(
             "li",
             {
+              staticClass: "breadcrumb-item",
+              attrs: { "aria-current": "page" }
+            },
+            [
+              _c("inertia-link", { attrs: { href: "/school/create" } }, [
+                _vm._v("Escola")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
               staticClass: "breadcrumb-item active",
               attrs: { "aria-current": "page" }
             },
-            [_vm._v("Escola ")]
+            [_vm._v("Curso: " + _vm._s(_vm.courseName))]
           )
         ])
       ]
     ),
     _vm._v(" "),
-    _vm._m(1),
-    _vm._v(" "),
     _c("form", { staticClass: "create-user-form" }, [
-      _c("h4", [_vm._v("Níveis")]),
+      _c("h4", [_vm._v("Disciplina")]),
       _vm._v(" "),
       _c("p"),
       _vm._v(" "),
       _c("div", { staticClass: "form-row" }, [
-        _c(
-          "div",
-          { staticClass: "form-group col-md-12 search-input-wrapper" },
-          [
-            _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.searchCourse,
-                  expression: "searchCourse"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "levelSearch", autocomplete: "off" },
-              domProps: { value: _vm.searchCourse },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.searchCourse = $event.target.value
-                }
-              }
-            }),
-            _vm._v(" "),
-            _vm.searchLevelSpinner
-              ? _c("span", {
-                  staticClass: "spinner-grow spinner-grow-sm",
-                  attrs: { role: "status", "aria-hidden": "true" }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.levelSearchPane
-              ? _c("div", { staticClass: "search-pane" }, [
-                  _c(
-                    "ul",
-                    { class: _vm.searchPaneUl },
-                    _vm._l(_vm.searchCourseArray, function(item) {
-                      return _c("div", { key: item.id }, [
-                        _c(
-                          "li",
-                          {
-                            staticClass: "levelItem",
-                            on: {
-                              click: function($event) {
-                                return _vm.getLevel(item.name)
-                              }
-                            }
-                          },
-                          [
-                            _c(
-                              "label",
-                              [
-                                _c("font-awesome-icon", {
-                                  staticClass: "search-img",
-                                  attrs: { icon: ["fas", "search"] }
-                                }),
-                                _vm._v("  " + _vm._s(item.name))
-                              ],
-                              1
-                            )
-                          ]
-                        )
-                      ])
-                    }),
-                    0
-                  )
-                ])
-              : _vm._e()
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-md-9" }, [
+        _c("div", { staticClass: "form-group col-md-6" }, [
           _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
           _vm._v(" "),
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.subjectName,
+                expression: "subjectName"
+              }
+            ],
             staticClass: "form-control",
-            class: _vm.inputErrorCourse,
-            attrs: { type: "text", id: "superadmin" }
+            class: _vm.inputSubjectNameError,
+            attrs: { type: "text", id: "superadmin" },
+            domProps: { value: _vm.subjectName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.subjectName = $event.target.value
+              }
+            }
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "text-danger" }, [
-            _c(
-              "small",
-              [
-                _c("font-awesome-icon", {
-                  attrs: { icon: ["fas", "exclamation-circle"] }
-                }),
-                _vm._v(" {{}}")
-              ],
-              1
-            )
-          ])
+          _vm.subjectError
+            ? _c("div", { staticClass: "text-danger" }, [
+                _c(
+                  "small",
+                  [
+                    _c("font-awesome-icon", {
+                      attrs: { icon: ["fas", "exclamation-circle"] }
+                    }),
+                    _vm._v(" " + _vm._s(_vm.subjectError))
+                  ],
+                  1
+                )
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
-        _vm._m(2)
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-md-8" }, [
-          _c("label", { attrs: { for: "apelido" } }, [_vm._v("Editar")]),
+        _c("div", { staticClass: "form-group col-md-6 search-input-wrapper" }, [
+          _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nível")]),
           _vm._v(" "),
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.searchLevel,
+                expression: "searchLevel"
+              }
+            ],
             staticClass: "form-control",
-            attrs: { type: "text", id: "superadmin" }
+            class: _vm.inputSearchLevelError,
+            attrs: { type: "text", id: "levelSearch", autocomplete: "off" },
+            domProps: { value: _vm.searchLevel },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.searchLevel = $event.target.value
+              }
+            }
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "text-danger" }, [
-            _c(
-              "small",
-              [
-                _c("font-awesome-icon", {
-                  attrs: { icon: ["fas", "exclamation-circle"] }
-                }),
-                _vm._v(" {{}}")
-              ],
-              1
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
-            _vm._v(" ")
-          ]),
+          _vm.searchLevelError
+            ? _c("div", { staticClass: "text-danger" }, [
+                _c(
+                  "small",
+                  [
+                    _c("font-awesome-icon", {
+                      attrs: { icon: ["fas", "exclamation-circle"] }
+                    }),
+                    _vm._v(" " + _vm._s(_vm.searchLevelError))
+                  ],
+                  1
+                )
+              ])
+            : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "btn-group" }, [
+          _vm.searchLevelSpinner
+            ? _c("span", {
+                staticClass: "spinner-grow spinner-grow-sm",
+                attrs: { role: "status", "aria-hidden": "true" }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.levelSearchPane
+            ? _c("div", { staticClass: "search-pane" }, [
+                _c(
+                  "ul",
+                  { class: _vm.searchPaneUlError },
+                  _vm._l(_vm.searchCourseArray, function(item) {
+                    return _c("div", { key: item.id }, [
+                      _c(
+                        "li",
+                        {
+                          staticClass: "levelItem",
+                          on: {
+                            click: function($event) {
+                              return _vm.getLevel(item.name, item.id)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "label",
+                            [
+                              _c("font-awesome-icon", {
+                                staticClass: "search-img",
+                                attrs: { icon: ["fas", "search"] }
+                              }),
+                              _vm._v("  " + _vm._s(item.name))
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ])
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: { click: _vm.submit }
+        },
+        [
+          _vm.subjectFeedbackSpinner
+            ? _c("span", {
+                staticClass: "spinner-grow spinner-grow-sm",
+                attrs: { role: "status", "aria-hidden": "true" }
+              })
+            : _vm._e(),
+          _vm._v("\n            Introduzir\n         ")
+        ]
+      ),
+      _vm._v(" "),
+      _c("p"),
+      _vm._v(" "),
+      _vm.userFeedBack.length > 0
+        ? _c("div", { staticClass: "table-responsive-sm" }, [
             _c(
-              "button",
-              {
-                staticClass: "btn btn-success form-control",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.updateCourse()
-                  }
-                }
-              },
+              "table",
+              { staticClass: "table table-hover table-light user-table" },
               [
-                _c("span", {
-                  staticClass: "spinner-grow spinner-grow-sm",
-                  attrs: { role: "status", "aria-hidden": "true" }
-                }),
-                _vm._v(
-                  "                            \n                        Actualizar\n                    "
+                _vm._m(1),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.userFeedBack, function(item) {
+                    return _c("tr", { key: item.id }, [
+                      _c("td", [_vm._v(_vm._s(item.subject))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(item.level))])
+                    ])
+                  }),
+                  0
                 )
               ]
-            ),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _c("div", { staticClass: "dropdown-menu" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "dropdown-item",
-                  on: {
-                    click: function($event) {
-                      return _vm.cancelCourseUpdate()
-                    }
+            )
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { attrs: { id: "viewEditForm" } }),
+    _vm._v(" "),
+    _c("form", { staticClass: "create-user-form" }, [
+      _c("h4", { attrs: { id: "" } }, [
+        _vm._v("Curso de: " + _vm._s(_vm.courseName) + " ")
+      ]),
+      _vm._v(" "),
+      _c("p"),
+      _vm._v(" "),
+      _vm.enableSubjetUpdateForm
+        ? _c("div", { staticClass: "form-row" }, [
+            _c("div", { staticClass: "form-group col-md-8" }, [
+              _c("label", { attrs: { for: "apelido" } }, [_vm._v("Nome")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.subjectUpdateForm.subjectName,
+                    expression: "subjectUpdateForm.subjectName"
                   }
-                },
-                [_vm._v("Cancelar")]
-              )
+                ],
+                staticClass: "form-control",
+                class: _vm.updateSubjectnameError,
+                attrs: { type: "text", id: "superadmin" },
+                domProps: { value: _vm.subjectUpdateForm.subjectName },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.subjectUpdateForm,
+                      "subjectName",
+                      $event.target.value
+                    )
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.subjectUpdateError
+                ? _c("div", { staticClass: "text-danger" }, [
+                    _c(
+                      "small",
+                      [
+                        _c("font-awesome-icon", {
+                          attrs: { icon: ["fas", "exclamation-circle"] }
+                        }),
+                        _vm._v(" " + _vm._s(_vm.subjectUpdateError))
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group col-md-4" }, [
+              _c(
+                "label",
+                { staticClass: "remove_label", attrs: { for: "name" } },
+                [_vm._v(" ")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "btn-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success form-control",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.updateSubject()
+                      }
+                    }
+                  },
+                  [
+                    _vm.subjectUpdateSpinner
+                      ? _c("span", {
+                          staticClass: "spinner-grow spinner-grow-sm",
+                          attrs: { role: "status", "aria-hidden": "true" }
+                        })
+                      : _vm._e(),
+                    _vm._v(
+                      "\n                            Actualizar\n                        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "dropdown-menu" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "dropdown-item",
+                      on: {
+                        click: function($event) {
+                          return _vm.cancelSubjectUpdate()
+                        }
+                      }
+                    },
+                    [_vm._v("Cancelar")]
+                  )
+                ])
+              ])
             ])
           ])
-        ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("p"),
+      _vm._v(" "),
+      _c("div", { staticClass: "table-responsive-sm" }, [
+        _c(
+          "table",
+          { staticClass: "table table-hover table-light user-table" },
+          [
+            _vm._m(3),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.subjectConfigArray, function(item) {
+                return _c("tr", { key: item.id }, [
+                  _c("td", [_vm._v(_vm._s(item.subject))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.level))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "table-button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editSubject(item.id, item.subject)
+                          }
+                        }
+                      },
+                      [
+                        _c("font-awesome-icon", {
+                          staticClass: "table-edit",
+                          attrs: { icon: ["fas", "edit"] }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "table-button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteSubject(item.id, _vm.courseId)
+                          }
+                        }
+                      },
+                      [
+                        _vm.deleteSubjectSpinner
+                          ? _c("span", {
+                              staticClass: "spinner-grow spinner-grow-sm",
+                              attrs: { role: "status", "aria-hidden": "true" }
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("font-awesome-icon", {
+                          staticClass: "table-delete",
+                          attrs: { icon: ["fas", "trash"] }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ])
+              }),
+              0
+            )
+          ]
+        )
       ])
     ])
   ])
@@ -57708,33 +58147,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [_c("br"), _vm._v(" "), _c("br")])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group col-md-3" }, [
-      _c("label", { staticClass: "remove_label", attrs: { for: "name" } }, [
-        _vm._v(" ")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary form-control",
-          attrs: { type: "button" }
-        },
-        [
-          _c("span", {
-            staticClass: "spinner-grow spinner-grow-sm",
-            attrs: { role: "status", "aria-hidden": "true" }
-          }),
-          _vm._v(
-            "                            \n                        Introduzir\n                    "
-          )
-        ]
-      )
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nível")])
+      ])
     ])
   },
   function() {
@@ -57754,6 +58172,22 @@ var staticRenderFns = [
       },
       [_c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nível")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Editar")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Excluir")])
+      ])
+    ])
   }
 ]
 render._withStripped = true

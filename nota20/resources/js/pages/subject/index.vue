@@ -9,71 +9,115 @@
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-            <li class="breadcrumb-item active" aria-current="page">Escola </li>
+            <li class="breadcrumb-item" aria-current="page"><inertia-link href="/school/create">Escola</inertia-link></li>
+            <li class="breadcrumb-item active" aria-current="page">Curso: {{courseName}}</li>
         </ol>
         </nav>
-   
-        <!--- COURSES FORM--->
-        <div>
-            <br>
-            <br>
-        </div>
+        <!--- SUBJECT FORM--->
         <form class="create-user-form" >
-           <h4>Níveis</h4>
+           <h4>Disciplina</h4>
             <p></p>
          <div class="form-row">
-                <div class="form-group col-md-12 search-input-wrapper">
+               <div class="form-group col-md-6">
                     <label for="apelido">Nome</label>
-                      <input type="text" class="form-control" id="levelSearch" v-model="searchCourse" autocomplete="off">
+                    <input type="text" class="form-control" v-model="subjectName" v-bind:class="inputSubjectNameError"  id="superadmin">
+                    <div class="text-danger" v-if="subjectError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{subjectError}}</small></div>
+                </div>
+                <div class="form-group col-md-6 search-input-wrapper">
+                    <label for="apelido">Nível</label>
+                      <input type="text" class="form-control" v-model="searchLevel" v-bind:class="inputSearchLevelError" id="levelSearch"  autocomplete="off">
+                      <div class="text-danger" v-if="searchLevelError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{searchLevelError}}</small></div>  
                             <span v-if="searchLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
                             <div  class="search-pane" v-if="levelSearchPane"> 
-                                <ul v-bind:class="searchPaneUl">
+                                <ul v-bind:class="searchPaneUlError">
                                     <div v-for="item in searchCourseArray" :key="item.id">
-                                        <li v-on:click="getLevel(item.name)" class="levelItem">
+                                        <li v-on:click="getLevel(item.name,item.id)" class="levelItem">
                                             <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />  {{item.name}}</label>
                                         </li>
                                     </div>
                                 </ul>
                             </div>
                 </div>
+               
              </div>
-            <div class="form-row">
-                <div class="form-group col-md-9">
-                    <label for="apelido">Nome</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorCourse"  id="superadmin">
-                    <div class="text-danger" > <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{}}</small></div>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="name" class="remove_label">&nbsp;</label>
-                        <button class="btn btn-primary form-control" type="button">
-                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
-                            Introduzir
-                        </button>
-                </div>
-             </div>
-             <div class="form-row">
-                <div class="form-group col-md-8">
-                    <label for="apelido">Editar</label>
-                    <input type="text" class="form-control"  id="superadmin">
-                    <div class="text-danger"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{}}</small></div>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="name" class="remove_label">&nbsp;</label>
-                    <div class="btn-group">
-                        <button class="btn btn-success form-control" v-on:click="updateCourse()" type="button">
-                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
-                            Actualizar
-                        </button>
-                        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" v-on:click="cancelCourseUpdate()">Cancelar</a>
-                        </div>
-                    </div>
-                </div>
-             </div>  
+             <button class="btn btn-primary" v-on:click="submit" type="button">
+                <span v-if="subjectFeedbackSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                Introduzir
+             </button>
+        <p></p>
+        <div class="table-responsive-sm" v-if="userFeedBack.length>0">
+            <table class="table table-hover table-light user-table">
+                <thead>
+                    <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Nível</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in userFeedBack" :key="item.id">
+                    <td>{{item.subject}}</td>
+                    <td>{{item.level}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
         </form>
+    <br/>
+        <div id="viewEditForm"></div>
+        <form class="create-user-form" >
+           <h4 id="">Curso de: {{courseName}} </h4>
+            <p></p>
+         <div class="form-row" v-if="enableSubjetUpdateForm">
+               <div class="form-group col-md-8" >
+                    <label for="apelido">Nome</label>
+                    <input type="text" class="form-control" v-model="subjectUpdateForm.subjectName" v-bind:class="updateSubjectnameError"  id="superadmin">
+                    <div class="text-danger" v-if="subjectUpdateError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{subjectUpdateError}}</small></div>
+                </div>
+
+                <div class="form-group col-md-4">
+                        <label for="name" class="remove_label">&nbsp;</label>                    
+                        <div class="btn-group"> 
+                            <button class="btn btn-success form-control" v-on:click="updateSubject()" type="button">
+                                <span v-if="subjectUpdateSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                Actualizar
+                            </button>
+                             <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" v-on:click="cancelSubjectUpdate()">Cancelar</a>
+                        </div>
+                        </div>
+                </div>
+        </div>
+            
+        <p></p>
+        <div class="table-responsive-sm">
+            <table class="table table-hover table-light user-table">
+                <thead>
+                    <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Nível</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in subjectConfigArray" :key="item.id"> 
+                    <td>{{item.subject}}</td>
+                    <td>{{item.level}}</td>
+                    <td><button class="table-button" v-on:click="editSubject(item.id, item.subject)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
+                      <td><button class="table-button" v-on:click="deleteSubject(item.id, courseId)" type="button">
+                            <span v-if="deleteSubjectSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
+                            <font-awesome-icon class="table-delete" :icon="['fas', 'trash']"/>
+                        </button>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+        </form>
+
     </div>
 </template>
 <script>
@@ -82,51 +126,190 @@ import Layout from '../shared/layout';
 
 export default {
     layout:Layout,
-    props:['schoolConfigArray', 'createSchool'],
+    props:['courseName','courseId','subjectConfigArray'],
      data(){
         return{
+            //subjcet variables
+            subjectUpdateForm:{
+                subjectName:'',
+                subjectId:''
+            },
+
+            subjectName:null,
+            enableSubjetUpdateForm:false,
             levelSearchPane:true,
-            searchCourse:'',
+            levelId:'',
             searchCourseArray:[],
-            searchLevelSpinner:false
+            subjectError:null,
+            subjectUpdateError:null,
+            searchLevelError:null,
+            userFeedBack:[], //user feedback array after creating subjects
+
+            subjectUpdateSpinner:false,
+            subjectFeedbackSpinner:false,
+            deleteSubjectSpinner:false,
+
+            //level variables
+            searchLevelSpinner:false,// spiner for the level search input field
+            searchLevel:'',
         }
     },
     methods:{
-        getLevel(levelName){
-      
+        
+        //takes the text from the input and assigns to the variable that sends it the to the 
+         //search engine
+         
+        getLevel(levelName,id){
             this.searchLevelSpinner=true;
-            this.searchCourse=levelName;
+            this.searchLevel=levelName;
+            this.levelId=id;
             this.levelSearchPane=false;
             this.searchLevelSpinner=false;
-        //fim
         },
-        /***
-        * enabling the searchpane if the input gets focus
-         */
-  
-        enableSearchPane(){
-            let levelSearchInput = document.getElementById('levelSearch');
-          //  console.log(levelSearchInput);
-            levelSearchInput.addEventListener('focus', (event) => {
-            this.levelSearchPane=true;
-            console.log(`i got focus`);
-             });
         
-        }
+        // enables and disables the searchPane
+        enableDisableSearchPane(){
+           document.querySelector('body').addEventListener('click', event => {
+            if(event.target.getAttribute('class')==='levelItem'){
+                this.levelSearchPane=false;
+            }else if (event.target.getAttribute('class')!='levelItem' && event.target.getAttribute('id')==='levelSearch'){
+                this.levelSearchPane=true;
+            }else{
+                this.levelSearchPane=false;
+             }
+
+            });
+        },
+    
+    // Submits the form
+        submit(){
+        /* this.$inertia.post('/subject',
+          {
+                subjectName:this.subjectName,
+                searchLevel:this.searchLevel,
+                levelId:this.levelId,
+                courseId:this.courseId
+            } 
+          );***/
+           
+            let that=this;
+            that.subjectFeedbackSpinner=true;
+            axios.post('/subject', {
+                subjectName:that.subjectName,
+                searchLevel:that.searchLevel,
+                levelId:that.levelId,
+                courseId:that.courseId
+            })
+            .then(function (response) {
+                
+                //CHECK FOR ERROR MESSAGES
+            
+                if(response['data'].hasOwnProperty('subjectName') && response['data'].hasOwnProperty('searchLevel')){
+                   
+                   that.subjectError=response['data']['subjectName']['0'];
+                   that.searchLevelError=response['data']['searchLevel']['0'];
+                   that.subjectFeedbackSpinner=false;
+                }
+                else if(response['data'].hasOwnProperty('subjectName')){
+                   that.subjectError=response['data']['subjectName']['0'];
+                    that.searchLevelError=null;
+                   that.subjectFeedbackSpinner=false;
+                }
+                else if (response['data'].hasOwnProperty('searchLevel')){
+                    that.searchLevelError=response['data']['searchLevel']['0'];
+                    that.subjectError=null;
+                    that.subjectFeedbackSpinner=false;
+
+                }
+                else{
+                    that.subjectError=null;
+                    that.searchLevelError=null;
+                }
+
+                
+                //GET THE CREATED COURSE  AND LEVEL FOR USER FEEDBACK
+                
+               if(response['data'].hasOwnProperty('subject') && response['data'].hasOwnProperty('level')){
+                   that.userFeedBack.push(
+                       {
+                           id:response['data']['id'],
+                           subject:response['data']['subject'],
+                           level:response['data']['level']
+                       }
+                   );
+                that.subjectFeedbackSpinner=false
+                   
+
+               }
+
+            })
+            .catch(function (error) {
+            }); 
+        },
+
+    //edit the selected subject
+    editSubject(id, subject){
+        this.enableSubjetUpdateForm=true;
+        document.getElementById('viewEditForm').scrollIntoView();
+
+        this.subjectUpdateForm.subjectId=id;
+        this.subjectUpdateForm.subjectName=subject;
+    },
+    //disable the subjcet update form
+    cancelSubjectUpdate(){
+        this.enableSubjetUpdateForm=false;
+    },
+
+    //Update the subject name
+    updateSubject(){
+        let that=this;
+        this.subjectUpdateSpinner=true;
+        axios.patch(`/subject/${that.subjectUpdateForm.subjectId}`,that.subjectUpdateForm)
+            .then((response)=>{
+              if(response['data'].hasOwnProperty('subjectName')){
+                  that.subjectUpdateError=response['data']['subjectName'][0];
+              }
+              else{
+                that.subjectConfigArray.forEach(function(item, index, array) {
+
+                if(item['id']==response['data']['id']){
+                    item['subject']=response['data']['name'];
+                }
+                });
+              }
+
+              that.subjectUpdateSpinner=false
+            })
+            .catch((error)=>{
+                console.log(error);
+            }) 
+    },
+
+    // delete the selected subject
+    deleteSubject(id, courseId){
+        let that=this;
+        
+        this.deleteSubjectSpinner=true;
+        //this.$inertia.delete(`/subject/${id}/${courseId}`);//for testing
+
+        axios.delete(`/subject/${id}/${courseId}`)
+            .then((response)=>{
+              that.subjectConfigArray=response['data'];
+              this.deleteSubjectSpinner=false;
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+    }
     },
     watch:{
         /**
-         * The method searches courses in the database and returns to the user
+         * Searches courses in the database and returns to the user
         */
-       test(){
-           console.log(`Test has changed`);
-       },
-        searchCourse(){
+        searchLevel(){
             let that=this;
-            let a=this.searchCourse;
-            //this.$inertia.get('/subject/search', {a});
             this.searchLevelSpinner=true;
-             axios.get(`/subject/search?searchLevelData=${that.searchCourse}`)
+             axios.get(`/subject/search?searchLevelData=${that.searchLevel}`)
             .then((response)=>{
                if(response['data'].hasOwnProperty('searchLevelData')){
                    that.searchCourseArray=[
@@ -144,77 +327,45 @@ export default {
                    }else{
                        that.searchCourseArray=[...response['data']];
                    }
-               
-               
                }
                that.searchLevelSpinner=false;
 
                
             })
             .catch((error)=>{
-                console.log(error);
             })
         }
     },
     computed: {
-        inputErrorSchoolName() {
+        inputSubjectNameError() {
             return {
-            inputError: this.$page.props.errors.name,
-            'inputError:focus': this.$page.props.errors.name
+            inputError: this.subjectError,
+            'inputError:focus': this.subjectError
             }
         },
-        inputErrorAbbreviation() {
-            return {
-            inputError: this.$page.props.errors.abbreviation,
-            'inputError:focus': this.$page.props.errors.abbreviation
+        updateSubjectnameError(){
+            return{
+                inputError: this.subjectUpdateError,
+                'inputError:focus': this.subjectUpdateError
             }
         },
-        inputErrorCourse() {
+        inputSearchLevelError() {
             return {
-            inputError: this.courseError,
-            'inputError:focus': this.courseError
+            inputError: this.searchLevelError,
+            'inputError:focus': this.searchLevelError
             }
         },
-        inputErrorUpdateCourse() {
-            return {
-            inputError: this.updateCourseError,
-            'inputError:focus': this.updateCourseError
-            }
-        },
-    inputErrorLevel(){
-         return {
-            inputError: this.levelError,
-            'inputError:focus': this.levelError
-        }
-    }, 
-    inputErrorUpdateLevel(){
-        return {
-            inputError: this.updateLevelError,
-            'inputError:focus': this.updateLevelError
-        }
-    },
-    searchPaneUl(){
+    searchPaneUlError(){
         return{
             'search-pane-ul':this.searchCourseArray.length>=1
         }
-    }
+    },
+
+
 },
 mounted(){
-    //this.enableSearchPane();
-
-    //this.disableSearchPane();
-    document.querySelector('body').addEventListener('click', event => {
-  //button.textContent = `Click count: ${event.detail}`;
-    if(event.target.getAttribute('class')==='levelItem'){
-        console.log(`level selected`);
-        this.levelSearchPane=false;
-    }else if (event.target.getAttribute('class')!='levelItem' && event.target.getAttribute('id')==='levelSearch'){
-        this.levelSearchPane=true;
-    }else{
-        this.levelSearchPane=false;
-    }
-
-});
+    this.enableDisableSearchPane();
+   //console.log(this.subjectConfigArray);
 }, 
 
 } 
@@ -232,6 +383,11 @@ mounted(){
     padding: 1.25rem;
     margin-top: 0;
     border-radius:2px ;
+}
+
+.course-name{
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
 }
 
 .inputError, .inputError:focus {
@@ -302,6 +458,7 @@ form h4{
     border-left: 1px solid #cac4bb;
     border-right: 1px solid #cac4bb;
     border-bottom: 1px solid #cac4bb;
+    box-shadow: -5px 5px 10px 1px #cac4bb  , 5px 5px 10px 1px #cac4bb;
     background: #f8f9fa;
 }
 .search-pane a{
@@ -320,7 +477,7 @@ form h4{
     background-color: #e2e2eb;
 }
 @media screen and (min-width: 992px){
-   .create-user-form, .page-navigation{
+   .create-user-form, .page-navigation, .course-name {
        margin-right: 10%;
        margin-left: 10%;       
    }

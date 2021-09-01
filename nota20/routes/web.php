@@ -112,7 +112,7 @@ Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->
 //inserts the courses into the database
 Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])->name('course.store')->middleware('auth');
 //updates courses
-Route::patch('/course/{id}', [App\Http\Controllers\courseController::class, 'update'])->name('course.update')->middleware('auth');
+Route::patch('/course/{id}', [App\Http\Controllers\CourseController::class, 'update'])->name('course.update')->middleware('auth');
 //deletes courses
 Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth');
 /***---------------------------------------------------------------------------------------------------------------------------
@@ -121,6 +121,12 @@ Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'de
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
 // get the page to create the subjects
-Route::get('/subject', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');
+Route::get('/subject/{courseName}/{courseId}', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');
+//search levels for the subjects// CHANGE THIS, THIS SHOULD BE IN THE LEVEL CONTROLLER 
 Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth');
-
+//store subject in its course
+Route::post('/subject', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store')->middleware('auth');
+//updates the subject
+Route::patch('/subject/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('subject.update')->middleware('auth');
+//delete the selected subject
+Route::delete('/subject/{id}/{courseId}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('subject.destroy')->middleware('auth');

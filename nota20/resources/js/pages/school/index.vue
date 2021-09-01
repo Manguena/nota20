@@ -37,15 +37,29 @@
         </div>
         <!--- LEVEL FORM--->
         <form class="create-user-form" >
-           <h4>Nívels</h4>
+           <h4>Níveis</h4>
            <p></p>
-            <div class="form-row" v-if="createLevel">
-                <div class="form-group col-md-9" >
+            <div class="form-row level" v-if="createLevel">
+                <div class="form-group level-input" >
                     <label for="apelido">Nome</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorLevel" v-model="levelForm.levelName"  id="superadmin">
-                    <div class="text-danger" v-if="levelError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{levelError}}</small></div>
+                    <input type="text" class="form-control" v-model="levelForm.levelName" v-bind:class="inputErrorLevelName"   id="superadmin">
+                    <div class="text-danger" v-if="levelErrorName"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{levelErrorName}}</small></div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group level-option">
+                    <label for="order">Ordem</label>
+                    <input type="text" list="level-order" class="form-control" v-bind:class="inputErrorLevelOrder" v-model="levelForm.orderNr"  id="super" autocomplete="off">
+                    <div class="text-danger" v-if="levelErrorOrder"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{levelErrorOrder}}</small></div>
+                     <datalist id="level-order">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                        <option value="6"></option>
+                        <option value="7"></option>
+                    </datalist>
+                </div>
+                <div class="form-group level-btn">
                     <label for="name" class="remove_label">&nbsp;</label>
                         <button class="btn btn-primary form-control" v-on:click="storeLevel" type="button">
                             <span v-if="storeLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
@@ -80,6 +94,7 @@
                 <thead>
                     <tr>
                     <th scope="col">Nome</th>
+                    <th scope="col">Ordem</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
                     </tr>
@@ -87,6 +102,7 @@
                 <tbody>
                     <tr v-for="item in levelConfigArray" :key="item.id">
                     <td> {{item.name}}</td>
+                    <td> {{item.order}}</td>
                     <td><button class="table-button" v-on:click="editLevel(item.id,item.name)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
                     <td><button class="table-button" v-on:click="deleteLevel(item.id)" type="button">
                             <span v-if="deleteLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
@@ -94,7 +110,6 @@
                         </button>
                     </td>
                     </tr>
-                 
                 </tbody>
             </table>
         </div>  
@@ -154,7 +169,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in courseConfigArray" :key="item.id">
-                    <td> <inertia-link href="/subject">{{item.name}}</inertia-link></td>
+                    <td> <inertia-link v-bind:href="'/subject/'+item.name+'/'+item.id">{{item.name}}</inertia-link></td>
                     <td><button class="table-button" v-on:click="editCourse(item.id,item.name)" type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'edit']"/></button></td>
                     <td><button class="table-button" v-on:click="deleteCourse(item.id)" type="button">
                             <span v-if="deleteCourseSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
@@ -178,8 +193,10 @@ export default {
     props:['schoolConfigArray', 'createSchool'],
      data(){
         return{
+           // orderNr:'',
             //level variables
-            levelError:null,
+            levelErrorName:null,
+            levelErrorOrder:null,
             createLevel:true,
             storeLevelSpinner:false,
             levelId:null,
@@ -188,7 +205,8 @@ export default {
             deleteLevelSpinner:false,
             levelConfigArray:[],
             levelForm:{
-                levelName:''
+                levelName:'',
+                orderNr:''
             },
             //course variables
             couseId:null,//veriable to store the id for update purpose
@@ -221,26 +239,38 @@ export default {
         this.$inertia.post(`/school`, this.schoolForm);
         },
       updateSchool(){
-        this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm)
+        this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm);
       },
       /*
       Level methods
       */ 
       storeLevel(){
-          console.log(this.levelForm.levelName);
           let that=this;
           this.storeLevelSpinner=true;
-        // this.$inertia.post(`/course`,this.courseForm);->used for testing
+          //this.$inertia.post(`/level`,this.levelForm); 
  
           axios.post('/level',this.levelForm)
             .then(function (response) {
-                     if(response['data'].hasOwnProperty('levelName')){
-                        that.levelError=response['data']['levelName'][0];
-                    }else{
-                    that.levelConfigArray.unshift(response['data'])
+                    //console.log(response['data'].hasOwnProperty('orderNr')); 
+                    if(response['data'].hasOwnProperty('levelName') && response['data'].hasOwnProperty('orderNr') ){
+                    that.levelErrorName=response['data']['levelName'][0];
+                    that.levelErrorOrder=response['data']['orderNr'][0];
+                    }
+                     else if(response['data'].hasOwnProperty('levelName')){
+                        that.levelErrorName=response['data']['levelName'][0];
+                        that.levelErrorOrder=null;
+                    }else if(response['data'].hasOwnProperty('orderNr')){
+                       // that.levelErrorOrder=response['data']['orderNr'][0];
+                       that.levelErrorOrder=response['data']['orderNr'][0];
+                       that.levelErrorName=null;                        
+                    }
+                    else{
+                    that.levelConfigArray.unshift(response['data']);
                     that.levelForm.levelName='';
+                    that.levelForm.orderNr='';
                     that.storeLevelSpinner=false;
-                    that.levelError=null;
+                    that.levelErrorName=null;
+                    that.levelErrorOrder=null;
                     }
 
                     that.storeLevelSpinner=false
@@ -250,7 +280,7 @@ export default {
             });
       },
       listLevel(){
-        //this.$inertia.get(`/course`); 
+        //this.$inertia.get(`/level`); 
         let that=this; 
         axios.get(`/level`)
             .then((response)=>{
@@ -265,7 +295,8 @@ export default {
             this.createLevel=false;
             this.levelForm.levelName=name;
             this.levelId=id;
-            this.levelError=null;
+            this.levelErrorName=null;
+            this.levelErrorOrder=null;
             this.updateLevelError=null;
         },
         updateLevel(){
@@ -300,7 +331,8 @@ export default {
           this.deleteLevelSpinner=true;
         axios.delete(`/level/${item}`)
             .then((response)=>{
-                this.levelError=null;
+                this.levelErrorName=null;
+                this.levelErrorOrder=null;
                 this.updateLevelError=null;
                 that.levelConfigArray=response['data'];
                 that.deleteLevelSpinner=false;
@@ -325,16 +357,20 @@ export default {
             .catch((error)=>{
                 console.log(error);
             }) 
-         },
+         }, 
      
       storeCourse(){
-          
+
+          console.log(this.levelForm.levelName);
+
           let that=this;
           that.storeCourseSpinner=true;
           this.courseForm.schoolId=this.schoolConfigArray['id'];
+
           
-        // this.$inertia.post(`/course`,this.courseForm);->used for testing
- 
+         //this.$inertia.post(`/course`,this.courseForm);
+
+        /*
           axios.post('/course',this.courseForm)
             .then(function (response) {
                     if (response['data'].hasOwnProperty('schoolId')&& response['data'].hasOwnProperty('courseName')){
@@ -356,7 +392,7 @@ export default {
             })
             .catch(function (error) {
                 //console.log(error);
-            });
+            });***/
       },
         editCourse(id, name){
             this.createCourse=false;
@@ -433,10 +469,16 @@ export default {
             'inputError:focus': this.updateCourseError
             }
         },
-    inputErrorLevel(){
+    inputErrorLevelName(){
          return {
-            inputError: this.levelError,
-            'inputError:focus': this.levelError
+            inputError: this.levelErrorName,
+            'inputError:focus': this.levelErrorName
+        }
+    },
+    inputErrorLevelOrder(){
+         return {
+            inputError: this.levelErrorOrder,
+            'inputError:focus': this.levelErrorOrder
         }
     }, 
     inputErrorUpdateLevel(){
@@ -448,12 +490,13 @@ export default {
 },
 mounted(){
     this.listLevel();
-    this.listCourse();   
+    this.listCourse();
 }
 } 
 </script>
 
 <style scoped>
+
 .breadcrumb{
     background-color: #e2e2eb;
     font-size:large;
@@ -506,6 +549,29 @@ form h4{
 .table-button{
     background-color: #e2e2eb;
 }
+
+.level{
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 0;
+    margin-left: 0;
+    justify-content: space-between;
+}
+
+.level-input{
+    flex-grow: 10;
+}
+.level-option{
+    flex-grow: 1;
+    margin-right: 5px;
+    margin-left: 5px;
+    width: 70px;
+}
+
+.level-btn{
+    flex-grow: 2;
+}
+
 @media screen and (min-width: 992px){
    .create-user-form, .page-navigation{
        margin-right: 10%;
@@ -515,8 +581,8 @@ form h4{
 }
 
 @media screen and (max-width: 767px){
-   .remove_label{
-      display: none;       
-   }
+   /*.remove_label{
+      display: none;     
+   }**/  
 }
 </style>

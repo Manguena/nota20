@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Level;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 
 class LevelController extends Controller
@@ -13,7 +15,7 @@ class LevelController extends Controller
     
     public function index(){
         $levelConfigArray=self::listLevel();
-       
+    
         return response($levelConfigArray);
     }
 
@@ -24,7 +26,14 @@ class LevelController extends Controller
                 'string',
                 'min:1',
                 'unique:App\Models\Level,name'
-            ] 
+            ] ,
+            'orderNr'=>[
+                'required',
+                'integer',
+                'min:1',
+                'max:50',
+                'unique:App\Models\Level,order'
+            ]
         ]);
 
         if ($validator->fails()){
@@ -33,9 +42,10 @@ class LevelController extends Controller
 
         $level= new Level();
         $level->name=$request->levelName;// make a change here
+        $level->order=$request->orderNr;
         $level->save();
 
-        return response(['id'=>$level->id, 'name'=>$level->name]);
+        return response(['id'=>$level->id, 'name'=>$level->name, 'order'=>$level->order]);
       
     }
     public function update(Request $request,$id){
@@ -58,7 +68,9 @@ class LevelController extends Controller
 
         return response(['id'=>$id, 'name'=>$level->name]);
     }
-
+    /*
+    Delete the selected level
+    */
     public function destroy($id){
         Level::destroy($id);
 
@@ -68,17 +80,19 @@ class LevelController extends Controller
 
     }
 
+    /*
+    get all the leves from database and orders by its "order"
+    **/
     public function listLevel(){
         $levelConfigArray=array();
-        $levelArray=Level::all()->toArray();
-        for ($i=0; $i<count($levelArray); $i++){
-            $levelConfigArray[$i]=[
-                'id'=>$levelArray[$i]['id'],
-                'name'=>$levelArray[$i]['name']
-            ];
-        }
- 
-        return $levelConfigArray;
+        
+        $levelArray=DB::table('levels')
+                        ->select('id', 'name', 'order')
+                        ->orderBy('order')
+                        ->get()
+                        ->toArray();
+        
+         return $levelArray;
     }
 
 }

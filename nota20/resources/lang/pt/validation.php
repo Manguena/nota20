@@ -159,7 +159,12 @@ return [
         'levelName'=>[
             'required'=>'Insira o Nível',
             'unique'=>'Nível indisponível'
-        ]
+        ],
+        'orderNr'=>[
+            'required'=>'Insira',
+            'unique'=>'Indisponível'
+        ],
+
 
 
 
@@ -193,6 +198,7 @@ return [
         'new_password'=>'Nova Password',
         'abbreviation'=>'Abreviatura',
          'courseName'=>'Nome',
-         'schoolId'=>'Nome da Escola, no campo apropriado'// change this in English version
+         'schoolId'=>'Nome da Escola, no campo apropriado',// change this in English version
+         'orderNr'=>'Ordem'
     ],
 ];
