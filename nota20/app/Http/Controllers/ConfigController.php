@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Models\Config;
+use Illuminate\Support\Facades\Gate;
+
 
 class ConfigController extends Controller
 {
@@ -17,6 +19,10 @@ class ConfigController extends Controller
     }
 
     public function update(Request $request, $id){
+
+        if(!Gate::allows('update-config')){
+            abort(403,'Sem permissão');
+        }
 
         $request->validate([
             'superadmin'=>'required|integer|gte:2|lt:4',

@@ -30,10 +30,10 @@ class UserController extends Controller
             if($request->toArray()['searchbar']!=null){// if a words is entered set maximum 20 results
                         $query=User::search($request->searchbar)->paginate(30)->toArray();
                     }else{// if a null search is executed by user, paginate with 15 items per page
-                        $query=User::search($request->searchbar)->paginate(15)->toArray();
+                        $query=User::search($request->searchbar)->paginate(10)->toArray();
                     }
         }else{
-            $query=User::search($request->searchbar)->paginate(15)->toArray();
+            $query=User::search($request->searchbar)->paginate(10)->toArray();
         } 
         
         // Create pagination content
@@ -82,7 +82,7 @@ class UserController extends Controller
            'useraArray'=>$userArray,
            'currentPage'=>$query['current_page'],
            'lastPage'=>$query['last_page'],
-           'route'=>'user',
+           'route'=>'',// no need, but must appear as empty, because of the front error implementation
            'isSearchable'=>$isSearchable,
            'queryString'=>$queryString // query string
         ]);

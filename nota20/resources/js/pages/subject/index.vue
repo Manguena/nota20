@@ -23,20 +23,14 @@
                     <input type="text" class="form-control" v-model="subjectName" v-bind:class="inputSubjectNameError"  id="superadmin">
                     <div class="text-danger" v-if="subjectError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{subjectError}}</small></div>
                 </div>
-                <div class="form-group col-md-6 search-input-wrapper">
-                    <label for="apelido">Nível</label>
-                      <input type="text" class="form-control" v-model="searchLevel" v-bind:class="inputSearchLevelError" id="levelSearch"  autocomplete="off">
-                      <div class="text-danger" v-if="searchLevelError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{searchLevelError}}</small></div>  
-                            <span v-if="searchLevelSpinner" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>                            
-                            <div  class="search-pane" v-if="levelSearchPane"> 
-                                <ul v-bind:class="searchPaneUlError">
-                                    <div v-for="item in searchCourseArray" :key="item.id">
-                                        <li v-on:click="getLevel(item.name,item.id)" class="levelItem">
-                                            <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />  {{item.name}}</label>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
+                <div class="form-group col-md-6">
+                    <Searchpane
+                        v-bind:searchRoute="searchRoute" 
+                        v-bind:label="label"
+                        v-bind:searchItemError="searchItemError"
+                        v-on:send-search-item="getSentSearchItem"
+                    >
+                    </Searchpane>
                 </div>
                
              </div>
@@ -62,6 +56,10 @@
             </table>
         </div> 
         </form>
+
+        <!---TEST SEARCH COMPONENT-->
+       
+        <!------>
     <br/>
         <div id="viewEditForm"></div>
         <form class="create-user-form" >
@@ -122,13 +120,18 @@
 </template>
 <script>
 import Layout from '../shared/layout';
+import Searchpane from '../shared/searchpane';
 
 
 export default {
+  components: { Searchpane },
     layout:Layout,
     props:['courseName','courseId','subjectConfigArray'],
      data(){
         return{
+            //varibles to send to searchpane component
+            searchRoute:'/subject/search?searchItemData',
+            label:'Nível',
             //subjcet variables
             subjectUpdateForm:{
                 subjectName:'',
@@ -138,11 +141,11 @@ export default {
             subjectName:null,
             enableSubjetUpdateForm:false,
             levelSearchPane:true,
-            levelId:'',
+            searchItemId:'',
             searchCourseArray:[],
             subjectError:null,
             subjectUpdateError:null,
-            searchLevelError:null,
+            searchItemError:null,
             userFeedBack:[], //user feedback array after creating subjects
 
             subjectUpdateSpinner:false,
@@ -151,36 +154,18 @@ export default {
 
             //level variables
             searchLevelSpinner:false,// spiner for the level search input field
-            searchLevel:'',
+            searchItemName:'',
         }
     },
     methods:{
         
         //takes the text from the input and assigns to the variable that sends it the to the 
          //search engine
-         
-        getLevel(levelName,id){
-            this.searchLevelSpinner=true;
-            this.searchLevel=levelName;
-            this.levelId=id;
-            this.levelSearchPane=false;
-            this.searchLevelSpinner=false;
-        },
-        
-        // enables and disables the searchPane
-        enableDisableSearchPane(){
-           document.querySelector('body').addEventListener('click', event => {
-            if(event.target.getAttribute('class')==='levelItem'){
-                this.levelSearchPane=false;
-            }else if (event.target.getAttribute('class')!='levelItem' && event.target.getAttribute('id')==='levelSearch'){
-                this.levelSearchPane=true;
-            }else{
-                this.levelSearchPane=false;
-             }
-
-            });
-        },
-    
+         getSentSearchItem(itemName,itemId){
+             this.searchItemName=itemName;
+             this.searchItemId=itemId;
+         },
+ 
     // Submits the form
         submit(){
         /* this.$inertia.post('/subject',
@@ -196,34 +181,35 @@ export default {
             that.subjectFeedbackSpinner=true;
             axios.post('/subject', {
                 subjectName:that.subjectName,
-                searchLevel:that.searchLevel,
-                levelId:that.levelId,
+                levelName:that.searchItemName,
+                levelId:that.searchItemId,
                 courseId:that.courseId
             })
             .then(function (response) {
                 
                 //CHECK FOR ERROR MESSAGES
-            
-                if(response['data'].hasOwnProperty('subjectName') && response['data'].hasOwnProperty('searchLevel')){
+                console.log(response);
+
+                if(response['data'].hasOwnProperty('subjectName') && response['data'].hasOwnProperty('levelName')){
                    
                    that.subjectError=response['data']['subjectName']['0'];
-                   that.searchLevelError=response['data']['searchLevel']['0'];
+                   that.searchItemError=response['data']['levelName']['0'];
                    that.subjectFeedbackSpinner=false;
                 }
                 else if(response['data'].hasOwnProperty('subjectName')){
                    that.subjectError=response['data']['subjectName']['0'];
-                    that.searchLevelError=null;
+                    that.searchItemError=null;
                    that.subjectFeedbackSpinner=false;
                 }
-                else if (response['data'].hasOwnProperty('searchLevel')){
-                    that.searchLevelError=response['data']['searchLevel']['0'];
+                else if (response['data'].hasOwnProperty('levelName')){
+                    that.searchItemError=response['data']['levelName']['0'];
                     that.subjectError=null;
                     that.subjectFeedbackSpinner=false;
 
                 }
                 else{
                     that.subjectError=null;
-                    that.searchLevelError=null;
+                    that.searchItemError=null;
                 }
 
                 
@@ -302,40 +288,6 @@ export default {
             })
     }
     },
-    watch:{
-        /**
-         * Searches courses in the database and returns to the user
-        */
-        searchLevel(){
-            let that=this;
-            this.searchLevelSpinner=true;
-             axios.get(`/subject/search?searchLevelData=${that.searchLevel}`)
-            .then((response)=>{
-               if(response['data'].hasOwnProperty('searchLevelData')){
-                   that.searchCourseArray=[
-                       {   id: 1001,
-                           name:'Pesquisa sem resultados'
-                       }
-                   ]
-               }else{
-                   if(response['data'].length===0){
-                       that.searchCourseArray=[
-                       {   id: 1001,
-                           name:'Pesquisa sem resultados'
-                       }
-                   ]
-                   }else{
-                       that.searchCourseArray=[...response['data']];
-                   }
-               }
-               that.searchLevelSpinner=false;
-
-               
-            })
-            .catch((error)=>{
-            })
-        }
-    },
     computed: {
         inputSubjectNameError() {
             return {
@@ -348,26 +300,9 @@ export default {
                 inputError: this.subjectUpdateError,
                 'inputError:focus': this.subjectUpdateError
             }
-        },
-        inputSearchLevelError() {
-            return {
-            inputError: this.searchLevelError,
-            'inputError:focus': this.searchLevelError
-            }
-        },
-    searchPaneUlError(){
-        return{
-            'search-pane-ul':this.searchCourseArray.length>=1
         }
-    },
 
-
-},
-mounted(){
-    this.enableDisableSearchPane();
-   //console.log(this.subjectConfigArray);
-}, 
-
+} 
 } 
 </script>
 
@@ -416,53 +351,6 @@ form h4{
 
 .table-light, .table-light > th, .table-light > td {
     background-color: #e2e2eb;
-}
-.search-input-wrapper{
-    position:relative;
-    display: flex;
-    flex-direction: column;
-}
-.search-input-wrapper span{
-    position: absolute;
-    z-index: 100;
-    right: 15px;
-    top: 42px;
-}
-.search-pane{
-    position: relative;
-    display: flex;
-}
-
-.search-pane li{
-    list-style-type: none;
-    margin-left: -40px;
-    height: 2rem;
-    cursor: pointer;
-    padding-top: 0.34rem;
-
-}
-
-.search-pane li:hover{
-        background: grey;
-}
-
-.search-pane label{
-    margin-left: 1.5rem;
-    cursor: pointer;
-}
-.search-pane-ul{
-    position: absolute;
-    width: 100%;
-    z-index: 5;
-    border-radius: 5px;
-    border-left: 1px solid #cac4bb;
-    border-right: 1px solid #cac4bb;
-    border-bottom: 1px solid #cac4bb;
-    box-shadow: -5px 5px 10px 1px #cac4bb  , 5px 5px 10px 1px #cac4bb;
-    background: #f8f9fa;
-}
-.search-pane a{
-    display: block;
 }
 
 .table-delete{

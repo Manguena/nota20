@@ -29,10 +29,7 @@ public function create(User $user){
 public function edit(User $user, $listedUserIid){
     $listedUserRole=User::find($listedUserIid)->roles()->get()[0]['name'];
 
-    /*if($user->currentUserId()==$listedUserIid){
-        return true;
-    }**/
-    if($user->currentUserRole()=='standard'){
+      if($user->currentUserRole()=='standard'){
         return false;
     }
     else if($user->currentUserRole()==$listedUserRole || $listedUserRole=='superadmin') {

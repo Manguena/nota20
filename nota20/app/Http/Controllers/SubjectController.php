@@ -9,6 +9,8 @@ use App\Models\Level;
 use App\Models\Subject;
 use App\Models\Course;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+
 
 class SubjectController extends Controller
 {
@@ -17,6 +19,11 @@ class SubjectController extends Controller
  * provides the page to create subjects
  * */ 
     public function index(Request $request, $courseName, $courseId){
+        
+        if(!Gate::allows('view-subjectPage')){
+            abort(403,'Sem permissão');
+        }
+
         $course=Course::find($courseId);
 
         $subjectArray=self::listSubject($courseId);
@@ -35,7 +42,7 @@ class SubjectController extends Controller
     public function search(Request $request){
         
         $validator = Validator::make($request->all(), [
-            'searchLevelData' => [
+            'searchItemData' => [
                 'required',
                 'string',
                 'min:1',
@@ -48,13 +55,13 @@ class SubjectController extends Controller
 
 
     
-       $searchItem=$request->toArray()['searchLevelData'];
+       $searchItem=$request->toArray()['searchItemData'];
       
-       $levelArray = Level::search($searchItem)->paginate(15);
+       $searchArray = Level::search($searchItem)->paginate(15);
         
-       $levelConfigArray=$levelArray->toArray()['data'];
+       $searchConfigArray=$searchArray->toArray()['data'];
        
-       return response($levelConfigArray);
+       return response($searchConfigArray);
     }
 
     public function store(Request $request){
@@ -65,7 +72,7 @@ class SubjectController extends Controller
                 'min:3',
                 'string'
             ], 
-            'searchLevel'=>[
+            'levelName'=>[
                 'required',
                 'exists:levels,name'
             ]
@@ -93,7 +100,7 @@ class SubjectController extends Controller
         $subject->save();
 
         // ['id'=>$level->id, 'name'=>$level->name, 'order'=>$level->order]
-        return response(['id'=>$subject->id, 'subject'=>$subject->name, 'level'=>$request->searchLevel]);
+        return response(['id'=>$subject->id, 'subject'=>$subject->name, 'level'=>$request->levelName]);
     }
 
     /*

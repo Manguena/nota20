@@ -59,7 +59,7 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
 // Edit the current user profile
-  Route::get('/profile/{id}/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+  Route::get('/profile/{id}/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');//sends custom authorization messages
   // update the user profile
   Route::patch('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
@@ -72,7 +72,7 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
   //ilst the user configurations 
   Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config')->middleware('auth');
   // store user configurations
-  Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');
+  Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');// ends a custom authorization message
 
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
@@ -81,52 +81,67 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
   -------------------------------------------------------------------------------------------------------------------------------*/
   
 // GET THE SCHOOL CREATION FORM
-  Route::get('/school/create', [App\Http\Controllers\SchoolController::class, 'create'])->name('school.create')->middleware('auth');
+  Route::get('/school/create', [App\Http\Controllers\SchoolController::class, 'create'])->name('school.create')->middleware('auth');//sends a custom authorization message
 // USER CREATES THE SCHOOL
-Route::post('/school', [App\Http\Controllers\SchoolController::class, 'store'])->name('school.store')->middleware('auth');
+Route::post('/school', [App\Http\Controllers\SchoolController::class, 'store'])->name('school.store')->middleware('auth')->middleware('can:view-schoolPage');
 //updates the school
-Route::patch('/school/{id}', [App\Http\Controllers\SchoolController::class, 'update'])->name('school.update')->middleware('auth');
+Route::patch('/school/{id}', [App\Http\Controllers\SchoolController::class, 'update'])->name('school.update')->middleware('auth')->middleware('can:view-schoolPage');
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
  *                                           LEVELS CONTROLLER CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
   // List the levels
-  Route::get('/level', [App\Http\Controllers\LevelController::class, 'index'])->name('level.index')->middleware('auth');  
+Route::get('/level', [App\Http\Controllers\LevelController::class, 'index'])->name('level.index')->middleware('auth')->middleware('can:view-schoolPage');  
   //inserts the levels into the database
-Route::post('/level', [App\Http\Controllers\LevelController::class, 'store'])->name('level.store')->middleware('auth');
+Route::post('/level', [App\Http\Controllers\LevelController::class, 'store'])->name('level.store')->middleware('auth')->middleware('can:view-schoolPage');
 //updates levels
-Route::patch('/level/{id}', [App\Http\Controllers\LevelController::class, 'update'])->name('level.update')->middleware('auth');
+Route::patch('/level/{id}', [App\Http\Controllers\LevelController::class, 'update'])->name('level.update')->middleware('auth')->middleware('can:view-schoolPage');
 //deletes levels
-Route::delete('/level/{id}', [App\Http\Controllers\LevelController::class, 'destroy'])->name('level.destroy')->middleware('auth');
+Route::delete('/level/{id}', [App\Http\Controllers\LevelController::class, 'destroy'])->name('level.destroy')->middleware('auth')->middleware('can:view-schoolPage');
 
 
 
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
- *                                           COURSES CONTROLLER                                                               *
+ *                                           COURSES CONTROLLER                                                                   *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
 // List the courses
-Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course.index')->middleware('auth');
+Route::get('/course', [App\Http\Controllers\CourseController::class, 'index'])->name('course.index')->middleware('auth')->middleware('can:view-schoolPage');
 //inserts the courses into the database
-Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])->name('course.store')->middleware('auth');
+Route::post('/course', [App\Http\Controllers\CourseController::class, 'store'])->name('course.store')->middleware('auth')->middleware('can:view-schoolPage');
 //updates courses
-Route::patch('/course/{id}', [App\Http\Controllers\CourseController::class, 'update'])->name('course.update')->middleware('auth');
+Route::patch('/course/{id}', [App\Http\Controllers\CourseController::class, 'update'])->name('course.update')->middleware('auth')->middleware('can:view-schoolPage');
 //deletes courses
-Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth');
+Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('course.destroy')->middleware('auth')->middleware('can:view-schoolPage');
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *
  *                                           SUBJECT CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
 // get the page to create the subjects
-Route::get('/subject/{courseName}/{courseId}', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');
+Route::get('/subject/{courseName}/{courseId}', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');// the user gets custom message
 //search levels for the subjects// CHANGE THIS, THIS SHOULD BE IN THE LEVEL CONTROLLER 
-Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth');
+Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth')->middleware('can:view-subjectPage');
 //store subject in its course
-Route::post('/subject', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store')->middleware('auth');
+Route::post('/subject', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store')->middleware('auth')->middleware('can:view-subjectPage');
 //updates the subject
-Route::patch('/subject/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('subject.update')->middleware('auth');
+Route::patch('/subject/{id}', [App\Http\Controllers\SubjectController::class, 'update'])->name('subject.update')->middleware('auth')->middleware('can:view-subjectPage');
 //delete the selected subject
-Route::delete('/subject/{id}/{courseId}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('subject.destroy')->middleware('auth');
+Route::delete('/subject/{id}/{courseId}', [App\Http\Controllers\SubjectController::class, 'destroy'])->name('subject.destroy')->middleware('auth')->middleware('can:view-subjectPage');
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           CLASS CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+// get the page to create the subjects
+Route::get('/class/course', [App\Http\Controllers\ClassController::class, 'course'])->name('class.course')->middleware('auth');
+//search the courses 
+Route::get('/class/search', [App\Http\Controllers\ClassController::class, 'search'])->name('class.search')->middleware('auth');
+// display the course subjects 
+Route::get('/class/subject/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'subject'])->name('class.search')->middleware('auth');
+//page to create the class room and list classrooms stored in the database
+Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
+
+

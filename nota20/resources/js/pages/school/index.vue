@@ -370,7 +370,7 @@ export default {
           
          //this.$inertia.post(`/course`,this.courseForm);
 
-        /*
+        
           axios.post('/course',this.courseForm)
             .then(function (response) {
                     if (response['data'].hasOwnProperty('schoolId')&& response['data'].hasOwnProperty('courseName')){
@@ -392,7 +392,7 @@ export default {
             })
             .catch(function (error) {
                 //console.log(error);
-            });***/
+            });
       },
         editCourse(id, name){
             this.createCourse=false;

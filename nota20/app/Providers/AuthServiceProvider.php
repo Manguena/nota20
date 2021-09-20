@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Policies\UserPolicy;
+use App\Policies\ConfigPolicy;
+use App\Policies\SchoolPolicy;
+use App\Policies\SubjectPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,15 +28,34 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        
-        //gate para criacao de usuarios
+        /*-----------------------------------------------------------------------------------------------------
+            User controller       
+        -----------------------------------------------------------------------------------------------------**/
+        //Permission to create user
         Gate::define('create-user', [UserPolicy::class, 'create']);
 
-        // edit user who is standard or an admin
+        //permission to edit a user profile
         Gate::define('edit-user', [UserPolicy::class, 'edit']);
 
-        //
-       // Gate::define('create-user', [UserPolicy::class, 'create']);
+       /****-----------------------------------------------------------------------------------------------------
+        * Config controller
+        --------------------------------------------------------------------------------------------------------*/
+        // Update system configurations 
+        Gate:: define('update-config',[ConfigPolicy::class,'update']);
+
+         /****-----------------------------------------------------------------------------------------------------
+        * school controller
+        --------------------------------------------------------------------------------------------------------*/
+        //permission to access the school page
+        Gate:: define('view-schoolPage',[SchoolPolicy::class,'view']);
+
+          /****-----------------------------------------------------------------------------------------------------
+        * school controller
+        --------------------------------------------------------------------------------------------------------*/
+
+        //permission to access the page to introduce system subjects
+        Gate:: define('view-subjectPage',[SubjectPolicy::class,'view']);
+
 
     }
 }

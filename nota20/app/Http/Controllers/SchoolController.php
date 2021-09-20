@@ -7,11 +7,17 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Models\School;
 use App\Models\Config;
+use Illuminate\Support\Facades\Gate;
+
 
 class SchoolController extends Controller
 {
     
     public function create(){
+
+        if(!Gate::allows('view-schoolPage')){
+            abort(403,'Sem permissão');
+        }
 
        $createSchool=true;
         if(count(School::all()->toArray())<1){

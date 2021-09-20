@@ -11,12 +11,10 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import { faSchool } from '@fortawesome/free-solid-svg-icons'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-
-
+import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 
 library.add(faUsers,faArrowRight,faSearch,faExclamationCircle,faUserMinus,
-    faKey,faCogs, faSchool,faEdit,faTrash  
+    faKey,faCogs, faSchool,faEdit,faTrash,faChalkboardTeacher, faPlus  
     )
-
-

@@ -177,6 +177,8 @@ export default {
       
     created(){
       this.paginationInfo();// call the fuction which will load iformation about pagination
+
+      this.paginationData;
     }
 } 
 </script>
