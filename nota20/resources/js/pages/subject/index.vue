@@ -154,7 +154,7 @@ export default {
 
             //level variables
             searchLevelSpinner:false,// spiner for the level search input field
-            searchItemName:'',
+            searchItemName:null,
         }
     },
     methods:{
@@ -230,6 +230,9 @@ export default {
 
             })
             .catch(function (error) {
+            })
+            .then( (error) =>{
+               that.searchItemName=null;
             }); 
         },
 

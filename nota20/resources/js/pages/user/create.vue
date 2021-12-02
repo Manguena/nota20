@@ -68,7 +68,10 @@
                 <div class="text-danger" v-if="$page.props.errors.role"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{`Escolha o perfil do Usuário`}}</small></div>
                 </div>
              </div>
+             
+             <inertia-link href="/user/create" v-if="$page.props.flash.message" class="btn btn-primary" type="submit">Novo Usuário</inertia-link>
              <button class="btn btn-primary" type="submit">Criar Usuário</button>
+
         </form>
     </div>
 </template>
@@ -94,14 +97,7 @@ export default {
 
     methods:{
       submit(){
-        this.$inertia.post('/user',this.form,{
-            onSuccess: () => {
-                for(const item in this.form){
-                    this.form[item]=null;
-
-                }
-            }
-        })
+        this.$inertia.post('/user',this.form)
       }
     }
     ,

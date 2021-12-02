@@ -12,7 +12,7 @@
     <br/>
         <div id="viewEditForm"></div>
         <form class="create-user-form" >
-           <h4 id="">Curso de: {{courseName}} </h4>
+           <h4 id="">Turma: {{classConfigArray['name']}} </h4>
             <p></p>
 
             <div class="form-row "> 
@@ -25,9 +25,9 @@
 
 
                 <div class="form-group col-12">
-                    <inertia-link v-bind:href="'/class/'+courseName+'/'+courseId" class="btn btn-primary">
-                        Turma
-                        <font-awesome-icon :icon="['fas', 'chalkboard-teacher']" size="1x"/>
+                    <inertia-link href="/class/student" class="btn btn-primary">
+                        Inscrever
+                        <font-awesome-icon :icon="['fas', 'list']" size="1x"/>
                     </inertia-link>
                 </div>
             </div>
@@ -60,7 +60,7 @@ import Layout from '../shared/layout';
 
 export default {
       layout:Layout,
-      props:['courseName', 'courseId', 'subjectConfigArray'],  
+      props:['classConfigArray','courseName', 'courseId', 'subjectConfigArray'],  
      data(){
         return{
            

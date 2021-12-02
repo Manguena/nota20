@@ -135,13 +135,43 @@ Route::delete('/subject/{id}/{courseId}', [App\Http\Controllers\SubjectControlle
  *                                           CLASS CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
+
 // get the page to create the subjects
 Route::get('/class/course', [App\Http\Controllers\ClassController::class, 'course'])->name('class.course')->middleware('auth');
 //search the courses 
 Route::get('/class/search', [App\Http\Controllers\ClassController::class, 'search'])->name('class.search')->middleware('auth');
 // display the course subjects 
-Route::get('/class/subject/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'subject'])->name('class.search')->middleware('auth');
+Route::get('/class/subject/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'subject'])->name('class.subject')->middleware('auth');
+//Get the students page for enrollment
+Route::get('/class/student', [App\Http\Controllers\ClassController::class, 'student'])->name('class.student')->middleware('auth');
+//search for student to be enrolled
+Route::get('/class/studentsearch', [App\Http\Controllers\ClassController::class, 'studentSearch'])->name('class.studentsearch')->middleware('auth');
 //page to create the class room and list classrooms stored in the database
 Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
+  //stores the classes into the database
+Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth');
+//update className
+Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth');
+//Delete the class
+Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth');
+//Load a classroom with enrolled students in it
+Route::get('/class/{id}', [App\Http\Controllers\ClassController::class, 'show'])->name('class.show')->middleware('auth');
+//list of students 
 
-
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           STUDENT CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+  //list of students
+Route::get('/student', [App\Http\Controllers\StudentController::class, 'index'])->name('student')->middleware('auth');
+//Create students
+Route::get('/student/create', [App\Http\Controllers\StudentController::class, 'create'])->name('student.create')->middleware('auth');
+//store the created user in the database
+Route::post('/student', [App\Http\Controllers\StudentController::class, 'store'])->name('student.store')->middleware('auth');
+// Gives the system user the update student page
+Route::get('/student/edit/{id}', [App\Http\Controllers\StudentController::class, 'edit'])->name('student.edit')->middleware('auth');
+// updates the studente data
+Route::patch('/student/{id}', [App\Http\Controllers\StudentController::class, 'update'])->name('student.update')->middleware('auth');
+//search students data
+Route::get('/student/search', [App\Http\Controllers\StudentController::class, 'search'])->name('student.search')->middleware('auth');

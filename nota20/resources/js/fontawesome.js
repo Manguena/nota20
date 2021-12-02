@@ -13,8 +13,12 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserGraduate } from '@fortawesome/free-solid-svg-icons'
+import { faList } from '@fortawesome/free-solid-svg-icons'
+
 
 
 library.add(faUsers,faArrowRight,faSearch,faExclamationCircle,faUserMinus,
-    faKey,faCogs, faSchool,faEdit,faTrash,faChalkboardTeacher, faPlus  
+    faKey,faCogs, faSchool,faEdit,faTrash,faChalkboardTeacher, faPlus, faUserGraduate,
+    faList  
     )

@@ -22,7 +22,6 @@ export default {
     data(){
         return{
             searchItem:'',
-           // searchItemError:null,
             searchItemSpinner: false,
             enableSearchPane:true,
             searchResultArray:[]
@@ -64,14 +63,14 @@ export default {
 
                if(response['data'].hasOwnProperty('searchItemData')){
                    that.searchResultArray=[
-                       {   id: 1001,
+                       {   id: -1,
                            name:'Pesquisa sem resultados'
                        }
                    ]
                }else{
                    if(response['data'].length===0){
                        that.searchResultArray=[
-                       {   id: 1001,
+                       {   id: -1,
                            name:'Pesquisa sem resultados'
                        }
                    ]

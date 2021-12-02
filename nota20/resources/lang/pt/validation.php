@@ -164,6 +164,9 @@ return [
             'required'=>'Insira',
             'unique'=>'Indisponível'
         ],
+        'className'=>[
+            'required'=>'Insira a Turma'
+        ],
 
 
 
@@ -199,6 +202,10 @@ return [
         'abbreviation'=>'Abreviatura',
          'courseName'=>'Nome',
          'schoolId'=>'Nome da Escola, no campo apropriado',// change this in English version
-         'orderNr'=>'Ordem'
+         'orderNr'=>'Ordem',
+         'schoolYear'=>'Ano Lectivo',
+         'surname'=>'Apelido',
+         'id_number'=>'Documento de Identificação',
+         'year'=>'Ano de matrícula'
     ],
 ];

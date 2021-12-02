@@ -40,7 +40,7 @@ class SubjectController extends Controller
 /*searches the levels for the subject
 */
     public function search(Request $request){
-        
+
         $validator = Validator::make($request->all(), [
             'searchItemData' => [
                 'required',
@@ -49,6 +49,7 @@ class SubjectController extends Controller
             ]
         ]);
 
+            
         if ($validator->fails()){
             return response($validator->errors());
         }        

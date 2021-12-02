@@ -74,8 +74,8 @@ export default {
               if(i+1<=this.lastPage){
                   this.paginationData[i]={
                     number: i+1,
+                   // link:`${this.route}?year=${this.urlParameter1}&surname=${this.urlParameter2}&page=${i+1}`,
                     link:this.urlParameter1?`${this.route}?year=${this.urlParameter1}&surname=${this.urlParameter2}&page=${i+1}`:`${this.route}?page=${i+1}`
-                    //link:`${this.route}?page=${i+1}`
                   }
               }
             }          
