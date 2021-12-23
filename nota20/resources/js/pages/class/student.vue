@@ -1,5 +1,19 @@
 <template>
     <div class="container">
+        <div v-if="$page.props.flash.message" class="alert alert-danger alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
+        <span class="center-msg">{{$page.props.flash.message}}</span> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <br/>
+         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
+            <ol class="breadcrumb page-navigation">
+                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
+                <li class="breadcrumb-item"><inertia-link href="/class/course">Estudante</inertia-link></li>
+                <li class="breadcrumb-item" aria-current="page">Inscrição</li>
+            </ol>
+        </nav>
 
         <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
             <span class="center-msg">Utilizador&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Excluido com sucesso</span>
@@ -50,7 +64,7 @@
                     <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
                     <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
                     <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
-                    <td><button class="table-button"  type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'list']"/></button></td>
+                    <td><button class="table-button" v-on:click="enroll(studentData.id, classId)"  type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'list']"/></button></td>
                     </tr>
                 </tbody>
             </table>
@@ -63,7 +77,6 @@
         v-bind:queryString="queryString"
         v-bind:urlParameter1="urlParameter1"
         v-bind:urlParameter2="urlParameter2"
-
         >
         </Pagination>
 
@@ -78,7 +91,7 @@ export default {
         Pagination
     },
     layout:Layout,
-    props:['studentConfigArray','urlParameter1','urlParameter2', 'lastPage','currentPage','route','isSearchable','queryString' ],
+    props:['classId','className','studentConfigArray','urlParameter1','urlParameter2', 'lastPage','currentPage','route','isSearchable','queryString' ],
     data: function(){
         return{
             search:{
@@ -90,8 +103,14 @@ export default {
     },
     methods:{
         searchBar(){
-            this.$inertia.get(`/class/studentsearch`, this.search)
-            }
+            this.$inertia.get(`/class/studentsearch/${this.classId}/${this.className}`, this.search)
+            }, 
+        enroll(id, classId){
+            this.$inertia.post(`/class/enroll`, {
+                id:id,
+                classId:classId 
+            })
+        }
         },
     computed: {
         inputErrorSurname() {
@@ -108,7 +127,7 @@ export default {
         }
 },
 created(){
-    console.log(this.route);
+    //console.log(this.className);
 }
     }
 </script>
@@ -130,6 +149,13 @@ created(){
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.breadcrumb{
+    background-color: #e2e2eb;
+    font-size:large;
+    padding-left:0;
+    padding-bottom:0;
 }
 
 .data-table-input{
@@ -168,6 +194,14 @@ margin-left:auto;
     height: 0;
     display: none;
 }
+
+}
+
+@media screen and (min-width: 992px){
+   .create-user-form, .page-navigation, .createdAlert {
+       margin-right: 10%;
+       margin-left: 10%;       
+   }
 
 }
 

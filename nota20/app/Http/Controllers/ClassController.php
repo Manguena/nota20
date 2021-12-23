@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
-use App\Models\StudentClass;
+use App\Models\Student;
+use App\Models\Studentclass;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 
 class ClassController extends Controller
@@ -21,7 +23,7 @@ class ClassController extends Controller
     public function course(){
         
 
-        $courseArray=Course::paginate(2)->toArray();
+        $courseArray=Course::paginate(15)->toArray();
 
         return Inertia::render('class/course',
         [
@@ -83,7 +85,6 @@ pagination section
     */
     public function index($courseName, $courseId){
 
-        
         $classConfigArray=self::listClasses($courseId);
 
         $classConfigArray=$classConfigArray->toArray();
@@ -145,7 +146,7 @@ pagination section
             return response($validator->errors());
         }  
 
-        $class= new StudentClass();
+        $class= new Studentclass();
         $class->name=$request->className;
         $class->year=$request->schoolYear;
         $class->course_id=$request->courseId;
@@ -188,7 +189,7 @@ pagination section
             return response($validator->errors());
             }
 
-        $class=StudentClass::find($request->id);
+        $class=Studentclass::find($request->id);
         $class->name=$request->className;
         $class->year=$request->schoolYear;
         $class->save();
@@ -205,10 +206,10 @@ pagination section
      }
 
      /*
-     deletes a class for a cours
+     deletes a class for a course
      */
      public function destroy($id, $courseId){
-        StudentClass::destroy($id);
+        Studentclass::destroy($id);
 
         $classConfigArray=self::listClasses($courseId);
         $classConfigArray=$classConfigArray->toArray();
@@ -218,36 +219,105 @@ pagination section
      }
 
      /**
-      * Show classes with students enrolled in it
+      *  Remove enrollment
+      */ 
+      public function unenroll($id,$classId,$studentSurname){
+
+        $classId=htmlspecialchars($classId,ENT_QUOTES);
+        $studentId=htmlspecialchars($id,ENT_QUOTES);
+        $studentSurname=htmlspecialchars($studentSurname,ENT_QUOTES);
+      
+       $class=Studentclass::find($classId);
+       $class->students()->detach($studentId);
+
+       return Redirect::route('class.show',['id'=>$classId])->with('message', $studentSurname);
+          
+      }
+
+     /**
+      * Show classes with students enrolled in a specific class it
      */
      public function show($id){
-        //dd($id);
-        $classConfigArray=DB::table('class')
-                ->where('id',$id)
-                ->get();
+         $classId=htmlspecialchars($id,ENT_QUOTES);
 
-        $classConfigArray=$classConfigArray[0];
+         //Get the students from DB
+        $studentConfigArray=DB::table('students')
+        ->select('*')
+        ->join('student_studentclass', function($join){
+            $join->on('student_studentclass.student_id','=','students.id');
+        })
+        ->where('student_studentclass.studentclass_id','=',$id)
+        ->orderBy('students.surname')
+        ->orderBy('students.name')
+        ->get();
+        
+        $studentConfigArray=$studentConfigArray->toArray();
+
+        //Get information about the class from DB
+        $classConfigArray=DB::table('studentclasses')
+        ->where('id','=',$classId)
+        ->get()
+        ->toArray();
+
+       //dd($classConfigArray);
+// Get the course name, level and course_d from the DB
+/*
+       $courseConfigArray=DB::table('subjects')
+       ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
+       ->join('courses', function($join){
+           $join->on('subjects.course_id','=','courses.id');
+       })
+       ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?)', [$classId])
+       ->orderBy('courses.name')
+       ->get();
+***/
+       
+        $courseConfigArray=DB::table('subjects')
+        ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
+        ->join('courses', function($join){
+            $join->on('subjects.course_id','=','courses.id');
+        })
+        ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?) AND
+            level_id=(SELECT level_id FROM studentclasses WHERE id=?)', [$classId,$classId])
+        ->orderBy('courses.name')
+        ->get();
 
         return Inertia::render('class/show',[
-            'classConfigArray'=>$classConfigArray
+            'studentConfigArray'=>$studentConfigArray,
+            'classConfigArray'=>$classConfigArray[0],
+            'courseConfigArray'=>$courseConfigArray[0]
         ]);
      }
 
     /***
-     *Show students page 
+     *Show students page, excludes all students already enrolled in the class from the list 
      */
 
-     public function student(){
-
+     public function student($id,$className){
+       
+        $className=htmlspecialchars($className,ENT_QUOTES);
+        $classId=htmlspecialchars($id,ENT_QUOTES);
+        
+      /*
         $studentConfigArray=DB::table('students')
         ->orderBy('year', 'desc')
         ->orderBy('surname', 'asc')                        
         ->paginate(15);
-        
-    $studentConfigArray=$studentConfigArray->toArray();
+        ***/
+       
+        $studentConfigArray=DB::table('students')
+            ->whereRaw('id NOT IN (SELECT student_id FROM student_studentclass WHERE studentclass_id=?)',[$classId])
+            ->orderBy('year', 'desc')
+            ->orderBy('surname', 'asc')                        
+            ->paginate(15);
+
+            //dd($studentConfigArray);
+     $studentConfigArray=$studentConfigArray->toArray();
         
 
          return Inertia::render('class/student',[
+            'className'=>$className,
+            'classId'=>$classId,
             'studentConfigArray'=>$studentConfigArray['data'],
             'currentPage'=>$studentConfigArray['current_page'],
             'lastPage'=>$studentConfigArray['last_page'],
@@ -258,10 +328,12 @@ pagination section
      }
      /**
       * search for the student to be enrolled
-     
       */
       
-      public function studentSearch(Request $request){
+      public function studentSearch(Request $request, $classId, $className){
+       $className=htmlspecialchars($className,ENT_QUOTES);
+       $classId=htmlspecialchars($classId,ENT_QUOTES);
+
         if(!array_key_exists('page',$request->toArray())){
             $request->validate( [
             'surname' => [
@@ -282,25 +354,26 @@ pagination section
     
     if($year==null){
         // sanitization of the data to be taken from the url parameters
-        $year=htmlspecialchars($_GET["year"]);
+        $year=htmlspecialchars($_GET["year"],ENT_QUOTES);
     }
 
     if($surname==null){
-        $surname=htmlspecialchars($_GET["surname"]);
+        $surname=htmlspecialchars($_GET["surname"],ENT_QUOTES);
     }
     
    
     if($surname==null){
         $studentConfigArray=DB::table('students')
                         ->select('*')
-                        ->whereRaw('year=?', [$year])
-                        ->paginate(1);
+                        ->whereRaw('year=? AND id NOT IN (SELECT student_id FROM student_studentclass WHERE studentclass_id=?)', [$year,$classId])
+                        ->paginate(15);
     }
     else{
         $studentConfigArray=DB::table('students')
             ->select('*')
-            ->whereRaw('MATCH(surname, name)AGAINST (? WITH QUERY EXPANSION) AND year=?', [$surname, $year])
-            ->paginate(1);
+            ->whereRaw('MATCH(surname, name)AGAINST (? WITH QUERY EXPANSION) AND year=?
+                AND id NOT IN (SELECT student_id FROM student_studentclass WHERE studentclass_id=?)', [$surname, $year,$classId])
+            ->paginate(15);
     }
     
     
@@ -311,6 +384,8 @@ pagination section
    // dd($studentConfigArray);
     //dd(htmlspecialchars($_GET["surname"]));
     return Inertia::render('class/student',[
+        'classId'=>$classId,
+        'className'=>$className,
         'studentConfigArray'=>$studentConfigArray['data'],
         'currentPage'=>$studentConfigArray['current_page'],
         'lastPage'=>$studentConfigArray['last_page'],
@@ -322,19 +397,43 @@ pagination section
     ]);
       }
 
+
+
+
+    /**
+     * Enroll student to a classroom
+     * */ 
+
+     public function enroll(Request $request){ 
+        
+        $class=Studentclass::find($request->classId);
+        $class->students()->attach($request->id);
+
+        $student=DB::table('students')
+        ->where('id','=',$request->id)
+        ->get()
+        ->toArray()[0];
+
+        $className=DB::table('studentclasses')
+        ->where('id','=',$request->classId)
+        ->get()
+        ->toArray()[0];
+        dd($className['name']);
+       return Redirect::route('class.student',['id'=>$request->classId, 'className'=>$className])->with('message', $sudent['surname']);
+     }
     /**
      * list classes for a certain course
      * 
     */
 
     public function listClasses($courseId){
-        $classConfigArray=DB::table('class')
-        ->select('class.id as id', 'class.name as name','class.year as year','levels.name as level')
+        $classConfigArray=DB::table('studentclasses')
+        ->select('studentclasses.id as id', 'studentclasses.name as name','studentclasses.year as year','levels.name as level')
         ->join('levels', function($join){
-            $join->on('class.level_id','=','levels.id');
+            $join->on('studentclasses.level_id','=','levels.id');
         })
-        ->where('class.course_id','=',$courseId)
-        ->orderByDesc('class.year')
+        ->where('studentclasses.course_id','=',$courseId)
+        ->orderByDesc('studentclasses.year')
         ->paginate(15);
         
         return $classConfigArray;

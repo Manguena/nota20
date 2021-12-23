@@ -33,7 +33,7 @@
                 <tbody>
                     <tr v-for="item in courseArray" :key="item.id"> 
                         <td>
-                            <inertia-link v-bind:href="'/class/subject/'+item.name+'/'+item.id">{{item.name}}</inertia-link>
+                            <inertia-link v-bind:href="'/class/'+item.name+'/'+item.id">{{item.name}}</inertia-link>
                         </td>
                     </tr>
                 </tbody>
@@ -42,7 +42,7 @@
         
         </form>
             <!--Link for the searched course to be clicked programmatically-->
-            <inertia-link id="subjectLink" v-bind:href="'/class/subject/'+searchItemName+'/'+searchItemId"></inertia-link> 
+            <inertia-link id="subjectLink" v-bind:href="'/class/'+searchItemName+'/'+searchItemId"></inertia-link> 
             
         <div class="course-pagination">
             <Pagination 

@@ -13507,14 +13507,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
-  props: ['classConfigArray', 'courseName', 'courseId', 'subjectConfigArray'],
+  props: ['courseConfigArray', 'studentConfigArray', 'classConfigArray'],
   data: function data() {
-    return {};
+    return {
+      deleteEnrollmentSpinner: false,
+      studentId: 0,
+      studentSurname: null
+    };
   },
-  methods: {}
+  methods: {
+    /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
+    showDeleteModal: function showDeleteModal(id, surname) {
+      this.studentId = id;
+      this.studentSurname = surname;
+      $('#showdeletemodal').modal('show');
+    },
+
+    /*remove student from enrolled class*/
+    removeEnrollment: function removeEnrollment() {
+      this.deleteEnrollmentSpinner = true;
+      this.$inertia["delete"]("/class/unenroll/".concat(this.studentId, "/").concat(this.classConfigArray['id'], "/").concat(this.studentSurname));
+      this.deleteEnrollmentSpinner = false;
+    }
+  },
+  created: function created() {// console.log(this.classConfigArray);
+    //...after the operation is done....
+  }
 });
 
 /***/ }),
@@ -13603,6 +13671,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -13610,7 +13691,7 @@ __webpack_require__.r(__webpack_exports__);
     Pagination: _shared_pagination__WEBPACK_IMPORTED_MODULE_1__.default
   },
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
-  props: ['studentConfigArray', 'urlParameter1', 'urlParameter2', 'lastPage', 'currentPage', 'route', 'isSearchable', 'queryString'],
+  props: ['classId', 'className', 'studentConfigArray', 'urlParameter1', 'urlParameter2', 'lastPage', 'currentPage', 'route', 'isSearchable', 'queryString'],
   data: function data() {
     return {
       search: {
@@ -13621,7 +13702,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     searchBar: function searchBar() {
-      this.$inertia.get("/class/studentsearch", this.search);
+      this.$inertia.get("/class/studentsearch/".concat(this.classId, "/").concat(this.className), this.search);
+    },
+    enroll: function enroll(id, classId) {
+      this.$inertia.post("/class/enroll", {
+        id: id,
+        classId: classId
+      });
     }
   },
   computed: {
@@ -13638,8 +13725,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     }
   },
-  created: function created() {
-    console.log(this.route);
+  created: function created() {//console.log(this.className);
   }
 });
 
@@ -21053,7 +21139,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.table-button[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-16102d7d]{\r\n    color: #dc2020;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d], .createdAlert[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -21077,7 +21163,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.inputError[data-v-0b9dbfeb], .inputError[data-v-0b9dbfeb]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.search-create[data-v-0b9dbfeb]{\r\n    display: flex;\r\n    margin-top: 30px;\r\n    margin-bottom: 30px;\n}\n.center-msg[data-v-0b9dbfeb]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.data-table-input[data-v-0b9dbfeb]{\r\n    max-width: 350px;\r\n    min-width: 150px;\n}\n.search-create-btn[data-v-0b9dbfeb]{\r\n    margin-left: auto;\n}\n.search-create-btn label[data-v-0b9dbfeb], .search-group-btn span[data-v-0b9dbfeb]{ \r\n    display: inline;\r\n    margin: 0;\n}\n.table-light thead th[data-v-0b9dbfeb]{\r\n        border-bottom-color: #818d99;\n}\n.table-light th[data-v-0b9dbfeb], .table-light td[data-v-0b9dbfeb], .table-light tbody + tbody[data-v-0b9dbfeb] {\r\n    border-color:#818d99;\n}\n@media screen and (max-width: 576px){\n.data-table-input[data-v-0b9dbfeb]{\r\n        margin-right: 1rem;\n}\n.search-create-btn[data-v-0b9dbfeb]{\r\nmargin-left:auto;\n}\n.search-group-btn span[data-v-0b9dbfeb]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (max-width:800px){\n.search-create-btn label[data-v-0b9dbfeb]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (min-width: 577px){\n.search-img[data-v-0b9dbfeb]{\r\n       display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.inputError[data-v-0b9dbfeb], .inputError[data-v-0b9dbfeb]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.search-create[data-v-0b9dbfeb]{\r\n    display: flex;\r\n    margin-top: 30px;\r\n    margin-bottom: 30px;\n}\n.center-msg[data-v-0b9dbfeb]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.breadcrumb[data-v-0b9dbfeb]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.data-table-input[data-v-0b9dbfeb]{\r\n    max-width: 350px;\r\n    min-width: 150px;\n}\n.search-create-btn[data-v-0b9dbfeb]{\r\n    margin-left: auto;\n}\n.search-create-btn label[data-v-0b9dbfeb], .search-group-btn span[data-v-0b9dbfeb]{ \r\n    display: inline;\r\n    margin: 0;\n}\n.table-light thead th[data-v-0b9dbfeb]{\r\n        border-bottom-color: #818d99;\n}\n.table-light th[data-v-0b9dbfeb], .table-light td[data-v-0b9dbfeb], .table-light tbody + tbody[data-v-0b9dbfeb] {\r\n    border-color:#818d99;\n}\n@media screen and (max-width: 576px){\n.data-table-input[data-v-0b9dbfeb]{\r\n        margin-right: 1rem;\n}\n.search-create-btn[data-v-0b9dbfeb]{\r\nmargin-left:auto;\n}\n.search-group-btn span[data-v-0b9dbfeb]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-0b9dbfeb], .page-navigation[data-v-0b9dbfeb], .createdAlert[data-v-0b9dbfeb] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width:800px){\n.search-create-btn label[data-v-0b9dbfeb]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (min-width: 577px){\n.search-img[data-v-0b9dbfeb]{\r\n       display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -58430,8 +58516,7 @@ var render = function() {
                           "inertia-link",
                           {
                             attrs: {
-                              href:
-                                "/class/subject/" + item.name + "/" + item.id
+                              href: "/class/" + item.name + "/" + item.id
                             }
                           },
                           [_vm._v(_vm._s(item.name))]
@@ -58451,7 +58536,7 @@ var render = function() {
       _c("inertia-link", {
         attrs: {
           id: "subjectLink",
-          href: "/class/subject/" + _vm.searchItemName + "/" + _vm.searchItemId
+          href: "/class/" + _vm.searchItemName + "/" + _vm.searchItemId
         }
       }),
       _vm._v(" "),
@@ -59066,6 +59151,26 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _vm.$page.props.flash.message
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-danger alert-dismissible fade show mt-4 mb-1 createdAlert",
+            attrs: { role: "alert" }
+          },
+          [
+            _c("span", { staticClass: "center-msg" }, [
+              _vm._v("Estudante "),
+              _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
+              _vm._v(" Removido com Sucesso")
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c(
       "nav",
       {
@@ -59086,7 +59191,7 @@ var render = function() {
             { staticClass: "breadcrumb-item" },
             [
               _c("inertia-link", { attrs: { href: "/class/course" } }, [
-                _vm._v("Curso")
+                _vm._v("Turma")
               ])
             ],
             1
@@ -59098,7 +59203,7 @@ var render = function() {
               staticClass: "breadcrumb-item",
               attrs: { "aria-current": "page" }
             },
-            [_vm._v("Disciplina")]
+            [_vm._v("Inscrição")]
           )
         ])
       ]
@@ -59124,10 +59229,41 @@ var render = function() {
               "inertia-link",
               {
                 staticClass: "btn btn-primary",
-                attrs: { href: "/class/student" }
+                attrs: {
+                  href:
+                    "/class/student/" +
+                    _vm.classConfigArray["id"] +
+                    "/" +
+                    _vm.classConfigArray["name"]
+                }
               },
               [
                 _vm._v("\n                    Inscrever\n                    "),
+                _c("font-awesome-icon", {
+                  attrs: { icon: ["fas", "list"], size: "1x" }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "inertia-link",
+              {
+                staticClass: "btn btn-primary",
+                attrs: {
+                  href:
+                    "/class/subject/" +
+                    _vm.courseConfigArray["name"] +
+                    "/" +
+                    _vm.courseConfigArray["course_id"] +
+                    "/" +
+                    _vm.courseConfigArray["level_id"]
+                }
+              },
+              [
+                _vm._v(
+                  "\n                    Disciplina\n                    "
+                ),
                 _c("font-awesome-icon", {
                   attrs: { icon: ["fas", "list"], size: "1x" }
                 })
@@ -59146,15 +59282,48 @@ var render = function() {
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.subjectConfigArray, function(item) {
+              _vm._l(_vm.studentConfigArray, function(item) {
                 return _c("tr", { key: item.id }, [
-                  _c("td", [_vm._v(_vm._s(item.subject))]),
+                  _c("td", [_vm._v(_vm._s(item.surname))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(item.level))])
+                  _c("td", [_vm._v(_vm._s(item.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.year))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.id_number))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "table-button",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.showDeleteModal(item.id, item.surname)
+                          }
+                        }
+                      },
+                      [
+                        _vm.deleteEnrollmentSpinner
+                          ? _c("span", {
+                              staticClass: "spinner-grow spinner-grow-sm",
+                              attrs: { role: "status", "aria-hidden": "true" }
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("font-awesome-icon", {
+                          staticClass: "table-delete",
+                          attrs: { icon: ["fas", "trash"] }
+                        })
+                      ],
+                      1
+                    )
+                  ])
                 ])
               }),
               0
@@ -59164,7 +59333,77 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("br")
+    _c("br"),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "showdeletemodal",
+          tabindex: "-1",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c(
+                "h5",
+                {
+                  staticClass: "modal-title",
+                  attrs: { id: "exampleModalLabel" }
+                },
+                [
+                  _c(
+                    "span",
+                    { staticClass: "badge badge badge-danger" },
+                    [
+                      _c("font-awesome-icon", {
+                        attrs: { icon: ["fas", "user-minus"] }
+                      }),
+                      _vm._v(" Remover")
+                    ],
+                    1
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(2)
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm._v(
+                "\n             Deseja remover o estudante da turma?\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-secondary",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Não")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button", "data-dismiss": "modal" },
+                  on: { click: _vm.removeEnrollment }
+                },
+                [_vm._v("Sim")]
+              )
+            ])
+          ])
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -59172,13 +59411,55 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Apelido")]),
+        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nível")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Ano de matricula")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [
+          _vm._v("Documento de identificao")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Inscrição")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
@@ -59212,6 +59493,68 @@ var render = function() {
             "div",
             {
               staticClass:
+                "alert alert-danger alert-dismissible fade show mt-4 mb-1 createdAlert",
+              attrs: { role: "alert" }
+            },
+            [
+              _c("span", { staticClass: "center-msg" }, [
+                _vm._v(_vm._s(_vm.$page.props.flash.message))
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "nav",
+        {
+          staticStyle: { "breadcrumb-divider": "''" },
+          attrs: { "aria-label": "breadcrumb" }
+        },
+        [
+          _c("ol", { staticClass: "breadcrumb page-navigation" }, [
+            _c(
+              "li",
+              { staticClass: "breadcrumb-item" },
+              [
+                _c("inertia-link", { attrs: { href: "/" } }, [
+                  _vm._v(" Painel")
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "breadcrumb-item" },
+              [
+                _c("inertia-link", { attrs: { href: "/class/course" } }, [
+                  _vm._v("Estudante")
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              {
+                staticClass: "breadcrumb-item",
+                attrs: { "aria-current": "page" }
+              },
+              [_vm._v("Inscrição")]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _vm.$page.props.flash.message
+        ? _c(
+            "div",
+            {
+              staticClass:
                 "alert alert-success alert-dismissible fade show mt-4 mb-1",
               attrs: { role: "alert" }
             },
@@ -59222,7 +59565,7 @@ var render = function() {
                 _vm._v(" Excluido com sucesso")
               ]),
               _vm._v(" "),
-              _vm._m(0)
+              _vm._m(1)
             ]
           )
         : _vm._e(),
@@ -59336,14 +59679,14 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(1),
+      _vm._m(2),
       _vm._v(" "),
       _c("div", { staticClass: "table-responsive-sm" }, [
         _c(
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(2),
+            _vm._m(3),
             _vm._v(" "),
             _c(
               "tbody",
@@ -59414,7 +59757,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "table-button",
-                        attrs: { type: "button" }
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.enroll(studentData.id, _vm.classId)
+                          }
+                        }
                       },
                       [
                         _c("font-awesome-icon", {
@@ -59449,6 +59797,23 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -63397,10 +63762,12 @@ var render = function() {
             attrs: { role: "alert" }
           },
           [
-            _c("span", { staticClass: "center-msg" }, [
-              _vm._v("Usuário "),
-              _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
-              _vm._v(" criado com sucesso")
+            _c("div", [
+              _c("span", { staticClass: "center-msg" }, [
+                _vm._v("Usuário "),
+                _c("strong", [_vm._v(_vm._s(_vm.$page.props.flash.message))]),
+                _vm._v(" criado com sucesso")
+              ])
             ]),
             _vm._v(" "),
             _vm._m(0)
