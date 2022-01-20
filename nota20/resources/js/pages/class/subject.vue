@@ -12,7 +12,7 @@
     <br/>
         <div id="viewEditForm"></div>
         <form class="create-user-form" >
-           <h4 id="">Curso de: {{courseName}} </h4>
+           <h4 id="">Turma: {{className}}</h4>
             <p></p>
 
             <div class="form-row "> 
@@ -22,14 +22,6 @@
                         <font-awesome-icon :icon="['fas', 'plus']" size="1x" />
                     </inertia-link>
                 </div--->
-
-
-                <div class="form-group col-12">
-                    <inertia-link v-bind:href="'/class/'+courseName+'/'+courseId" class="btn btn-primary">
-                        Turma
-                        <font-awesome-icon :icon="['fas', 'chalkboard-teacher']" size="1x"/>
-                    </inertia-link>
-                </div>
             </div>
 
 
@@ -44,8 +36,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in subjectConfigArray" :key="item.id"> 
-                        <td>{{item.subject}}</td>
-                        <td>{{item.level}}</td>
+                        <td><inertia-link :href="'/class/grade/'+classId+'/'+item.id">{{item.subject}}</inertia-link></td>
+                        <td>  {{item.level}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -60,7 +52,7 @@ import Layout from '../shared/layout';
 
 export default {
       layout:Layout,
-      props:['courseName', 'courseId', 'subjectConfigArray'],  
+      props:['className','classId', 'courseId', 'subjectConfigArray'],  
      data(){
         return{
            

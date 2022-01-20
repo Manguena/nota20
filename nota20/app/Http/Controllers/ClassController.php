@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\Studentclass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
@@ -69,11 +70,12 @@ pagination section
 /***
  * list the subject for the course
  * **/
-    public function subject($courseName, $courseId){
-        $subjectArray=self::listSubject($courseId);
+    public function subject($courseName, $courseId,$className,$classId,$levelId){
+        $subjectArray=self::listSubject($courseId, $levelId);
 
         return Inertia::render('class/subject',[
-            'courseName'=>$courseName,
+            'className'=>$className,
+            'classId'=>$classId,
             'courseId'=>$courseId,
             'subjectConfigArray'=>$subjectArray
         ]);
@@ -110,6 +112,54 @@ pagination section
             'queryString'=>''
 
         ]);
+    }
+
+/*
+    Se the students grade for the current subject
+*/
+    public function grade($classId, $subjectId){
+        $classId=htmlspecialchars($classId,ENT_QUOTES);
+
+        //Get the students from DB
+       $studentConfigArray=DB::table('students')
+       ->select('*')
+       ->join('student_studentclass', function($join){
+           $join->on('student_studentclass.student_id','=','students.id');
+       })
+       ->where('student_studentclass.studentclass_id','=',$classId)
+       ->orderBy('students.surname')
+       ->orderBy('students.name')
+       ->get();
+       
+       $studentConfigArray=$studentConfigArray->toArray();
+
+       //Get information about the class from DB
+       $classConfigArray=DB::table('studentclasses')
+       ->where('id','=',$classId)
+       ->get()
+       ->toArray();
+
+   // Get the course name, level and course_d from the DB
+      /*
+       $courseConfigArray=DB::table('subjects')
+       ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
+       ->join('courses', function($join){
+           $join->on('subjects.course_id','=','courses.id');
+       })
+       ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?) AND
+           level_id=(SELECT level_id FROM studentclasses WHERE id=?)', [$classId,$classId])
+       ->orderBy('courses.name')
+       ->get();
+       ***/
+
+       return Inertia::render('class/grade',[
+           'studentConfigArray'=>$studentConfigArray,
+           'classConfigArray'=>$classConfigArray[0],
+           'subjectId'=>$subjectId,
+           'arr'=>[1,2,3,4,5]
+          // 'courseConfigArray'=>$courseConfigArray[0]
+       ]);
+
     }
 
     public function store(Request $request){
@@ -160,6 +210,62 @@ pagination section
             'levelId'=>$request->levelId,
             'year'=>$class->year
         ]);
+        
+    }
+    /**
+     * Store grades in the database
+    */
+
+    public function storeGrade(Request $request){
+        $studentArray=$request->toArray();
+        $errorArray=[];
+       
+       foreach ($studentArray as $value) {
+        $key=$value["id"];
+        $validator = Validator::make($value, [
+                    'id' => [
+                        'required',
+                        'integer',
+                        'min:1',
+                    ],
+                    'value' => [
+                        'required',
+                        'numeric',
+                        'min:0',
+                        'max:20'
+                    ]
+
+                ]);
+                //create an array with objects containing errors an student Id
+            if($validator->fails()){
+                $error=$validator->errors();
+                $errorArray [$value["id"]]=$error->first('value');
+            
+            }
+        
+        }
+
+        $classId=$request[0]['class'];
+
+        $subjectId=$request[0]['subject'];
+        $subject=Subject::find( $subjectId);
+
+       // dd($subject);
+    //class
+    $data=$request->toArray();
+
+    foreach ($data as $value) {
+        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
+        
+    }
+    
+        // Break reference with the last element(Fom PHP.NET)
+        unset($value);
+       
+        if (count($errorArray)>0){
+            return Redirect::route('class.grade',['classId'=>50])->withErrors($errorArray);
+        }  
+       
         
     }
 
@@ -230,15 +336,16 @@ pagination section
        $class=Studentclass::find($classId);
        $class->students()->detach($studentId);
 
-       return Redirect::route('class.show',['id'=>$classId])->with('message', $studentSurname);
+       return Redirect::route('class.show',['classId'=>$classId])->with('message', $studentSurname);
           
       }
 
      /**
       * Show classes with students enrolled in a specific class it
      */
-     public function show($id){
-         $classId=htmlspecialchars($id,ENT_QUOTES);
+     public function show($classId){
+        
+         $classId=htmlspecialchars($classId,ENT_QUOTES);
 
          //Get the students from DB
         $studentConfigArray=DB::table('students')
@@ -246,7 +353,7 @@ pagination section
         ->join('student_studentclass', function($join){
             $join->on('student_studentclass.student_id','=','students.id');
         })
-        ->where('student_studentclass.studentclass_id','=',$id)
+        ->where('student_studentclass.studentclass_id','=',$classId)
         ->orderBy('students.surname')
         ->orderBy('students.name')
         ->get();
@@ -259,18 +366,7 @@ pagination section
         ->get()
         ->toArray();
 
-       //dd($classConfigArray);
-// Get the course name, level and course_d from the DB
-/*
-       $courseConfigArray=DB::table('subjects')
-       ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
-       ->join('courses', function($join){
-           $join->on('subjects.course_id','=','courses.id');
-       })
-       ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?)', [$classId])
-       ->orderBy('courses.name')
-       ->get();
-***/
+    // Get the course name, level and course_d from the DB
        
         $courseConfigArray=DB::table('subjects')
         ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
@@ -281,7 +377,7 @@ pagination section
             level_id=(SELECT level_id FROM studentclasses WHERE id=?)', [$classId,$classId])
         ->orderBy('courses.name')
         ->get();
-
+        
         return Inertia::render('class/show',[
             'studentConfigArray'=>$studentConfigArray,
             'classConfigArray'=>$classConfigArray[0],
@@ -414,12 +510,17 @@ pagination section
         ->get()
         ->toArray()[0];
 
+        $student=(array)$student;//Typecast Object A.K.A stdClass to array to avoid errors 
+        
+
         $className=DB::table('studentclasses')
         ->where('id','=',$request->classId)
         ->get()
         ->toArray()[0];
-        dd($className['name']);
-       return Redirect::route('class.student',['id'=>$request->classId, 'className'=>$className])->with('message', $sudent['surname']);
+
+        $className= (array)$className;// //Typecast Object A.K.A stdClass to array to avoid errors
+        
+        return Redirect::route('class.student',['id'=>$request->classId, 'className'=>$className['name']])->with('message', $student['surname']);
      }
     /**
      * list classes for a certain course
@@ -442,7 +543,7 @@ pagination section
      /*
     List of subjects for the current course
     */
-    public function listSubject($courseId){
+    public function listSubject($courseId,$levelId){
         // inner join sql
         $subjectArray=DB::table('subjects')
         ->select('subjects.id as id','subjects.name as subject', 'subjects.course_id','levels.name as level')
@@ -450,6 +551,7 @@ pagination section
             $join->on('subjects.level_id','=','levels.id');
         })
         ->where('subjects.course_id','=',$courseId)
+        ->whereRaw('levels.name= (SELECT levels.name FROM levels WHERE levels.id=?)',[$levelId])
         ->orderBy('levels.order')
         ->get();
 

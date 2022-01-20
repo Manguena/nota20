@@ -138,10 +138,12 @@ Route::delete('/subject/{id}/{courseId}', [App\Http\Controllers\SubjectControlle
 
 // get the page to create the subjects
 Route::get('/class/course', [App\Http\Controllers\ClassController::class, 'course'])->name('class.course')->middleware('auth');
+//Put students grades for the current subject
+Route::get('/class/grade/{classId}/{subjectId}', [App\Http\Controllers\ClassController::class, 'grade'])->name('class.grade')->middleware('auth');
 //search the courses 
 Route::get('/class/search', [App\Http\Controllers\ClassController::class, 'search'])->name('class.search')->middleware('auth');
 // display the course subjects 
-Route::get('/class/subject/{courseName}/{courseId}/{levelId}', [App\Http\Controllers\ClassController::class, 'subject'])->name('class.subject')->middleware('auth');
+Route::get('/class/subject/{courseName}/{courseId}/{className}/{classId}/{levelId}', [App\Http\Controllers\ClassController::class, 'subject'])->name('class.subject')->middleware('auth');
 //Get the students page for enrollment
 Route::get('/class/student/{id}/{className}', [App\Http\Controllers\ClassController::class, 'student'])->name('class.student')->middleware('auth');
 //search for student to be enrolled
@@ -150,6 +152,8 @@ Route::get('/class/studentsearch/{id}/{className}', [App\Http\Controllers\ClassC
 Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
   //stores the classes into the database
 Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth');
+//stores grades in the database
+Route::post('/class/grade', [App\Http\Controllers\ClassController::class, 'storeGrade'])->name('class.storeGrade')->middleware('auth');
 //update className
 Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth');
 // remove student from  class
@@ -157,9 +161,10 @@ Route::delete('/class/unenroll/{id}/{classId}/{studentSurname}', [App\Http\Contr
 //Delete the class
 Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth');
 //Load a classroom with enrolled students in it
-Route::get('/class/{id}', [App\Http\Controllers\ClassController::class, 'show'])->name('class.show')->middleware('auth');
+Route::get('/class/{classId}', [App\Http\Controllers\ClassController::class, 'show'])->name('class.show')->middleware('auth');
 //enroll a student in a class
 Route::post('/class/enroll', [App\Http\Controllers\ClassController::class, 'enroll'])->name('class.enroll')->middleware('auth');
+
 
 
 

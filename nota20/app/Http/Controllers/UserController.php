@@ -129,7 +129,6 @@ class UserController extends Controller
         // You can only create a user if you are an administrator,
         // otherwise throw error
         Gate::authorize('create-user');
-
         //validation of input
          $request->validate([
             'apelido' => 'required|max:255|min:3',
