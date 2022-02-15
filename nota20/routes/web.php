@@ -154,6 +154,8 @@ Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassControll
 Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth');
 //stores grades in the database
 Route::post('/class/grade', [App\Http\Controllers\ClassController::class, 'storeGrade'])->name('class.storeGrade')->middleware('auth');
+//Update the students' grade
+Route::patch('/class/grade/updategrade', [App\Http\Controllers\ClassController::class, 'updateGrade'])->name('class.updateGrade')->middleware('auth');
 //update className
 Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth');
 // remove student from  class

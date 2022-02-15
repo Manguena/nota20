@@ -133,30 +133,26 @@ pagination section
        
        $studentConfigArray=$studentConfigArray->toArray();
 
+       //dd($studentConfigArray);
        //Get information about the class from DB
        $classConfigArray=DB::table('studentclasses')
        ->where('id','=',$classId)
        ->get()
        ->toArray();
 
-   // Get the course name, level and course_d from the DB
-      /*
-       $courseConfigArray=DB::table('subjects')
-       ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
-       ->join('courses', function($join){
-           $join->on('subjects.course_id','=','courses.id');
-       })
-       ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?) AND
-           level_id=(SELECT level_id FROM studentclasses WHERE id=?)', [$classId,$classId])
-       ->orderBy('courses.name')
-       ->get();
-       ***/
-
+    // get the grades for the specific subject from the DB
+    $gradeConfigArray=DB::table('student_subject')
+    ->where('class_id','=',$classId)
+    ->where('subject_id','=',$subjectId)
+    ->get()
+    ->toArray();
+    
+       
        return Inertia::render('class/grade',[
            'studentConfigArray'=>$studentConfigArray,
            'classConfigArray'=>$classConfigArray[0],
            'subjectId'=>$subjectId,
-           'arr'=>[1,2,3,4,5]
+           'gradeConfigArray'=>$gradeConfigArray
           // 'courseConfigArray'=>$courseConfigArray[0]
        ]);
 
@@ -250,23 +246,51 @@ pagination section
         $subjectId=$request[0]['subject'];
         $subject=Subject::find( $subjectId);
 
-       // dd($subject);
-    //class
+  
+    
     $data=$request->toArray();
-
+        // insert the data into the database by looping the request from the front end
     foreach ($data as $value) {
         $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
         
     }
     
-        // Break reference with the last element(Fom PHP.NET)
-        unset($value);
+        unset($value);// Break reference with the last element(Fom PHP.NET)
        
         if (count($errorArray)>0){
             return Redirect::route('class.grade',['classId'=>50])->withErrors($errorArray);
         }  
        
         
+    }
+
+    public function updateGrade(Request $request){
+       
+        $data=$request->toArray();
+        
+       // $classId=$request[0]['class'];->Not used
+
+        $subjectId=$request[0]['subject'];
+        $subject=Subject::find($subjectId);//get the subject
+
+       // loop the request and update the table in the DB
+        foreach ($data as $value) {
+            //$subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
+            if($value['operation']=='update'){// determine if an update is going to occur 
+            $subject->students()->updateExistingPivot($value['id'], [
+                'class_id'=>$value['class'],
+                'grade'=>$value['value']
+            ]);
+        }
+        else {
+            # fuck with Mungos Marquez
+            $subject->students()->attach($value['id'], [
+                'class_id'=>$value['class'],
+                'grade'=>$value['value']
+            ]);
+            
+        }
+        }
     }
 
     /****

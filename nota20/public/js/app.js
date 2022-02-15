@@ -13145,35 +13145,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
-  props: ['studentConfigArray', 'classConfigArray', 'subjectId'],
+  props: ['studentConfigArray', 'classConfigArray', 'subjectId', 'gradeConfigArray'],
   data: function data() {
     return {
       deleteEnrollmentSpinner: false,
       studentId: 0,
       studentSurname: null,
-      studentGrade: []
+      studentGrade: [],
+      studentsWithGrade: [],
+      updateButton: false
     };
   },
   methods: {
     storeGrade: function storeGrade() {
       this.$inertia.post("/class/grade", this.studentGrade);
+    },
+    updateGrade: function updateGrade() {
+      this.$inertia.patch("/class/grade/updategrade", this.studentGrade);
     }
   },
   created: function created() {
-    for (var i = 0; i < this.studentConfigArray.length; i++) {
-      //console.log(this.studentConfigArray[i]);
-      this.studentGrade.push({
-        id: this.studentConfigArray[i]['id'],
-        name: this.studentConfigArray[i]['name'],
-        surname: this.studentConfigArray[i]['surname'],
-        value: null,
-        "class": this.classConfigArray['id'],
-        subject: this.subjectId
-      });
-    }
+    var _this = this;
+
+    console.log();
+    /**
+     * Adds a student to the list if he/she has a grande,
+     * this process begins if the gradeConfigArray variable has some data,
+     * which means there are marks available
+     */
+
+    console.log(this.gradeConfigArray);
+
+    if (this.gradeConfigArray.length > 0) {
+      for (var i = 0; i < this.studentConfigArray.length; i++) {
+        for (var j = 0; j < this.gradeConfigArray.length; j++) {
+          if (this.studentConfigArray[i]['id'] === this.gradeConfigArray[j]['student_id']) {
+            this.updateButton = true; // show the update button if we have marks stred for a specific subject
+
+            this.studentGrade.push({
+              id: this.studentConfigArray[i]['id'],
+              name: this.studentConfigArray[i]['name'],
+              surname: this.studentConfigArray[i]['surname'],
+              value: this.gradeConfigArray[j]['grade'],
+              "class": this.classConfigArray['id'],
+              subject: this.subjectId,
+              operation: "update"
+            });
+            this.studentsWithGrade.push(this.gradeConfigArray[j]['student_id']);
+          }
+        }
+      }
+    } // Add students without grade to the list
+
+
+    var studentsWithoutGrade = this.studentConfigArray.filter(function (student) {
+      if (_this.studentsWithGrade.indexOf(student.id) === -1) {
+        _this.studentGrade.push({
+          id: student['id'],
+          name: student['name'],
+          surname: student['surname'],
+          value: null,
+          "class": _this.classConfigArray['id'],
+          subject: _this.subjectId,
+          operation: "create"
+        });
+      }
+    });
   }
 });
 
@@ -59239,17 +59283,29 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "saveGrades" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            attrs: { type: "button" },
-            on: { click: _vm.storeGrade }
-          },
-          [_vm._v("Guardar")]
-        )
-      ])
+      _vm.updateButton
+        ? _c("div", { staticClass: "saveGrades" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.updateGrade }
+              },
+              [_vm._v("Actualizar")]
+            )
+          ])
+        : _c("div", { staticClass: "saveGrades" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.storeGrade }
+              },
+              [_vm._v("Guardar")]
+            )
+          ])
     ]),
     _vm._v(" "),
     _c("br")

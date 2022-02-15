@@ -44,12 +44,16 @@
                 </tbody>
             </table>
         </div> 
-            <div  class=saveGrades>
+       
+            <div  class="saveGrades" v-if="updateButton">
+                <button type="button" v-on:click="updateGrade" class="btn btn-primary">Actualizar</button>         
+            </div>
+            <div  class="saveGrades" v-else>
                 <button type="button" v-on:click="storeGrade" class="btn btn-primary">Guardar</button>         
             </div>
         </form>
         <br/>
-
+            
         
     </div>
 </template>
@@ -58,33 +62,74 @@ import Layout from '../shared/layout';
 
 export default {
       layout:Layout,
-      props:['studentConfigArray','classConfigArray','subjectId'],  
+      props:['studentConfigArray','classConfigArray','subjectId', 'gradeConfigArray'],  
      data(){
         return{
            deleteEnrollmentSpinner:false,
            studentId:0,
            studentSurname:null,
-           studentGrade:[]
+           studentGrade:[],
+           studentsWithGrade:[],
+           updateButton:false
         }
     },
     methods:{
        storeGrade(){
             this.$inertia.post(`/class/grade`, this.studentGrade);
+       },
+       updateGrade(){
+            this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
        }
+       
     },
     created(){ 
-        for (let i=0; i<this.studentConfigArray.length; i++){
-            //console.log(this.studentConfigArray[i]);
-            this.studentGrade.push({
-                id:this.studentConfigArray[i]['id'],
-                name:this.studentConfigArray[i]['name'],
-                surname:this.studentConfigArray[i]['surname'],
-                value:null,
-                class:this.classConfigArray['id'],
-                subject: this.subjectId
-            });
+        console.log();
+    /**
+     * Adds a student to the list if he/she has a grande,
+     * this process begins if the gradeConfigArray variable has some data,
+     * which means there are marks available
+     */
+
+     console.log(this.gradeConfigArray);
+        if(this.gradeConfigArray.length>0){
+
+            for (let i=0; i<this.studentConfigArray.length; i++){
+                for (let j=0; j<this.gradeConfigArray.length; j++){
+                    if (this.studentConfigArray[i]['id']===this.gradeConfigArray[j]['student_id']){
+                         this.updateButton=true;// show the update button if we have marks stred for a specific subject
+                                        this.studentGrade.push({
+                                            id:this.studentConfigArray[i]['id'],
+                                            name:this.studentConfigArray[i]['name'],
+                                            surname:this.studentConfigArray[i]['surname'],
+                                            value:this.gradeConfigArray[j]['grade'],
+                                            class:this.classConfigArray['id'],
+                                            subject: this.subjectId,
+                                            operation:`update`
+                                        });
+
+                        this.studentsWithGrade.push(this.gradeConfigArray[j]['student_id']);
+                                        
+                                    }
+                }
+            }
+           
         }
-       
+         // Add students without grade to the list
+           const studentsWithoutGrade=this.studentConfigArray.filter(student=>{
+                    if (this.studentsWithGrade.indexOf(student.id)===-1){
+                        this.studentGrade.push({
+                            id:student['id'],
+                            name:student['name'],
+                            surname:student['surname'],
+                            value:null,
+                            class:this.classConfigArray['id'],
+                            subject: this.subjectId,
+                            operation:`create`
+
+                        });
+                    }
+               });
+           
     },
     
 } 
