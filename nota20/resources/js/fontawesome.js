@@ -15,10 +15,12 @@ import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faUserGraduate } from '@fortawesome/free-solid-svg-icons'
 import { faList } from '@fortawesome/free-solid-svg-icons'
+import { faPenSquare } from '@fortawesome/free-solid-svg-icons'
+
 
 
 
 library.add(faUsers,faArrowRight,faSearch,faExclamationCircle,faUserMinus,
     faKey,faCogs, faSchool,faEdit,faTrash,faChalkboardTeacher, faPlus, faUserGraduate,
-    faList  
+    faList, faPenSquare  
     )

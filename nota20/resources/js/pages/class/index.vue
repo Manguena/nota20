@@ -92,7 +92,6 @@
                     <th scope="col">Ano Lectivo</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
-                    <th scope="col">Inscritos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,7 +106,6 @@
                             <font-awesome-icon class="table-delete" :icon="['fas', 'trash']"/>
                         </button>
                     </td>
-                    <td>1</td>
                     </tr>
                 </tbody>
             </table>
@@ -125,6 +123,18 @@
         </div>
    <!--link to be clicked authomatically using code-->
    <inertia-link id="subjectLink" v-bind:href="'/class/'+courseName+'/'+courseId"></inertia-link>
+    
+    <!--Modal text-->
+
+    
+    <div class="modal fade " id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  not-authorized modal-xl">
+    <div class="modal-content ">
+        <p>403 | THIS ACTION IS  UNAUTHORIZED</p>
+    </div>
+  </div>
+</div>
+    <!--End of modal text-->
     </div>
 </template>
 <script>
@@ -264,6 +274,7 @@ export default {
                     that.subjectFeedbackSpinner=false
             })
             .catch(function (error) {
+                $('#modal').modal('show');
             })
             .then( (error) =>{
                that.searchItemName=null;
@@ -341,7 +352,7 @@ export default {
               that.classUpdateSpinner=false// disable the spinner
             })
             .catch((error)=>{
-                console.log(error);
+                $('#modal').modal('show');
             }) 
     },
 
@@ -361,7 +372,7 @@ export default {
                document.getElementById("subjectLink").click();
             })
             .catch((error)=>{
-                console.log(error);
+                    $('#modal').modal('show');
             })
     }
     },
@@ -463,6 +474,53 @@ form h4{
 .class-pagination{
     margin-top: 1rem;
 }
+
+.not-authorized{
+    max-width: 100%;
+
+
+}
+
+.not-authorized{
+    margin-top: 2.938rem;
+    margin-right: 3.063rem;
+    margin-left: 3.188rem;
+      
+  }
+
+.not-authorized div{
+    background: rgb(247 250 252);
+    box-sizing: border-box;
+    border: 0 solid #e2e8f0;
+    height:86vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.not-authorized p{
+font-family: 'Nunito', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    letter-spacing: .05em;
+    color: rgba(160,174,192,1);
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    
+    
+
+  }
+
+    @media screen and (min-width: 992px){
+  
+
+  
+}    
+
 
 @media screen and (min-width: 992px){
    .create-user-form, .page-navigation, .course-name,.class-pagination {

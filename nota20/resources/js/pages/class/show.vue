@@ -10,8 +10,9 @@
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-            <li class="breadcrumb-item"><inertia-link href="/class/course">Turma</inertia-link></li>
-            <li class="breadcrumb-item" aria-current="page">Inscrição</li>
+            <li class="breadcrumb-item"><inertia-link href="/class/course">Curso</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/'+courseConfigArray['name']+'/'+courseConfigArray['course_id']">Turma</inertia-link></li>
+            <li class="breadcrumb-item active" aria-current="page">Inscrição</li>
         </ol>
         </nav>
 
@@ -133,6 +134,7 @@ export default {
        // console.log(this.classConfigArray);
        
        //...after the operation is done....
+       console.log(this.courseConfigArray);
 
     } 
 } 

@@ -1,21 +1,12 @@
 <template>
     <div class="container">
-         <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
-            <span class="center-msg">Estudante&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Inscrito com Sucesso</span> 
+
+        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
+            <span class="center-msg">Utilizador&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Excluido com sucesso</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
-        <br/>
-         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
-            <ol class="breadcrumb page-navigation">
-                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-                <li class="breadcrumb-item"><inertia-link href="/student">Estudante</inertia-link></li>
-                <li class="breadcrumb-item active" aria-current="page">Inscrever</li>
-            </ol>
-        </nav>
-
             <div class="search-create">
                 <form>
                     <div class="form-row">
@@ -34,6 +25,7 @@
                         </div>
                     </div>
                 </form>
+                 <!---inertia-link href="/student/create" class="btn btn-primary search-create-btn">Criar <label>Estudante</label></inertia-link--->  
         </div>
 
        <div id="example-1">
@@ -41,8 +33,8 @@
             </div>
       </div>
 
-    
-        <div class="table-responsive-sm resultlist">
+
+        <div class="table-responsive-sm">
             <table class="table table-hover table-light user-table">
                 <thead>
                     <tr>
@@ -50,34 +42,33 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Ano de matricula</th>
                     <th scope="col">Documento de Identificacao</th>
-                    <th scope="col">Inscrição</th>
+                    <th scope="col">Relatório</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="studentData in studentConfigArray" :key="studentData.id">
-                    <td><inertia-link  v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.surname}}</inertia-link></td>
-                    <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
-                    <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
-                    <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
-                    <td><button class="table-button" v-on:click="enroll(studentData.id, classId)"  type="button"><font-awesome-icon class="table-edit" :icon="['fas', 'list']"/></button></td>
+                        <td><inertia-link  v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.surname}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark"><font-awesome-icon :icon="['fas', 'pen-square']" class="pen-icon"/></inertia-link></td>   
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="resultlist-pagination">
-                <Pagination 
-                v-bind:lastPage="lastPage"
-                v-bind:currentPage="currentPage"
-                v-bind:route="route"
-                v-bind:isSearchable="isSearchable"
-                v-bind:queryString="queryString"
-                v-bind:urlParameter1="urlParameter1"
-                v-bind:urlParameter2="urlParameter2"
-                >
-                </Pagination>
-        </div>
-    </div>
+        <Pagination 
+        v-bind:lastPage="lastPage"
+        v-bind:currentPage="currentPage"
+        v-bind:route="route"
+        v-bind:isSearchable="isSearchable"
+        v-bind:queryString="queryString"
+        v-bind:urlParameter1="urlParameter1"
+        v-bind:urlParameter2="urlParameter2"
 
+        >
+        </Pagination>
+
+    </div>
 </template>
 <script>
 import Layout from '../shared/layout';
@@ -88,7 +79,7 @@ export default {
         Pagination
     },
     layout:Layout,
-    props:['classId','className','studentConfigArray','urlParameter1','urlParameter2', 'lastPage','currentPage','route','isSearchable','queryString' ],
+    props:['studentConfigArray','urlParameter1','urlParameter2', 'lastPage','currentPage','route','isSearchable','queryString' ],
     data: function(){
         return{
             search:{
@@ -100,14 +91,8 @@ export default {
     },
     methods:{
         searchBar(){
-            this.$inertia.get(`/class/studentsearch/${this.classId}/${this.className}`, this.search)
-            }, 
-        enroll(id, classId){
-            this.$inertia.post(`/class/enroll`, {
-                id:id,
-                classId:classId 
-            })
-        }
+            this.$inertia.get(`/report/search`, this.search)
+            }
         },
     computed: {
         inputErrorSurname() {
@@ -124,7 +109,7 @@ export default {
         }
 },
 created(){
-    console.log(this.studentConfigArray);
+    console.log(this.route);
 }
     }
 </script>
@@ -141,18 +126,17 @@ created(){
     margin-top: 30px;
     margin-bottom: 30px;
 }
-/*
+
+.pen-icon{
+    color: #6b6316;
+    font-size: 1.2rem;
+
+}
+
 .center-msg{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-***/
-.breadcrumb{
-    background-color: #e2e2eb;
-    font-size:large;
-    padding-left:0;
-    padding-bottom:0;
 }
 
 .data-table-input{
@@ -191,14 +175,6 @@ margin-left:auto;
     height: 0;
     display: none;
 }
-
-}
-
-@media screen and (min-width: 992px){
-   .search-create, .resultlist, .page-navigation, .resultlist-pagination, .alert{
-       margin-right: 10%;
-       margin-left: 10%;       
-   }
 
 }
 

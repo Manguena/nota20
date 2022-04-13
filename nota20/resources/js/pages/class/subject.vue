@@ -1,11 +1,11 @@
 <template>
     <div class="container">
-
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
             <li class="breadcrumb-item"><inertia-link href="/class/course">Curso</inertia-link></li>
-            <li class="breadcrumb-item" aria-current="page">Disciplina</li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/'+courseName+'/'+courseId">Turma</inertia-link></li>
+            <li class="breadcrumb-item active" aria-current="page">Disciplina</li>
         </ol>
         </nav>
 
@@ -52,7 +52,7 @@ import Layout from '../shared/layout';
 
 export default {
       layout:Layout,
-      props:['className','classId', 'courseId', 'subjectConfigArray'],  
+      props:['courseName','className','classId', 'courseId', 'subjectConfigArray'],  
      data(){
         return{
            
@@ -60,6 +60,9 @@ export default {
     },
     methods:{
      
+    },
+    created(){
+        console.log(this.subjectConfigArray);
     } 
 } 
 </script>

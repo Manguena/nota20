@@ -206,6 +206,7 @@ return [
          'schoolYear'=>'Ano Lectivo',
          'surname'=>'Apelido',
          'id_number'=>'Documento de Identificação',
-         'year'=>'Ano de matrícula'
+         'year'=>'Ano de matrícula',
+         'grade'=>'Nota'
     ],
 ];

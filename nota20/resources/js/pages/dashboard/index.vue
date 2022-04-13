@@ -55,9 +55,9 @@
  <div class="col-sm-6 mt-4">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Turma</h5>
-        <p><font-awesome-icon :icon="['fas', 'chalkboard-teacher']" size="4x" class="dashboard-icon"/> <label class="dashboard-label"> Acesso e criação de turmas</label> </p>
-        <inertia-link href="/class/course" class="btn btn-primary dashboard-arrow">Acessar <font-awesome-icon :icon="['fas', 'arrow-right']" size="1x" /></inertia-link>
+        <h5 class="card-title">Relatório</h5>
+        <p><font-awesome-icon :icon="['fas', 'pen-square']" size="4x" class="dashboard-icon"/> <label class="dashboard-label"> Detalhes Sobre Desempenho do estudante</label> </p>
+        <inertia-link href="/report" class="btn btn-primary dashboard-arrow">Acessar <font-awesome-icon :icon="['fas', 'arrow-right']" size="1x" /></inertia-link>
       </div>
     </div>
   </div>

@@ -11,6 +11,8 @@ use App\Models\Studentclass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ClassController extends Controller
 {
@@ -72,8 +74,9 @@ pagination section
  * **/
     public function subject($courseName, $courseId,$className,$classId,$levelId){
         $subjectArray=self::listSubject($courseId, $levelId);
-
+        
         return Inertia::render('class/subject',[
+            'courseName'=>$courseName,
             'className'=>$className,
             'classId'=>$classId,
             'courseId'=>$courseId,
@@ -115,10 +118,13 @@ pagination section
     }
 
 /*
-    Se the students grade for the current subject
+    See the students grade for the current subject
 */
     public function grade($classId, $subjectId){
         $classId=htmlspecialchars($classId,ENT_QUOTES);
+
+        
+        $subjectName=Subject::where('id',$subjectId)->first()->name;//Get the subjectName
 
         //Get the students from DB
        $studentConfigArray=DB::table('students')
@@ -140,6 +146,15 @@ pagination section
        ->get()
        ->toArray();
 
+       $courseId=(array)$classConfigArray[0];
+       $courseId=$courseId['course_id'];
+
+       $courseName=DB::table('courses')
+                    ->select('name')
+                    ->where('id','=', $courseId)
+                    ->get()
+                    ->toArray();
+       
     // get the grades for the specific subject from the DB
     $gradeConfigArray=DB::table('student_subject')
     ->where('class_id','=',$classId)
@@ -152,13 +167,17 @@ pagination section
            'studentConfigArray'=>$studentConfigArray,
            'classConfigArray'=>$classConfigArray[0],
            'subjectId'=>$subjectId,
-           'gradeConfigArray'=>$gradeConfigArray
+           'subjectName'=>$subjectName,
+           'gradeConfigArray'=>$gradeConfigArray,
+           'courseName'=>(array)$courseName[0]
           // 'courseConfigArray'=>$courseConfigArray[0]
        ]);
 
     }
 
     public function store(Request $request){
+
+//     Gate::authorize('create-class');// gate to authorize admin users to create classes and store into the database
 
          $validator = Validator::make($request->all(), [
             'className' => [
@@ -215,63 +234,110 @@ pagination section
     public function storeGrade(Request $request){
         $studentArray=$request->toArray();
         $errorArray=[];
-       
+       $validatorErrorArray=[];
+        
+        $subjectId=$request[0]['subject'];// get the subject ID
+        $classId=$request[0]['class'];// get the class Id
+
+        // form validation
        foreach ($studentArray as $value) {
-        $key=$value["id"];
+    
         $validator = Validator::make($value, [
                     'id' => [
                         'required',
                         'integer',
                         'min:1',
                     ],
-                    'value' => [
-                        'required',
+                    'grade' => [
+                        'nullable',
                         'numeric',
                         'min:0',
                         'max:20'
                     ]
 
                 ]);
-                //create an array with objects containing errors an student Id
-            if($validator->fails()){
-                $error=$validator->errors();
-                $errorArray [$value["id"]]=$error->first('value');
             
+            array_push($validatorErrorArray,
+                       [$validator->errors()
+                        ->first('grade')]
+                    );
+       }
+
+           
+
+             //create a unique array with all the form errors 
+             $validatorErrorArray=array_map(function($nr){
+                return $nr[0];
+            }, $validatorErrorArray);
+
+            if($validator->fails() || strlen(implode($validatorErrorArray)) >0){
+                
+                return Redirect::route('class.grade',['classId'=>$classId, 'subjectId'=>$subjectId])->withErrors($validatorErrorArray);
+
             }
-        
-        }
 
-        $classId=$request[0]['class'];
+    // Get the Current Subject object from eloquent
+    $subject=Subject::find( $subjectId);
 
-        $subjectId=$request[0]['subject'];
-        $subject=Subject::find( $subjectId);
-
-  
-    
     $data=$request->toArray();
         // insert the data into the database by looping the request from the front end
     foreach ($data as $value) {
-        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
-        
+        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['grade']]);
     }
     
-        unset($value);// Break reference with the last element(Fom PHP.NET)
-       
-        if (count($errorArray)>0){
-            return Redirect::route('class.grade',['classId'=>50])->withErrors($errorArray);
-        }  
-       
-        
+    unset($value);// Break reference with the last element(Fom PHP.NET)
+
+    return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas introduzidas com Sucesso');
+
     }
 
+    /**
+     * update the students grade for a certain subject
+     */
     public function updateGrade(Request $request){
        
         $data=$request->toArray();
         
        // $classId=$request[0]['class'];->Not used
-
+        $studentArray=$request->toArray();
         $subjectId=$request[0]['subject'];
-        $subject=Subject::find($subjectId);//get the subject
+        $subject=Subject::find($subjectId);//get the subject object
+        $classId=$request[0]['class'];// get the class Id
+        $validatorErrorArray=[];// array to hold  validation errors
+        // form validation
+        foreach ($studentArray as $value) {
+    
+            $validator = Validator::make($value, [
+                        'id' => [
+                            'nullable',
+                            'integer',
+                            'min:1',
+                        ],
+                        'grade' => [
+                            'nullable',
+                            'numeric',
+                            'min:0',
+                            'max:20'
+                        ]
+    
+                    ]);
+                
+                array_push($validatorErrorArray,
+                           [$validator->errors()
+                            ->first('grade')]
+                        );
+           }
+
+           //create a unique array with all the form errors 
+           $validatorErrorArray=array_map(function($nr){
+            return $nr[0];
+        }, $validatorErrorArray);
+
+        if($validator->fails() || strlen(implode($validatorErrorArray)) >0){
+            
+            return Redirect::route('class.grade',['classId'=>$classId, 'subjectId'=>$subjectId])->withErrors($validatorErrorArray);
+
+        }
 
        // loop the request and update the table in the DB
         foreach ($data as $value) {
@@ -279,18 +345,21 @@ pagination section
             if($value['operation']=='update'){// determine if an update is going to occur 
             $subject->students()->updateExistingPivot($value['id'], [
                 'class_id'=>$value['class'],
-                'grade'=>$value['value']
+                'grade'=>$value['grade']
             ]);
         }
         else {
-            # fuck with Mungos Marquez
             $subject->students()->attach($value['id'], [
                 'class_id'=>$value['class'],
-                'grade'=>$value['value']
+                'grade'=>$value['grade']
             ]);
             
         }
         }
+
+        unset($value);// Break reference with the last element(Fom PHP.NET)
+
+        return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
     }
 
     /****
@@ -382,6 +451,7 @@ pagination section
         ->orderBy('students.name')
         ->get();
         
+       
         $studentConfigArray=$studentConfigArray->toArray();
 
         //Get information about the class from DB
@@ -392,16 +462,18 @@ pagination section
 
     // Get the course name, level and course_d from the DB
        
-        $courseConfigArray=DB::table('subjects')
-        ->select('courses.name', 'subjects.course_id', 'subjects.level_id')
+        $courseConfigArray=DB::table('studentclasses')
+        ->select('courses.name', 'studentclasses.course_id', 'studentclasses.level_id')
         ->join('courses', function($join){
-            $join->on('subjects.course_id','=','courses.id');
+            $join->on('studentclasses.course_id','=','courses.id');
         })
         ->whereRaw('courses.id=(SELECT course_id FROM studentclasses WHERE id=?) AND
             level_id=(SELECT level_id FROM studentclasses WHERE id=?)', [$classId,$classId])
         ->orderBy('courses.name')
+        ->distinct()
         ->get();
         
+        //dd($studentConfigArray);
         return Inertia::render('class/show',[
             'studentConfigArray'=>$studentConfigArray,
             'classConfigArray'=>$classConfigArray[0],

@@ -16,7 +16,7 @@ class StudentSubject extends Migration
         //
         Schema::create('student_subject', function (Blueprint $table) {
             $table->string('class_id');
-            $table->decimal('grade', $precision = 4, $scale = 2);
+            $table->decimal('grade', $precision = 4, $scale = 2)->nullable();
             
             $table->foreignId('student_id')
             ->constrained();

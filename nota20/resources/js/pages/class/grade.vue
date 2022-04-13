@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <div v-if="$page.props.flash.message" class="alert alert-danger alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
-        <span class="center-msg">Estudante&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Removido com Sucesso</span> 
+        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
+        <span class="center-msg">{{$page.props.flash.message}}</span> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -10,8 +10,11 @@
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-            <li class="breadcrumb-item"><inertia-link href="/class/course">Turma</inertia-link></li>
-            <li class="breadcrumb-item" aria-current="page">Inscrição</li>
+            <li class="breadcrumb-item"><inertia-link href="/class/course">Curso</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/'+courseName['name']+'/'+classConfigArray['course_id']">Turma</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/'+classConfigArray['id']">Inscrição</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/subject/'+courseName['name']+'/'+classConfigArray['course_id']+'/'+classConfigArray['name']+'/'+classConfigArray['id']+'/'+classConfigArray['level_id']">Disciplina</inertia-link></li>
+            <li class="breadcrumb-item active" aria-current="page">Nota</li>
         </ol>
         </nav>
 
@@ -19,7 +22,7 @@
         <div id="viewEditForm"></div>
         <form class="create-user-form" >
            <h4 id="">Turma: {{classConfigArray['name']}} </h4>
-           <h4>Disciplina: Matematica</h4>
+           <h4>Disciplina: {{subjectName}}</h4>
             <p></p>
         <div class="table-responsive-sm">
             <table class="table table-hover table-light user-table">
@@ -31,24 +34,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in studentGrade" :key="item.id"> 
+                    <tr v-for="(item,index) in studentGrade"> <!--Isto da erro mas nao tem problema nenhum-->
                         <td>{{item.surname}}</td>
                         <td>{{item.name}}</td>
                         <td> 
-                            <input type="text" :id="item.id" v-model="item.value" class="gradeInput">
-                            <div v-if="$page.props.errors[item.id]">
-                                {{$page.props.errors[item.id]}}
+                          <input type="text" :id="item.id" v-bind:class="{inputError:$page.props.errors[index]}" v-model="item.grade" class="gradeInput test">
+                            <div class="text-danger" v-if="$page.props.errors[index]">
+                                <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" />&nbsp;{{$page.props.errors[index]}}</small>
                             </div>
                             </td>
                     </tr>
                 </tbody>
             </table>
         </div> 
-       
             <div  class="saveGrades" v-if="updateButton">
                 <button type="button" v-on:click="updateGrade" class="btn btn-primary">Actualizar</button>         
             </div>
-            <div  class="saveGrades" v-else>
+            <div  class="saveGrades
+            " v-else>
                 <button type="button" v-on:click="storeGrade" class="btn btn-primary">Guardar</button>         
             </div>
         </form>
@@ -62,7 +65,7 @@ import Layout from '../shared/layout';
 
 export default {
       layout:Layout,
-      props:['studentConfigArray','classConfigArray','subjectId', 'gradeConfigArray'],  
+      props:['studentConfigArray','classConfigArray','subjectId','subjectName', 'gradeConfigArray', 'courseName'],  
      data(){
         return{
            deleteEnrollmentSpinner:false,
@@ -75,7 +78,10 @@ export default {
     },
     methods:{
        storeGrade(){
-            this.$inertia.post(`/class/grade`, this.studentGrade);
+            this.$inertia.post(`/class/grade`,this.studentGrade, {
+                onSuccess:()=>this.updateButton=true
+                
+            });
        },
        updateGrade(){
             this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
@@ -83,14 +89,12 @@ export default {
        
     },
     created(){ 
-        console.log();
     /**
      * Adds a student to the list if he/she has a grande,
      * this process begins if the gradeConfigArray variable has some data,
      * which means there are marks available
      */
 
-     console.log(this.gradeConfigArray);
         if(this.gradeConfigArray.length>0){
 
             for (let i=0; i<this.studentConfigArray.length; i++){
@@ -101,7 +105,7 @@ export default {
                                             id:this.studentConfigArray[i]['id'],
                                             name:this.studentConfigArray[i]['name'],
                                             surname:this.studentConfigArray[i]['surname'],
-                                            value:this.gradeConfigArray[j]['grade'],
+                                            grade:this.gradeConfigArray[j]['grade'],
                                             class:this.classConfigArray['id'],
                                             subject: this.subjectId,
                                             operation:`update`
@@ -121,7 +125,7 @@ export default {
                             id:student['id'],
                             name:student['name'],
                             surname:student['surname'],
-                            value:null,
+                            grade:null,
                             class:this.classConfigArray['id'],
                             subject: this.subjectId,
                             operation:`create`
@@ -129,8 +133,7 @@ export default {
                         });
                     }
                });
-           
-    },
+    }
     
 } 
 </script>
@@ -154,11 +157,14 @@ export default {
 .table-delete{
     color: #dc2020;
 }
-.inputError, .inputError:focus {
+.inputError{
  border-color: #e3342f;
  box-shadow: 0px 0px 3px 0px #e3342f;
 }
 
+.inputError:focus{
+ outline-color:#e3352f;
+}
 .page-navigation{
     margin-top: 2rem;
 }

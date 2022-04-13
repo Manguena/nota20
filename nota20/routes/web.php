@@ -148,20 +148,20 @@ Route::get('/class/subject/{courseName}/{courseId}/{className}/{classId}/{levelI
 Route::get('/class/student/{id}/{className}', [App\Http\Controllers\ClassController::class, 'student'])->name('class.student')->middleware('auth');
 //search for student to be enrolled
 Route::get('/class/studentsearch/{id}/{className}', [App\Http\Controllers\ClassController::class, 'studentSearch'])->name('class.studentsearch')->middleware('auth');
-//page to create the class room and list classrooms stored in the database
+//page to create the class and list classes stored in the database
 Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
   //stores the classes into the database
-Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth');
+Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth','can:create, App\Models\Studentclass');
 //stores grades in the database
 Route::post('/class/grade', [App\Http\Controllers\ClassController::class, 'storeGrade'])->name('class.storeGrade')->middleware('auth');
 //Update the students' grade
-Route::patch('/class/grade/updategrade', [App\Http\Controllers\ClassController::class, 'updateGrade'])->name('class.updateGrade')->middleware('auth');
+Route::patch('/class/grade/updategrade', [App\Http\Controllers\ClassController::class, 'updateGrade'])->name('class.updateGrade')->middleware('auth', 'can:update, App\Models\Studentclass');// uses the grade table (intermediate) uses the same policy as the class because of error committed by the developer
 //update className
-Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth');
+Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth','can:update, App\Models\Studentclass');
 // remove student from  class
 Route::delete('/class/unenroll/{id}/{classId}/{studentSurname}', [App\Http\Controllers\ClassController::class, 'unenroll'])->name('class.unenroll')->middleware('auth');
 //Delete the class
-Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth');
+Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth', 'can:delete, App\Models\Studentclass');
 //Load a classroom with enrolled students in it
 Route::get('/class/{classId}', [App\Http\Controllers\ClassController::class, 'show'])->name('class.show')->middleware('auth');
 //enroll a student in a class
@@ -187,3 +187,13 @@ Route::get('/student/edit/{id}', [App\Http\Controllers\StudentController::class,
 Route::patch('/student/{id}', [App\Http\Controllers\StudentController::class, 'update'])->name('student.update')->middleware('auth');
 //search students data
 Route::get('/student/search', [App\Http\Controllers\StudentController::class, 'search'])->name('student.search')->middleware('auth');
+
+/***---------------------------------------------------------------------------------------------------------------------------
+ *                                                                                                                               *
+ *                                           REPORT CONTROLLER                                                               *
+ *                                                                                                                               *
+  -------------------------------------------------------------------------------------------------------------------------------*/
+  //shows the report page to the user
+  Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report')->middleware('auth');
+  //search students data
+  Route::get('/report/search', [App\Http\Controllers\ReportController::class, 'search'])->name('report.search')->middleware('auth');

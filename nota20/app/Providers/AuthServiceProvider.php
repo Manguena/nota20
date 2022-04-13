@@ -8,6 +8,7 @@ use App\Policies\UserPolicy;
 use App\Policies\ConfigPolicy;
 use App\Policies\SchoolPolicy;
 use App\Policies\SubjectPolicy;
+use App\Policies\ClassPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Studentclass'=>'App\Policies\ClassPolicy',
     ];
 
     /**
@@ -56,6 +58,17 @@ class AuthServiceProvider extends ServiceProvider
         //permission to access the page to introduce system subjects
         Gate:: define('view-subjectPage',[SubjectPolicy::class,'view']);
 
+        /****-----------------------------------------------------------------------------------------------------
+        * class controller
+        --------------------------------------------------------------------------------------------------------*/
+
+        Gate:: define('create-class',[ClassPolicy::class, 'create']);
+        
+        Gate:: define('update-class',[ClassPolicy::class, 'update']);
+
+        //Gate:: define('delete-class',[ClassPolicy::class,'delete']);
+
+        
 
     }
 }
