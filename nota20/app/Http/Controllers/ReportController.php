@@ -154,32 +154,9 @@ class ReportController extends Controller
         ->toArray();
       //test
 
-      flush();
-    return response(Excel::download(new GradesExport, 'grade.xlsx'));
-      /*
-    dd($j);
 
-     foreach($j as $jj){
-       dd( array_values((array) $jj));    
-    }***/
-
-    
-    $file='jordao.txt';
-    if (file_exists($file)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/txt');
-        header('Content-Disposition: attachment; filename="'.basename($file).'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
-        exit;
-    }
-    
-     //file_put_contents('jordao.txt','kkkkkkkk');
-     //readfile('jordao.txt');
-      //test
+    return Excel::download(new GradesExport($id), 'grade.xlsx');
+   
         
         /*** 
         $studentConfigArray=DB::table('students')

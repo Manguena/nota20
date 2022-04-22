@@ -51,7 +51,7 @@
                         <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
                         <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
                         <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
-                        <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark"><font-awesome-icon :icon="['fas', 'newspaper']" class="pen-icon"/></inertia-link></td>   
+                        <td><a v-bind:href="'/report/create/'+studentData.id" class="text-dark"><font-awesome-icon :icon="['fas', 'newspaper']" class="pen-icon"/></a></td>   
                     </tr>
                 </tbody>
             </table>

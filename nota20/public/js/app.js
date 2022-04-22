@@ -63219,26 +63219,22 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _c(
-                    "td",
-                    [
-                      _c(
-                        "inertia-link",
-                        {
-                          staticClass: "text-dark",
-                          attrs: { href: "/report/create/" + studentData.id }
-                        },
-                        [
-                          _c("font-awesome-icon", {
-                            staticClass: "pen-icon",
-                            attrs: { icon: ["fas", "newspaper"] }
-                          })
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "text-dark",
+                        attrs: { href: "/report/create/" + studentData.id }
+                      },
+                      [
+                        _c("font-awesome-icon", {
+                          staticClass: "pen-icon",
+                          attrs: { icon: ["fas", "newspaper"] }
+                        })
+                      ],
+                      1
+                    )
+                  ])
                 ])
               }),
               0

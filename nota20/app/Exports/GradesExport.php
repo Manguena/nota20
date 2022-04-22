@@ -4,18 +4,17 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
 
 class GradesExport implements FromCollection
 {
     
 
- /*   protected $userId;
+   protected $userId;
 
     public function __construct($id){
         $this->userId=$id;
     }
-***/
+
 
     /**
         * @return \Illuminate\Support\Collection
@@ -23,7 +22,7 @@ class GradesExport implements FromCollection
 
     public function collection()
     {
-       /*
+       
         $fullGradeConfigCollection=DB::table('student_subject')
         ->select('student_subject.grade as grade', 'subjects.name as subject', 'levels.name as level','levels.order', 'studentclasses.name as class', 'courses.name as course')
         ->join('subjects', function($join){
@@ -38,16 +37,14 @@ class GradesExport implements FromCollection
         ->join('courses', function($join){
             $join->on('courses.id','=','studentclasses.course_id');
         })
-        ->where('student_subject.student_id','=',1)
+        ->where('student_subject.student_id','=',$this->userId)
         ->orderBy('courses.name')
         ->orderBy('levels.order','asc')
         ->orderBy('studentclasses.name')
         ->get();
 
         return $fullGradeConfigCollection;
-         ***/
-    
-        return User::all();
+         
     }
 
 }
