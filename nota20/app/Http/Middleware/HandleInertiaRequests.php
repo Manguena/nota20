@@ -42,12 +42,18 @@ class HandleInertiaRequests extends Middleware
         if (Auth::check()) {
           $user = Auth::user();
         
-        $userName=$user->name;
+        $userName=$user->apelido;
+        $userId=$user->id;
             
     return array_merge(parent::share($request), [
                 //
+               
+            'sharedAuthuserName'=>$userName,
+            'sharedAuthUserId'=>$userId,
+            'flash' => ['message'=>function() use ($request){
+                return $request->session()->get('message'); 
+            }],
                 
-            'sharedAuthuserName'=>$userName
             
             ]);
 

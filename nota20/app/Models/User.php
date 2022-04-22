@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
-
+use Illuminate\Support\Facades\Auth;
+use Laravel\Scout\Searchable; 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bi',
+        'apelido'
     ];
 
     /**
@@ -46,4 +50,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function isAdministrator(){
+       $user =Auth::user();
+      return User::find($user->id)->roles()->get()[0]['name']=='superadmin'||User::find($user->id)->roles()->get()[0]['name']=='admin';
+    }
+
+    public function currentUserRole(){
+        $user =Auth::user();
+
+        return User::find($user->id)->roles()->get()[0]['name']; 
+    }
+
+    public function currentUserId(){
+        $user =Auth::user();
+        return $user->id;
+    }
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        // Customize the data array...
+        return $array;
+    }
 }

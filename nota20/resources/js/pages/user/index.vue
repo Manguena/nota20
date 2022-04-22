@@ -1,63 +1,95 @@
 <template>
     <div class="container">
+
+        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
+            <span class="center-msg">Utilizador&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Excluido com sucesso</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
             <div class="search-create">
             
-            <div class="input-group data-table-input">
-                <input type="text" class="form-control" placeholder="Pesquise o utilizador" aria-label="Text input with segmented dropdown button">
+            <form @submit.prevent="submit" class="input-group data-table-input">
+                <input type="text" id="searchbar"
+                 v-on:keyup.enter="submit"
+                 v-model="form.searchbar" 
+                 class="form-control" 
+                 placeholder="Pesquise o utilizador" 
+                 aria-label="Text input with segmented dropdown button">
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-primary search-group-btn"><label>Pesquisar</label> <font-awesome-icon :icon="['fas', 'search']" class="search-img" /></button>
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
+                    <button type="submit" class="btn btn-primary search-group-btn">
+                        <span>Pesquisar</span><font-awesome-icon :icon="['fas', 'search']" class="search-img" />
                     </button>
-                    <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Super Admin</a>
-                    <a class="dropdown-item" href="#">Admin</a>
-                    <a class="dropdown-item" href="#">Standard</a>
-                    </div>
                 </div>
-            </div>
-                 <inertia-link href="/utilizador/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link> 
-                   
+            </form>
+                 <inertia-link href="/user/create" class="btn btn-primary search-create-btn">Criar <label>utilizador</label></inertia-link>  
         </div>
+
+       <div id="example-1">
+            <div >
+                
+            </div>
+      </div>
+
 
         <div class="table-responsive-sm">
             <table class="table table-hover table-light user-table">
                 <thead>
                     <tr>
-                    <th scope="col">Nr.</th>
                     <th scope="col">Apelido</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Perfil</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <tr v-for="userdata in useraArray" :key="userdata.id">
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.apelido}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.nome}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.email}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.role}}</inertia-link></td>
                     </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                    </tr>
+                 
                 </tbody>
             </table>
         </div>
+        <Pagination 
+        v-bind:lastPage="lastPage"
+        v-bind:currentPage="currentPage"
+        v-bind:route="route"
+        v-bind:isSearchable="isSearchable"
+        v-bind:queryString="queryString"
+        >
+
+        </Pagination>
+
     </div>
 </template>
 <script>
 import Layout from '../shared/layout';
+import Pagination from '../shared/pagination';
+
 export default {
-    layout:Layout
-}
+    components:{
+        Pagination
+    },
+    layout:Layout,
+    props:['useraArray', 'lastPage','currentPage','route','isSearchable','queryString' ],
+    data: function(){
+        return{
+            form:{
+               searchbar:null 
+            }
+            
+        }
+    },
+    methods:{
+        submit(){
+            this.$inertia.get('/user', this.form)}
+        }
+    }
+    
+ 
 </script>
 
 <style>
@@ -65,6 +97,12 @@ export default {
     display: flex;
     margin-top: 30px;
     margin-bottom: 30px;
+}
+
+.center-msg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .data-table-input{
@@ -78,7 +116,7 @@ export default {
 
 
 
-.search-create-btn label, .search-group-btn label{ 
+.search-create-btn label, .search-group-btn span{ 
     display: inline;
     margin: 0;
 }
@@ -100,7 +138,7 @@ margin-left:auto;
 
 }
 
-.search-create-btn label, .search-group-btn label{ 
+.search-create-btn label, .search-group-btn span{ 
     width: 0;
     height: 0;
     display: none;
