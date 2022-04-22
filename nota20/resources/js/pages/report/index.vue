@@ -42,16 +42,16 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Ano de matricula</th>
                     <th scope="col">Documento de Identificacao</th>
-                    <th scope="col">Relatório</th>
+                    <th scope="col">Pauta</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="studentData in studentConfigArray" :key="studentData.id">
-                        <td><inertia-link  v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.surname}}</inertia-link></td>
-                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
-                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
-                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
-                        <td><inertia-link v-bind:href="'/student/edit/'+studentData.id" class="text-dark"><font-awesome-icon :icon="['fas', 'pen-square']" class="pen-icon"/></inertia-link></td>   
+                        <td><inertia-link  v-bind:href="'/report/create/'+studentData.id" class="text-dark" >{{studentData.surname}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark" >{{studentData.name}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark">{{studentData.year}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark">{{studentData.id_number}}</inertia-link></td>
+                        <td><inertia-link v-bind:href="'/report/create/'+studentData.id" class="text-dark"><font-awesome-icon :icon="['fas', 'newspaper']" class="pen-icon"/></inertia-link></td>   
                     </tr>
                 </tbody>
             </table>

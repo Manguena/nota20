@@ -15,6 +15,7 @@
         "laravel/scout": "^9.1",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
+        "maatwebsite/excel": "^3.1",
         "meilisearch/meilisearch-php": "^0.18.2",
         "square-bit/laravel-pt-localization": "^1.0",
         "tightenco/ziggy": "^1.1"

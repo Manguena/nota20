@@ -175,6 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**laravel excel service provider*/
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
+
     ],
 
     /*
@@ -227,6 +231,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        /***
+         * laravel excel aliases
+         * */ 
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

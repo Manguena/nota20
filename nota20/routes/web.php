@@ -193,7 +193,10 @@ Route::get('/student/search', [App\Http\Controllers\StudentController::class, 's
  *                                           REPORT CONTROLLER                                                               *
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
-  //shows the report page to the user
-  Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report')->middleware('auth');
+   Route::get('/report', [App\Http\Controllers\ReportController::class, 'index'])->name('report')->middleware('auth');
   //search students data
   Route::get('/report/search', [App\Http\Controllers\ReportController::class, 'search'])->name('report.search')->middleware('auth');
+  //show the page with the student data
+  Route::get('/report/create/{id}', [App\Http\Controllers\ReportController::class, 'create'])->name('report.create')->middleware('auth');
+//shows the report page to the user
+ 

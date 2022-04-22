@@ -55,8 +55,8 @@
  <div class="col-sm-6 mt-4">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Relatório</h5>
-        <p><font-awesome-icon :icon="['fas', 'pen-square']" size="4x" class="dashboard-icon"/> <label class="dashboard-label"> Detalhes Sobre Desempenho do estudante</label> </p>
+        <h5 class="card-title">Pauta</h5>
+        <p><font-awesome-icon :icon="['fas', 'newspaper']" size="4x" class="dashboard-icon"/> <label class="dashboard-label">Consulta da Pauta do estudante</label> </p>
         <inertia-link href="/report" class="btn btn-primary dashboard-arrow">Acessar <font-awesome-icon :icon="['fas', 'arrow-right']" size="1x" /></inertia-link>
       </div>
     </div>

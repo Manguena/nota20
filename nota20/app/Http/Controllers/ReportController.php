@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GradesExport;
+ 
+
 
 class ReportController extends Controller
 {
@@ -100,6 +103,116 @@ class ReportController extends Controller
          ]);
          
      }
+
+     public function create($id){
+
+        
+
+       // dd($id);
+        $studentConfigArray=DB::table('students')->find($id);
+        //Get the garde, class, course, level info for a specific student from the database
+        $gradeConfigArray=DB::table('student_subject')
+        ->select('student_subject.grade as grade', 'subjects.name as subject', 'levels.name as level','levels.order', 'studentclasses.name as class', 'courses.name as course')
+        ->join('subjects', function($join){
+            $join->on('student_subject.subject_id','=','subjects.id');
+        })
+        ->join('levels', function($join){
+            $join->on('subjects.level_id','=','levels.id');
+        })
+        ->join('studentclasses', function($join){
+            $join->on('student_subject.class_id','=','studentclasses.id');
+        })
+        ->join('courses', function($join){
+            $join->on('courses.id','=','studentclasses.course_id');
+        })
+        ->where('student_subject.student_id','=',$id)
+        ->orderBy('courses.name')
+        ->orderBy('levels.order','asc')
+        ->orderBy('studentclasses.name')
+        ->paginate(30);
+
+
+        $fullGradeConfigArray=DB::table('student_subject')
+        ->select('student_subject.grade as grade', 'subjects.name as subject', 'levels.name as level','levels.order', 'studentclasses.name as class', 'courses.name as course')
+        ->join('subjects', function($join){
+            $join->on('student_subject.subject_id','=','subjects.id');
+        })
+        ->join('levels', function($join){
+            $join->on('subjects.level_id','=','levels.id');
+        })
+        ->join('studentclasses', function($join){
+            $join->on('student_subject.class_id','=','studentclasses.id');
+        })
+        ->join('courses', function($join){
+            $join->on('courses.id','=','studentclasses.course_id');
+        })
+        ->where('student_subject.student_id','=',$id)
+        ->orderBy('courses.name')
+        ->orderBy('levels.order','asc')
+        ->orderBy('studentclasses.name')
+        ->get()
+        ->toArray();
+      //test
+
+   
+    return Excel::download(new GradesExport, 'grade.xlsx');
+      /*
+    dd($j);
+
+     foreach($j as $jj){
+       dd( array_values((array) $jj));    
+    }***/
+
+    
+    $file='jordao.txt';
+    if (file_exists($file)) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/txt');
+        header('Content-Disposition: attachment; filename="'.basename($file).'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit;
+    }
+    
+     //file_put_contents('jordao.txt','kkkkkkkk');
+     //readfile('jordao.txt');
+      //test
+        
+        /*** 
+        $studentConfigArray=DB::table('students')
+        ->orderBy('year', 'desc')
+        ->orderBy('surname', 'asc')                        
+        ->paginate(15);
+        **/
+        $gradeConfigArray=$gradeConfigArray->toArray();
+        //dd($gradeConfigArray);
+
+        return Inertia::render('report/create',[
+        'studentConfigArray'=>$studentConfigArray,    
+        'gradeConfigArray'=>$gradeConfigArray['data'],
+        'currentPage'=>$gradeConfigArray['current_page'],
+        'lastPage'=>$gradeConfigArray['last_page'],
+        'route'=>'',// no need, but must appear as empty, because of the front error implementation 
+        'isSearchable'=>false,
+        'queryString'=>''
+        ]
+
+        );
+    }
+    /**
+     * export and download users grades
+     * */ 
+    //public function export(){
+      //  $GradesExport= new GradesExport();
+        //$GradesExport->collection($id);
+
+        //return Excel::download(new UsersExport, 'users.xlsx');
+
+
+    //}
 
     
 }
