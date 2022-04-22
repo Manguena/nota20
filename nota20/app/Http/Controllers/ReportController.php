@@ -154,8 +154,8 @@ class ReportController extends Controller
         ->toArray();
       //test
 
-   
-    return Excel::download(new GradesExport, 'grade.xlsx');
+      flush();
+    return response(Excel::download(new GradesExport, 'grade.xlsx'));
       /*
     dd($j);
 
