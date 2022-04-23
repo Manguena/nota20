@@ -106,10 +106,8 @@ class ReportController extends Controller
 
      public function create($id){
 
-        
-
-       // dd($id);
         $studentConfigArray=DB::table('students')->find($id);
+        
         //Get the garde, class, course, level info for a specific student from the database
         $gradeConfigArray=DB::table('student_subject')
         ->select('student_subject.grade as grade', 'subjects.name as subject', 'levels.name as level','levels.order', 'studentclasses.name as class', 'courses.name as course')
@@ -152,10 +150,9 @@ class ReportController extends Controller
         ->orderBy('studentclasses.name')
         ->get()
         ->toArray();
-      //test
 
 
-    return Excel::download(new GradesExport($id), 'grade.xlsx');
+    return Excel::download(new GradesExport((array)$studentConfigArray), 'grade.xlsx');
    
         
         /*** 
