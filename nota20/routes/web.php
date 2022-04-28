@@ -198,5 +198,6 @@ Route::get('/student/search', [App\Http\Controllers\StudentController::class, 's
   Route::get('/report/search', [App\Http\Controllers\ReportController::class, 'search'])->name('report.search')->middleware('auth');
   //show the page with the student data
   Route::get('/report/create/{id}', [App\Http\Controllers\ReportController::class, 'create'])->name('report.create')->middleware('auth');
-//shows the report page to the user
+  //Export the student data in Excel format
+  Route::get('/report/export/{id}', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export')->middleware('auth');
  

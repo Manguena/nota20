@@ -15,9 +15,15 @@
 
         <div class="list-user-form">
             <div class="table-responsive-sm">
-                <div class="">
-                    <p> <span class="font-weight-bold">Apelido: </span>{{studentConfigArray.surname}}</p>
-                    <p> <span class="font-weight-bold">Nome: </span>{{studentConfigArray.name}}</p>
+                <div class="student-id">
+                    <div>
+                        <p> <span class="font-weight-bold">Apelido: </span>{{studentConfigArray.surname}}</p>
+                        <p> <span class="font-weight-bold">Nome: </span>{{studentConfigArray.name}}</p>
+
+                    </div>
+                    <!--font-awesome-icon icon="fas fa-" /--->
+                    <a v-bind:href="'/report/export/'+studentConfigArray['id']"><font-awesome-icon :icon="['fas', 'file-excel']" size="2x" class="excel-icon"/></a>
+                    
                 </div>
 
                 <table class="table table-hover table-light user-table">
@@ -94,13 +100,21 @@ export default {
         }
 },
 created(){
-    console.log(this.studentConfigArray);
+    console.log(this.studentConfigArray['id']);
 }
     }
 </script>
 
 
 <style scoped>
+.excel-icon{
+color: #6b6316;
+}
+
+.student-id{
+    display: flex;
+    justify-content: space-between;
+}
 
 .list-user-form{
     background-color: #fdfdfe;

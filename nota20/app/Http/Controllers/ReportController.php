@@ -11,6 +11,8 @@ use App\Exports\GradesExport;
 
 class ReportController extends Controller
 {
+
+    private static $pa;
     /*
         List all students in different pages
     */
@@ -103,11 +105,17 @@ class ReportController extends Controller
          ]);
          
      }
+     /**
+      * 
+      */
 
-     public function create($id){
+     public function create($id, $isExportFunction=null){
 
+        
         $studentConfigArray=DB::table('students')->find($id);
         
+        if ($isExportFunction) return $studentConfigArray;
+
         //Get the garde, class, course, level info for a specific student from the database
         $gradeConfigArray=DB::table('student_subject')
         ->select('student_subject.grade as grade', 'subjects.name as subject', 'levels.name as level','levels.order', 'studentclasses.name as class', 'courses.name as course')
@@ -150,9 +158,6 @@ class ReportController extends Controller
         ->orderBy('studentclasses.name')
         ->get()
         ->toArray();
-
-
-    return Excel::download(new GradesExport((array)$studentConfigArray), 'grade.xlsx');
    
         
         /*** 
@@ -176,17 +181,18 @@ class ReportController extends Controller
 
         );
     }
+    
     /**
      * export and download users grades
      * */ 
-    //public function export(){
-      //  $GradesExport= new GradesExport();
-        //$GradesExport->collection($id);
+    
+     public function export($id){
+     
+        $studentConfigArray=self::create($id, true);
 
-        //return Excel::download(new UsersExport, 'users.xlsx');
+        return Excel::download(new GradesExport((array)$studentConfigArray), 'grade.xlsx');
 
-
-    //}
+    }
 
     
 }

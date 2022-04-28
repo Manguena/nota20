@@ -14607,6 +14607,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -14643,7 +14649,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    console.log(this.studentConfigArray);
+    console.log(this.studentConfigArray['id']);
   }
 });
 
@@ -17092,7 +17098,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserMinus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faKey, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faCogs, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSchool, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faEdit, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faTrash, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faChalkboardTeacher, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faPlus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserGraduate, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faList, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faNewspaper);
+
+_fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_0__.library.add(_fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUsers, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faArrowRight, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSearch, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faExclamationCircle, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserMinus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faKey, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faCogs, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faSchool, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faEdit, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faTrash, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faChalkboardTeacher, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faPlus, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faUserGraduate, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faList, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faNewspaper, _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_1__.faFileExcel); // <font-awesome-icon icon="fas fa-file-spreadsheet" />
 
 /***/ }),
 
@@ -21854,7 +21861,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.list-user-form[data-v-d2c81004]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px;\r\n    margin-top: 1.2rem;\r\n    margin-bottom: 1.2rem;\n}\n.user-table[data-v-d2c81004]{\r\n    background-color: #e2e2eb;\n}\n.inputError[data-v-d2c81004], .inputError[data-v-d2c81004]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.search-create[data-v-d2c81004]{\r\n    display: flex;\r\n    margin-top: 30px;\r\n    margin-bottom: 30px;\n}\n.pen-icon[data-v-d2c81004]{\r\n    color: #6b6316;\r\n    font-size: 1.2rem;\n}\n.center-msg[data-v-d2c81004]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.data-table-input[data-v-d2c81004]{\r\n    max-width: 350px;\r\n    min-width: 150px;\n}\n.search-create-btn[data-v-d2c81004]{\r\n    margin-left: auto;\n}\n.search-create-btn label[data-v-d2c81004], .search-group-btn span[data-v-d2c81004]{ \r\n    display: inline;\r\n    margin: 0;\n}\n.table-light thead th[data-v-d2c81004]{\r\n        border-bottom-color: #818d99;\n}\n.table-light th[data-v-d2c81004], .table-light td[data-v-d2c81004], .table-light tbody + tbody[data-v-d2c81004] {\r\n    border-color:#818d99;\n}\n@media screen and (max-width: 576px){\n.data-table-input[data-v-d2c81004]{\r\n        margin-right: 1rem;\n}\n.search-create-btn[data-v-d2c81004]{\r\nmargin-left:auto;\n}\n.search-group-btn span[data-v-d2c81004]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (max-width:800px){\n.search-create-btn label[data-v-d2c81004]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (min-width: 577px){\n.search-img[data-v-d2c81004]{\r\n       display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.excel-icon[data-v-d2c81004]{\r\ncolor: #6b6316;\n}\n.student-id[data-v-d2c81004]{\r\n    display: flex;\r\n    justify-content: space-between;\n}\n.list-user-form[data-v-d2c81004]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px;\r\n    margin-top: 1.2rem;\r\n    margin-bottom: 1.2rem;\n}\n.user-table[data-v-d2c81004]{\r\n    background-color: #e2e2eb;\n}\n.inputError[data-v-d2c81004], .inputError[data-v-d2c81004]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.search-create[data-v-d2c81004]{\r\n    display: flex;\r\n    margin-top: 30px;\r\n    margin-bottom: 30px;\n}\n.pen-icon[data-v-d2c81004]{\r\n    color: #6b6316;\r\n    font-size: 1.2rem;\n}\n.center-msg[data-v-d2c81004]{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\n}\n.data-table-input[data-v-d2c81004]{\r\n    max-width: 350px;\r\n    min-width: 150px;\n}\n.search-create-btn[data-v-d2c81004]{\r\n    margin-left: auto;\n}\n.search-create-btn label[data-v-d2c81004], .search-group-btn span[data-v-d2c81004]{ \r\n    display: inline;\r\n    margin: 0;\n}\n.table-light thead th[data-v-d2c81004]{\r\n        border-bottom-color: #818d99;\n}\n.table-light th[data-v-d2c81004], .table-light td[data-v-d2c81004], .table-light tbody + tbody[data-v-d2c81004] {\r\n    border-color:#818d99;\n}\n@media screen and (max-width: 576px){\n.data-table-input[data-v-d2c81004]{\r\n        margin-right: 1rem;\n}\n.search-create-btn[data-v-d2c81004]{\r\nmargin-left:auto;\n}\n.search-group-btn span[data-v-d2c81004]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (max-width:800px){\n.search-create-btn label[data-v-d2c81004]{ \r\n    width: 0;\r\n    height: 0;\r\n    display: none;\n}\n}\n@media screen and (min-width: 577px){\n.search-img[data-v-d2c81004]{\r\n       display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -62824,20 +62831,38 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "list-user-form" }, [
         _c("div", { staticClass: "table-responsive-sm" }, [
-          _c("div", {}, [
-            _c("p", [
-              _c("span", { staticClass: "font-weight-bold" }, [
-                _vm._v("Apelido: ")
+          _c("div", { staticClass: "student-id" }, [
+            _c("div", [
+              _c("p", [
+                _c("span", { staticClass: "font-weight-bold" }, [
+                  _vm._v("Apelido: ")
+                ]),
+                _vm._v(_vm._s(_vm.studentConfigArray.surname))
               ]),
-              _vm._v(_vm._s(_vm.studentConfigArray.surname))
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "font-weight-bold" }, [
+                  _vm._v("Nome: ")
+                ]),
+                _vm._v(_vm._s(_vm.studentConfigArray.name))
+              ])
             ]),
             _vm._v(" "),
-            _c("p", [
-              _c("span", { staticClass: "font-weight-bold" }, [
-                _vm._v("Nome: ")
-              ]),
-              _vm._v(_vm._s(_vm.studentConfigArray.name))
-            ])
+            _c(
+              "a",
+              {
+                attrs: {
+                  href: "/report/export/" + _vm.studentConfigArray["id"]
+                }
+              },
+              [
+                _c("font-awesome-icon", {
+                  staticClass: "excel-icon",
+                  attrs: { icon: ["fas", "file-excel"], size: "2x" }
+                })
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c(
@@ -63219,22 +63244,26 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _c("td", [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "text-dark",
-                        attrs: { href: "/report/create/" + studentData.id }
-                      },
-                      [
-                        _c("font-awesome-icon", {
-                          staticClass: "pen-icon",
-                          attrs: { icon: ["fas", "newspaper"] }
-                        })
-                      ],
-                      1
-                    )
-                  ])
+                  _c(
+                    "td",
+                    [
+                      _c(
+                        "inertia-link",
+                        {
+                          staticClass: "text-dark",
+                          attrs: { href: "/report/create/" + studentData.id }
+                        },
+                        [
+                          _c("font-awesome-icon", {
+                            staticClass: "pen-icon",
+                            attrs: { icon: ["fas", "newspaper"] }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
                 ])
               }),
               0
