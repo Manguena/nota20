@@ -26,7 +26,8 @@ Auth::routes();
 Route::get('/setup', [App\Http\Controllers\SetupController::class, 'index'])->name('setup');
 
 // Login-page
-Route::get('/nota20Login', [App\Http\Controllers\InicioController::class, 'index'])->name('nota20Login');;// antigo (/inicio)
+//Route::get('/nota20Login', [App\Http\Controllers\InicioController::class, 'index'])->name('nota20Login');;// antigo (/inicio)
+Route::get('/login', [App\Http\Controllers\InicioController::class, 'index'])->name('login');// antigo (/inicio)
 
 //log-out route
 Route::post('/out', [App\Http\Controllers\LogUserOut::class, 'index'])->name('out')->middleware('auth');
@@ -70,7 +71,7 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
   //ilst the user configurations 
-  Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config')->middleware('auth');
+  Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config');//->middleware('auth');
   // store user configurations
   Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');// ends a custom authorization message
 

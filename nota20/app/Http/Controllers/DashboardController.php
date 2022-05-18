@@ -23,7 +23,7 @@ class DashboardController extends Controller
     
         self::createSuperAdminRole();
 
-        return Inertia::render('dashboard/index');
+        return Inertia::render('dashboard/index',['']);
     }
 
 

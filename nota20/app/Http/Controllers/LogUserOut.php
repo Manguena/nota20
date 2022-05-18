@@ -23,7 +23,8 @@ class LogUserOut extends Controller
 
         $request->session()->regenerateToken();
 
-        $url='/';// the address to be loaded
+       $url='/';// the address to be loaded, 
+
         return Inertia::location($url);
     }
 

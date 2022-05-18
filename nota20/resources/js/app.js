@@ -36,3 +36,32 @@ const el = document.getElementById('app')
 }).$mount(el)
 
 
+/*
+import Vue from 'vue'
+import { createInertiaApp } from '@inertiajs/inertia-vue'
+
+// font awesome
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// inertia progress
+import { InertiaProgress } from '@inertiajs/progress'
+
+//required files
+require('./bootstrap');
+require('./fontawesome');
+
+// Registering global component
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+InertiaProgress.init()
+
+createInertiaApp({
+  //resolve: name => require(`./Pages/${name}`),
+  resolve: name => require(`./Pages/${name}`),
+  setup({ el, App, props, plugin }) {
+    Vue.use(plugin)
+
+    new Vue({
+      render: h => h(App, props),
+    }).$mount(el)
+  },
+}) **/
