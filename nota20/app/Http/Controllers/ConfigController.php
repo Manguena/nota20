@@ -29,7 +29,7 @@ class ConfigController extends Controller
             'admin' => 'required|integer|gte:2|lt:6',
             'standard' => 'required|integer|gte:5|lt:11',
         ]);
-
+       
 
         $config=Config::find($id);
         $config->superadmin=$request->toArray()['superadmin'];

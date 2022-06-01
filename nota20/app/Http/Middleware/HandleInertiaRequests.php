@@ -42,8 +42,8 @@ class HandleInertiaRequests extends Middleware
         if (Auth::check()) {
           $user = Auth::user();
         
-        $userName=$user->apelido;
-        $userId=$user->id;
+            $userName=$user->apelido;
+            $userId=$user->id;
             
     return array_merge(parent::share($request), [
                 //
@@ -58,7 +58,9 @@ class HandleInertiaRequests extends Middleware
             ]);
 
 
-        } 
+        } else{
+            return [];
+        }
         
 
    

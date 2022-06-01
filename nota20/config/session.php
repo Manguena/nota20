@@ -31,7 +31,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 15),
+    'lifetime' => env('SESSION_LIFETIME', 1),
     //'lifetime' => env('SESSION_LIFETIME', 120),->original which then i changed
 
     'expire_on_close' => true,//the session exprires if the browser is closed
