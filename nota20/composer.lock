@@ -1066,16 +1066,16 @@
         },
         {
             "name": "inertiajs/inertia-laravel",
-            "version": "v0.4.0",
+            "version": "v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inertiajs/inertia-laravel.git",
-                "reference": "097fe5b3be73ab8edea1a5216a696f627c1f6b03"
+                "reference": "406b15af162e78be5c7793b25aadd5a183eea84b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/097fe5b3be73ab8edea1a5216a696f627c1f6b03",
-                "reference": "097fe5b3be73ab8edea1a5216a696f627c1f6b03",
+                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/406b15af162e78be5c7793b25aadd5a183eea84b",
+                "reference": "406b15af162e78be5c7793b25aadd5a183eea84b",
                 "shasum": ""
             },
             "require": {
@@ -1097,12 +1097,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Inertia\\": "src"
-                },
                 "files": [
                     "./helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "Inertia\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1122,7 +1122,7 @@
             ],
             "support": {
                 "issues": "https://github.com/inertiajs/inertia-laravel/issues",
-                "source": "https://github.com/inertiajs/inertia-laravel/tree/v0.4.0"
+                "source": "https://github.com/inertiajs/inertia-laravel/tree/v0.4.5"
             },
             "funding": [
                 {
@@ -1130,7 +1130,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-02T19:35:26+00:00"
+            "time": "2021-10-27T09:37:59+00:00"
         },
         {
             "name": "laravel/framework",
