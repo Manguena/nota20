@@ -62499,7 +62499,6 @@ var render = function() {
                 type: "password",
                 id: "password",
                 name: "password",
-                required: "",
                 autocomplete: "current-password"
               },
               domProps: { value: _vm.form.password },

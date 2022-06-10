@@ -12,7 +12,7 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" id="password" v-model="form.password" class="form-control main-input" name="password" required autocomplete="current-password">
+                    <input type="password" id="password" v-model="form.password" class="form-control main-input" name="password" autocomplete="current-password">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
