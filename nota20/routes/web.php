@@ -27,8 +27,8 @@ Route::get('/setup', [App\Http\Controllers\SetupController::class, 'index'])->na
 
 // Login-page
 //Route::get('/nota20Login', [App\Http\Controllers\InicioController::class, 'index'])->name('nota20Login');;// antigo (/inicio)
-Route::get('/login', [App\Http\Controllers\LoginController::class, 'index'])->name('login')->middleware('guest');// antigo (/inicio)
-Route::post('/authenticate', [App\Http\Controllers\LoginController::class, 'authenticate'])->name('login.authenticate')->middleware('guest');;
+Route::get('/login', [App\Http\Controllers\LoginController::class, 'index'])->name('login');// antigo (/inicio)
+Route::post('/login', [App\Http\Controllers\LoginController::class, 'store'])->name('login.store');
 
 //log-out route
 Route::post('/out', [App\Http\Controllers\LogUserOut::class, 'index'])->name('out')->middleware('auth');

@@ -59,7 +59,18 @@ class HandleInertiaRequests extends Middleware
 
 
         } else{
-            return [];
+            if($request->session()->get('message')){
+                //return $request->session()->get('message');
+                return array_merge(parent::share($request), [
+                    'flash' => ['message'=>function() use ($request){
+                        return $request->session()->get('message'); 
+                    }],
+                ]);
+            }
+            else{
+                return [];
+            }
+            
         }
         
 

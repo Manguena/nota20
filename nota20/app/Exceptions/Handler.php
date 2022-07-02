@@ -4,6 +4,10 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Inertia\Inertia;// I added this 
+//eu
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 
 class Handler extends ExceptionHandler
 {
@@ -37,5 +41,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+         
+        // dd($request);
+        if ($response->status() === 419) {
+           
+            return back()->with([
+                'message' => '419',
+            ]);
+        }
+      // return redirect('login')->with('message', 'Profile updated!');
+    
+       return $response;
     }
 }

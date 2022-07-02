@@ -16,6 +16,7 @@ class LogUserOut extends Controller
      * returns the login page after the user logs out
     */
     public function index(Request $request){
+     
 
         Auth::logout();
 

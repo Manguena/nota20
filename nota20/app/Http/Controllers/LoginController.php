@@ -20,9 +20,13 @@ public function index(){
         if (Auth::check()) { 
                                 //this is useful
         }  
-        
+/*
+        if($Request->inertia()){
+            return response('',409)
+                ->header('X-inertia-location', url()->current());
+        }
+        ***/
         return Inertia::render('login');
-        
 }
 
 /**
@@ -31,9 +35,15 @@ public function index(){
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function authenticate(Request $request)
+    public function store(Request $request)
     {
-        $credentials=null;
+       // $credentials=null;
+        /*** 
+        $token = $request->session()->token();
+        dd($token);
+
+        ***/
+
         /*
         
         $credentials = $request->validate([
@@ -41,7 +51,7 @@ public function index(){
             'password' => ['required'],
         ]);
         ****/
-
+        /*
         $validator=Validator::make( $request->all(),[
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -53,7 +63,7 @@ public function index(){
         if (count($errors)!=0){
             return Inertia::render('login',['love'=>'fuck you nigger']); $credentials->errors();
         }
-        
+        ***/
         $credentials = $request->validate([
                 'email' => ['required', 'email'],
                 'password' => ['required'],
@@ -67,7 +77,7 @@ public function index(){
             return redirect()->intended('/');
         }
  
-        dd('The provided credentials do not match our records.');
+       // dd('The provided credentials do not match our records.');
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
