@@ -1,5 +1,8 @@
 <template>
     <div class="container main">
+        <!--div v-if="$page.props.flash.message">
+            <div>FUCK</div>
+        </div-->
         <div class="main-center">
             <h1>Nota20</h1>
             <p>Sistema de Gestão Academica</p>
@@ -33,11 +36,15 @@ export default{
     methods:{
         submit(){
             //console.log(`${this.form.email}---- ${this.form.password}`);
-            this.$inertia.post('/authenticate',this.form);
-        },
-        created(){
-            console.log('kkkk');
-            console.log($page);
+           // console.log(this.$page);
+            this.$inertia.post('/login',this.form,{
+                onFinish:()=>{
+                    if(this.$page.props.flash.message==='419'){
+                        console.log(`---request expired`);
+                        location.reload();
+                    }
+                }
+            });
         }
         
     }
