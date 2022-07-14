@@ -93,7 +93,10 @@ export default {
             }
         }
         
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Editar Estudante";  
+  }
 }
 
 </script>

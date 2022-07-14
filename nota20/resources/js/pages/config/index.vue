@@ -110,7 +110,10 @@ export default {
             'inputError:focus': this.$page.props.errors.standard
             }
         }
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Configuração";  
+  }
 }
 
 

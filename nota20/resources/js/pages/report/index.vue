@@ -110,7 +110,10 @@ export default {
 },
 created(){
     console.log(this.route);
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Pauta";  
+  }
     }
 </script>
 

@@ -86,7 +86,10 @@ export default {
     methods:{
         submit(){
             this.$inertia.get('/user', this.form)}
-        }
+        },
+        mounted() {  
+         document.title = "Nota 20 - Utilizador";  
+  }
     }
     
  

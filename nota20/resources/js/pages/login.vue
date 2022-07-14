@@ -54,7 +54,10 @@ export default{
            location.reload();
         }
         
-    }
+    },
+    mounted() {  
+    document.title = "Nota 20 - Gestão Academica";  
+  }
 };
 </script>
 

@@ -101,7 +101,10 @@ export default {
 },
 created(){
     console.log(this.studentConfigArray['id']);
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Gerar Pauta";  
+  }
     }
 </script>
 

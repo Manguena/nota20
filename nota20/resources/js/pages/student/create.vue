@@ -93,7 +93,10 @@ export default {
             'inputError:focus': this.$page.props.errors.year
             }
         }
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Criar Estudante";  
+  }
     
 }
 

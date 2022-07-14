@@ -227,7 +227,10 @@ mounted(){
                 });
     })
 
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Editar Utilizador";  
+  }
     
 }
 

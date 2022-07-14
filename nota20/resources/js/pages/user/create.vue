@@ -144,7 +144,10 @@ export default {
             'inputError:focus': this.$page.props.errors.focus
             }
         }
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Criar Utilizador";  
+  }
     
 }
 

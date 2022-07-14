@@ -14238,6 +14238,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.$page.props.errors.standard
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Configuração";
   }
 });
 
@@ -14396,6 +14399,9 @@ __webpack_require__.r(__webpack_exports__);
     pageReload: function pageReload() {
       location.reload();
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Gestão Academica";
   }
 });
 
@@ -14602,6 +14608,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.showPasswordModal();
       });
     });
+    document.title = "Nota 20 - Perfil do Utilizador";
   }
 });
 
@@ -14720,6 +14727,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log(this.studentConfigArray['id']);
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Gerar Pauta";
   }
 });
 
@@ -14847,6 +14857,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log(this.route);
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Pauta";
   }
 });
 
@@ -15327,6 +15340,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     this.listLevel();
     this.listCourse();
+    document.title = "Nota 20 - Escola";
   }
 });
 
@@ -16016,6 +16030,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.$page.props.errors.year
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Criar Estudante";
   }
 });
 
@@ -16124,6 +16141,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.$page.props.errors.year
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Editar Estudante";
   }
 });
 
@@ -16249,6 +16269,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     console.log(this.route);
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Estudante";
   }
 });
 
@@ -16541,6 +16564,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.subjectUpdateError
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Disciplina";
   }
 });
 
@@ -16700,6 +16726,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.$page.props.errors.focus
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Criar Utilizador";
   }
 });
 
@@ -16717,6 +16746,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -16834,7 +16865,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_defineProperty({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
   props: ['user', 'userRole'],
   data: function data() {
@@ -16942,7 +16973,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     });
   }
-});
+}, "mounted", function mounted() {
+  document.title = "Nota 20 - Editar Utilizador";
+}));
 
 /***/ }),
 
@@ -17045,6 +17078,9 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       this.$inertia.get('/user', this.form);
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Utilizador";
   }
 });
 

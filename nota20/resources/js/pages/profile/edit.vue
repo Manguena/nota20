@@ -189,8 +189,9 @@ mounted(){
                 disabledPasswordInput.addEventListener('focus', (event) => {
                     this.showPasswordModal();
                 });
-    })
-
+    });
+  
+    document.title = "Nota 20 - Perfil do Utilizador";  
 }
     
 }

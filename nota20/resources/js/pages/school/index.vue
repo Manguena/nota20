@@ -491,6 +491,7 @@ export default {
 mounted(){
     this.listLevel();
     this.listCourse();
+    document.title = "Nota 20 - Escola"; 
 }
 } 
 </script>
