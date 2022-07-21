@@ -14374,6 +14374,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -14600,6 +14605,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    document.title = "Nota 20 - Perfil do Utilizador";
     this.$nextTick(function () {
       var _this = this;
 
@@ -14608,7 +14614,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.showPasswordModal();
       });
     });
-    document.title = "Nota 20 - Perfil do Utilizador";
   }
 });
 
@@ -15148,7 +15153,14 @@ __webpack_require__.r(__webpack_exports__);
 
         that.storeLevelSpinner = false;
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        }
       });
     },
     listLevel: function listLevel() {
@@ -15157,7 +15169,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/level").then(function (response) {
         that.levelConfigArray = response['data']; //console.log(that.courseConfigArray);
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        }
       });
     },
     editLevel: function editLevel(id, name) {
@@ -15175,6 +15194,7 @@ __webpack_require__.r(__webpack_exports__);
       this.updateLevelSpinner = true; //this.$inertia.patch(`/level/${this.levelId}`, this.levelForm);
 
       axios.patch("/level/".concat(this.levelId), this.levelForm).then(function (response) {
+        //console.log(response);
         if (response['data'].hasOwnProperty('levelName')) {
           _this.updateLevelError = response['data']['levelName'][0];
         } else {
@@ -15187,7 +15207,14 @@ __webpack_require__.r(__webpack_exports__);
 
         that.updateLevelSpinner = false;
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        }
       });
     },
     cancelLevelUpdate: function cancelLevelUpdate() {
@@ -15206,7 +15233,17 @@ __webpack_require__.r(__webpack_exports__);
         that.levelConfigArray = response['data'];
         that.deleteLevelSpinner = false; //console.log(that.courseConfigArray);
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419 || error.response.status === 405) {
+            location.reload();
+          } else if (error.response.status === 500) {
+            // level cannot be deleted because it has items associated to it
+            that.deleteLevelSpinner = false;
+          }
+        }
       });
     },
 
@@ -15219,7 +15256,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/course").then(function (response) {
         that.courseConfigArray = response['data']; //console.log(that.courseConfigArray);
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        }
       });
     },
     storeCourse: function storeCourse() {
@@ -15243,7 +15287,15 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         that.storeCourseSpinner = false;
-      })["catch"](function (error) {//console.log(error);
+      })["catch"](function (error) {
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        }
       });
     },
     editCourse: function editCourse(id, name) {
@@ -15271,7 +15323,14 @@ __webpack_require__.r(__webpack_exports__);
 
         that.updateCourseSpinner = false;
       })["catch"](function (error) {
-        console.log(error);
+        if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419) {
+            location.reload();
+          }
+        } else if (error.request) {
+          // no response from the server
+          location.reload();
+        }
       });
     },
     cancelCourseUpdate: function cancelCourseUpdate() {
@@ -15289,7 +15348,17 @@ __webpack_require__.r(__webpack_exports__);
         that.courseConfigArray = response['data'];
         that.deleteCourseSpinner = false; //console.log(that.courseConfigArray);
       })["catch"](function (error) {
-        console.log(error);
+        if (error.request) {
+          // no response from the server
+          location.reload();
+        } else if (error.response) {
+          if (error.response.status === 401 || error.response.status === 419 || error.response.status === 405) {
+            location.reload();
+          } else if (error.response.status === 500) {
+            // level cannot be deleted because it has items associated to it
+            that.deleteCourseSpinner = false;
+          }
+        }
       });
     }
   },
@@ -16746,8 +16815,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -16865,7 +16932,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_defineProperty({
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__.default,
   props: ['user', 'userRole'],
   data: function data() {
@@ -16893,6 +16960,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
     showPasswordModal: function showPasswordModal() {
+      console.log("show password");
       this.passwordModal;
 
       if (this.passwordModal) {
@@ -16964,6 +17032,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
+    document.title = "Nota 20 - Editar Utilizador";
     this.$nextTick(function () {
       var _this = this;
 
@@ -16973,9 +17042,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     });
   }
-}, "mounted", function mounted() {
-  document.title = "Nota 20 - Editar Utilizador";
-}));
+});
 
 /***/ }),
 
@@ -62627,7 +62694,9 @@ var render = function() {
             )
           ]
         )
-      ])
+      ]),
+      _vm._v(" "),
+      _vm._m(2)
     ])
   ])
 }
@@ -62657,6 +62726,14 @@ var staticRenderFns = [
       _c("h1", [_vm._v("Nota20")]),
       _vm._v(" "),
       _c("p", [_vm._v("Sistema de Gestão Academica")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "main-buttom" }, [
+      _c("small", [_vm._v("Jordao Manguena 2022")])
     ])
   }
 ]

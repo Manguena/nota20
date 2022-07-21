@@ -248,7 +248,6 @@ export default {
           let that=this;
           this.storeLevelSpinner=true;
           //this.$inertia.post(`/level`,this.levelForm); 
- 
           axios.post('/level',this.levelForm)
             .then(function (response) {
                     //console.log(response['data'].hasOwnProperty('orderNr')); 
@@ -276,7 +275,15 @@ export default {
                     that.storeLevelSpinner=false
             })
             .catch(function (error) {
-                console.log(error);
+
+                   if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             });
       },
       listLevel(){
@@ -288,7 +295,14 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             }) 
          },
          editLevel(id, name){
@@ -306,6 +320,7 @@ export default {
 
             axios.patch(`/level/${this.levelId}`, this.levelForm)
             .then((response)=>{
+                //console.log(response);
                 if(response['data'].hasOwnProperty('levelName')){
                     this.updateLevelError=response['data']['levelName'][0];
                 }else{ 
@@ -318,7 +333,14 @@ export default {
                 that.updateLevelSpinner=false;
             })
             .catch((error)=>{
-                console.log(error);
+                 if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             })
 
         },
@@ -339,7 +361,19 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ||error.response.status===405){
+                            location.reload();
+                        }
+                        
+                        else if (error.response.status===500){// level cannot be deleted because it has items associated to it
+                            that.deleteLevelSpinner=false;
+                        }
+                }
+                    
             }) 
 
       },
@@ -355,7 +389,14 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             }) 
          }, 
      
@@ -391,7 +432,14 @@ export default {
                     that.storeCourseSpinner=false
             })
             .catch(function (error) {
-                //console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             });
       },
         editCourse(id, name){
@@ -419,7 +467,15 @@ export default {
                 that.updateCourseSpinner=false;
             })
             .catch((error)=>{
-                console.log(error);
+                if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+               
+                } else if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                
             })
 
         },
@@ -439,7 +495,18 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ||error.response.status===405){
+                            location.reload();
+                        }
+                        
+                        else if (error.response.status===500){// level cannot be deleted because it has items associated to it
+                            that.deleteCourseSpinner=false;
+                        }
+                }
             }) 
 
       }

@@ -24,7 +24,12 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
             </div>
+            
+        <div class="main-buttom">
+          <small>Jordao Manguena 2022</small> 
         </div>
+        </div>
+        
     </div>
 </template>
 <script>

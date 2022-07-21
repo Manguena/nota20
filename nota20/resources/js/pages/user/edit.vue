@@ -146,6 +146,7 @@ export default {
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){
+        console.log(`show password`);
           this.passwordModal;
           if(this.passwordModal){
             $('#exampleModal').modal('show');
@@ -219,23 +220,20 @@ export default {
         }
 },
 mounted(){
+
+    document.title = "Nota 20 - Editar Utilizador"; 
     this.$nextTick(function () {
-        let   disabledPasswordInput=document.getElementById('password');
+            let   disabledPasswordInput=document.getElementById('password');
 
-                disabledPasswordInput.addEventListener('focus', (event) => {
-                    this.showPasswordModal();
-                });
-    })
+                    disabledPasswordInput.addEventListener('focus', (event) => {
+                        this.showPasswordModal();
+                    });
+        })
 
-},
-mounted() {  
-    document.title = "Nota 20 - Editar Utilizador";  
-  }
+}
     
 }
 
-
- 
 </script>
 
 <style>

@@ -183,6 +183,8 @@ export default {
         }
 },
 mounted(){
+    document.title = "Nota 20 - Perfil do Utilizador";  
+
     this.$nextTick(function () {
         let   disabledPasswordInput=document.getElementById('password');
 
@@ -191,7 +193,7 @@ mounted(){
                 });
     });
   
-    document.title = "Nota 20 - Perfil do Utilizador";  
+   
 }
     
 }
