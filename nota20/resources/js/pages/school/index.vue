@@ -187,7 +187,6 @@
 <script>
 import Layout from '../shared/layout';
 
-
 export default {
     layout:Layout,
     props:['schoolConfigArray', 'createSchool'],
@@ -317,7 +316,6 @@ export default {
             let that=this;
             this.updateLevelSpinner=true;
             //this.$inertia.patch(`/level/${this.levelId}`, this.levelForm);
-
             axios.patch(`/level/${this.levelId}`, this.levelForm)
             .then((response)=>{
                 //console.log(response);

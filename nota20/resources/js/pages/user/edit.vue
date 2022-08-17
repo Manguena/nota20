@@ -142,7 +142,17 @@ export default {
          * THIS METHOD SUBMITS THE FORM
          * */ 
       submit(){
-        this.$inertia.patch(`/user/${this.user['0']['id']}`,this.form);
+        this.$inertia.patch(`/user/${this.user['0']['id']}`,this.form,{
+            //inicio
+        onBefore: (visit) => { console.log(`before`);},
+        onStart: (visit) => { console.log(`onStart`);},
+        onProgress: (progress) => { console.log(`onProgress`);},
+        onSuccess: (page) => { console.log(`onSuccess`);},
+        onError: (errors) => { console.log(`onError`);},
+        onCancel: () => { console.log(`onCancel`);},
+        onFinish: visit => { console.log(`onFisish`);},
+                    //fim
+        });
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){

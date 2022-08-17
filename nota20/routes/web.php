@@ -72,9 +72,9 @@ Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destro
  *                                                                                                                               *
   -------------------------------------------------------------------------------------------------------------------------------*/
   //ilst the user configurations 
-  Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config');//->middleware('auth');
+  Route::get('/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('config')->middleware('auth');
   // store user configurations
-  Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('config.update')->middleware('auth');// ends a custom authorization message
+  Route::patch('/config/{id}', [App\Http\Controllers\ConfigController::class, 'update'])->name('configs.update')->middleware('auth');// ends a custom authorization message
 
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *

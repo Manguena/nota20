@@ -1,4 +1,3 @@
-
 // inertia
 import { App, plugin } from '@inertiajs/inertia-vue'
 //vuejs
@@ -7,9 +6,7 @@ import Vue from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // inertia progress
 import { InertiaProgress } from '@inertiajs/progress'
-
-
-
+// nprogressbar for non inertia requests
 
 //required files
 require('./bootstrap');

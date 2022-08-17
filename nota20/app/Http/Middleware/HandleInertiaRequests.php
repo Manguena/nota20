@@ -44,10 +44,9 @@ class HandleInertiaRequests extends Middleware
         
             $userName=$user->apelido;
             $userId=$user->id;
-            
+           
     return array_merge(parent::share($request), [
                 //
-               
             'sharedAuthuserName'=>$userName,
             'sharedAuthUserId'=>$userId,
             'flash' => ['message'=>function() use ($request){
@@ -57,7 +56,9 @@ class HandleInertiaRequests extends Middleware
             ]);
 
 
-        } else{
+        } 
+        
+        else{ 
             //if($request->session()->get('message')){
                 //return $request->session()->get('message');
                 return array_merge(parent::share($request), [
@@ -66,11 +67,9 @@ class HandleInertiaRequests extends Middleware
                     }],
                 ]);
             //}
-            /*
-            else{
-                return [];
-            }***/
             
+            //else{   return [];}
+           
         }
         
 
