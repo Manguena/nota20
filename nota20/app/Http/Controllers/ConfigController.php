@@ -44,9 +44,6 @@ class ConfigController extends Controller
             return response()->json($errors);
         }
 
-       
-
-
         $config=Config::find($id);
         $config->superadmin=$request->toArray()['superadmin'];
         $config->admin=$request->toArray()['admin'];

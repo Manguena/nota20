@@ -20,7 +20,7 @@
                 <div class="form-group col-md-4">
                     <label for="apelido">Super Admin</label>
                     <input type="text" class="form-control" v-bind:class="inputErrorSuperAdmin" id="superadmin" v-model="form.superadmin">
-                    <div class="text-danger" v-if="superUserError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{superUserError}}</small></div>
+                    <div class="text-danger" v-if="superUserError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{superUserError}}</small></div>                                      
                 </div>
                 <div class="form-group col-md-4">
                     <label for="name">Admin</label>
@@ -68,10 +68,15 @@ export default {
         let that=this;
         NProgress.start();//start the progressbar
          axios.patch(`/config/${this.configArray['id']}`,this.form)
-        .then((response)=>{
-            
-           
+        .then((response)=>{  
             if(response.hasOwnProperty('data')){
+            
+            //Empty the form error variables, before assigning new errors       
+            that.adminUserError=null;
+            that.standardUserError=null;
+            that.superUserError=null;
+
+                //Deal with data returned from server
                 let ServerResponse=response['data'];
                 if (ServerResponse.hasOwnProperty('message')){
                     that.flashMessage=response['data'];
@@ -79,12 +84,14 @@ export default {
                     if(ServerResponse.hasOwnProperty('superadmin')){
                         that.superUserError=response['data']['superadmin'][0];
                     }
+                    else{
+                        that.superUserError='';
+                    }
                     if(ServerResponse.hasOwnProperty('admin')){
                         that.adminUserError=response['data']['admin'][0];
                     }
                     if(ServerResponse.hasOwnProperty('standard')){
                         that.standardUserError=response['data']['standard'][0];
-
                     }
                 }
 
@@ -93,22 +100,11 @@ export default {
         })
         .catch(
             (error)=>{
-                console.log(error);
                NProgress.done();//end the progressbar
                location.reload();
             }
         ); 
-           /*
-      this.$inertia.patch(`/config/${this.configArray['id']}`,this.form,{
-            onError:(error)=>{
-                console.log(`error`);
-            },
-            onFinish:error=>{
-            //    console.log(JSON.stringify(error));
-                console.log(`${this.inertia}`);
-                console.log(`${this}`);
-            }
-        }); ***/
+          
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){

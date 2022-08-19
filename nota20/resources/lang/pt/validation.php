@@ -149,7 +149,7 @@ return [
         'email'=>[
             'unique'=>'Email indisponivel'
         ],
-        'bi'=>[
+        'user_id'=>[
             'required'=>'Insira o número do Documento de Identificação',
             'unique'=>'Documento de Identificação indisponível' 
         ],
@@ -189,10 +189,10 @@ return [
         //'password_confirmation' => 'Confirmar Password',
         'current_password' => 'Password Actual',
         'name'=>'Nome',
-        'apelido' => 'Apelido',
+        'surname' => 'Apelido',
         'name'=>'Nome',
         'email'=>'Email',
-        'bi'=>'Documento de Identificação',
+        'user_id'=>'Documento de Identificação',
         'password'=>'Password',
         'password_confirmation'=>'Confirmar a password',
         'admin'=>'Usuário Admin',
