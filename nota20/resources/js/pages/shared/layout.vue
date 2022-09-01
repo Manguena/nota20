@@ -16,13 +16,13 @@
         <inertia-link href="/user" class="nav-link dashboard-menu">Utilizador</inertia-link> 
       </li>
       <li class="nav-item">
-        <a class="nav-link dashboard-menu" href="#">Turma</a>
+        <inertia-link class="nav-link dashboard-menu" href="/class/course">Turma</inertia-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link dashboard-menu" href="#">Escola</a>
+        <inertia-link class="nav-link dashboard-menu" href="/school/create">Escola</inertia-link>
       </li>
       <li class="nav-item">
-        <a class="nav-link dashboard-menu" href="#">Estudante </a>
+        <inertia-link class="nav-link dashboard-menu" href="/student">Estudante </inertia-link>
       </li>
     </ul>
     <span class="navbar-text">
