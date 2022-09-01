@@ -1,7 +1,7 @@
 <template>
     <div class="container">
        <div v-if="flashMessage" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
-            <span class="center-msg">Utilizador &nbsp;<strong >{{flashMessage.message}}</strong>&nbsp;Actualizado com sucesso</span>
+            <span class="center-msg">Utilizador &nbsp;<strong >{{user['0']['surname']}}</strong>&nbsp;Actualizado com sucesso</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -19,37 +19,37 @@
             <div class="form-row ">
                 <div class="form-group col-md-4">
                     <label for="apelido">Apelido</label>
-                    <input type="text" class="form-control" id="apelido" v-model="form.surname" >
+                    <input type="text" class="form-control" v-bind:class="inputErrorSurname" id="apelido" v-model="form.surname" >
                     <div class="text-danger" v-if="surnameError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{surnameError}}</small></div>
                 </div>
                 <div class="form-group col-md-8">
                     <label for="name">Nome</label>
-                    <input type="text" class="form-control" id="name" v-model="form.name">
+                    <input type="text" class="form-control" v-bind:class="inputErrorName" id="name" v-model="form.name">
                      <div class="text-danger" v-if="nameError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{nameError}}</small></div>
                 </div>
              </div>
              <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" v-model="form.email">
+                    <input type="email" class="form-control" v-bind:class="inputErrorEmail" id="email" v-model="form.email">
                     <div class="text-danger" v-if="emailError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{emailError}}</small></div>
 
                 </div>
                 <div class="form-group col-md-6">
                     <label for="id">Documento de Identificação</label>
-                    <input type="text" class="form-control" id="id" v-model="form.user_id">
+                    <input type="text" class="form-control" v-bind:class="inputErrorDocIdentif" id="id" v-model="form.user_id">
                     <div class="text-danger" v-if="idError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{idError}}</small></div>
                 </div>
              </div>
              <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="password">Password actual</label>
-                    <input type="password" class="form-control" id="password" v-model="form.password" readonly>
+                    <input type="password" class="form-control" v-bind:class="inputErrorPassword" id="password" v-model="form.password" readonly>
                     <div class="text-danger" v-if="pwdError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{pwdError}}</small></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="new_password">Nova password</label>
-                    <input type="password" class="form-control" id="new_password" v-model="form.new_password" readonly>
+                    <input type="password" class="form-control" v-bind:class="inputErrorNewPass" id="new_password" v-model="form.new_password" readonly>
                     <div class="text-danger" v-if="newPwdError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{newPwdError}}</small></div>
                 </div>
              </div>
@@ -167,8 +167,9 @@ export default {
                 NProgress.done();
             })
             .catch(error=>{
-                console.log(error)
-                NProgress.done();
+              NProgress.done();
+              location.reload();
+                
             });
 
         },

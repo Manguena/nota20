@@ -166,22 +166,11 @@ mounted() {
 </script>
 
 <style>
-.breadcrumb{
-    background-color: #e2e2eb;
-    font-size:large;
-    padding-left:0;
-    padding-bottom:0;
-}
 .create-user-form{
     background-color: #fdfdfe;
     padding: 1.25rem;
     margin-top: 0;
     border-radius:2px ;
-}
-
-.inputError, .inputError:focus {
- border-color: #e3342f;
- box-shadow: 0px 0px 3px 0px #e3342f;
 }
 
 .page-navigation{
@@ -198,7 +187,7 @@ form h4{
     font-weight: 700;
 }
 @media screen and (min-width: 992px){
-   .create-user-form, .page-navigation{
+   .create-user-form{
        margin-right: 10%;
        margin-left: 10%;       
    }

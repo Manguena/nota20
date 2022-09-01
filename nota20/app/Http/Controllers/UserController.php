@@ -49,7 +49,7 @@ class UserController extends Controller
            $userArray[$userArrayCounter]=
            array(
                 "id"=>$user['id'],
-                "apelido"=>$user['apelido'],
+                "surname"=>$user['surname'],
                 "email"=>$user['email'],
                 "nome"=>$user['name'],
                 "editUri"=>"user/".$user['id']."/edit",
@@ -131,7 +131,7 @@ class UserController extends Controller
         Gate::authorize('create-user');
         //validation of input
          $request->validate([
-            'apelido' => 'required|max:255|min:3',
+            'surname' => 'required|max:255|min:3',
             'name' => 'required|max:255|min:3',
             'email' => 'required | max:50|min:3|unique:App\Models\User|email',
             'bi' => 'required|min:3|max:255|unique:App\Models\User',
@@ -149,7 +149,7 @@ class UserController extends Controller
         $user->email=$request->email;
         $user->password=Hash::make($request->password);
         $user->bi=$request->bi;
-        $user->apelido=$request->apelido;
+        $user->surname=$request->surname;
         $user->save();
 
         $userId=$user->id;
@@ -160,7 +160,7 @@ class UserController extends Controller
         $user->refresh();
 
 // Redirect to the same page
-  return Redirect::route('user.create')->with('message', $request->apelido);
+  return Redirect::route('user.create')->with('message', $request->surname);
   
 }
 
@@ -183,14 +183,9 @@ public function edit($id){
 }
 
 public function update(Request $request, $id){
-//sanitize the request and the ID
 
-
-// sanitise this id??????
-
-    $request->validate([
-        'passwordctr'=>'boolean',
-        'apelido' => 'required|max:255|min:3',
+    $validator=Validator::make($request->all(),[
+        'surname' => 'required|max:255|min:3',
         'name' => 'required|max:255|min:3',
         'email' => ['required',
                 Rule::unique('users')->ignore($id),
@@ -198,42 +193,51 @@ public function update(Request $request, $id){
                  'min:3',
                  'email'
                 ],
-        'bi' => ['required',
+        'user_id' => ['required',
                 Rule::unique('users')->ignore($id),
                 'min:3',
                 'max:255'],
-        'password' =>'exclude_if:passwordctr,false|required|confirmed|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-        'password_confirmation' => 'exclude_if:passwordctr,false|required|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+        'password' =>'exclude_if:password,null|required|confirmed|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+        'password_confirmation' => 'exclude_if:password,null|required|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
         'role'=>[
             'required',
             Rule::in (['standard','admin'])
         ],
     ]);
 
+    if($validator->fails()){
+        $errors=$validator->errors();
+        return response()->json($errors);
+    }
+
     $userUpdateArray=$request->toArray();
     
     $user=User::find($id);
     $user->name=$userUpdateArray['name'];
-    $user->apelido=$userUpdateArray['apelido'];
+    $user->surname=$userUpdateArray['surname'];
     $user->email=$userUpdateArray['email'];
-    $user->bi=$userUpdateArray['bi'];
+    $user->user_id=$userUpdateArray['user_id'];
     if($userUpdateArray['password']!=null || trim($userUpdateArray['password'])!=""){
        $user->password= Hash::make($userUpdateArray['password']);
     }
     $user->save();
 
-    //Actualizacao do User Role
+    //Update of the user role
     $roleId=User::find($id)->roles()->get()->toArray()['0']['id'];
     $role=Role::find($roleId);
     $role->name=$userUpdateArray['role'];
     $role->save();
   
-  return Redirect::route('user.edit', ['id' => $id])->with('message', $user->apelido);
+    return response()->json([
+        'message' =>  $user->surname
+    ]);
+
+  //return Redirect::route('user.edit', ['id' => $id])->with('message', $user->surname);
 
 }
 
 public function destroy($id){
-    $removedUser=User::find($id)->apelido;    
+    $removedUser=User::find($id)->surname;    
     User::destroy($id);
 
     return Redirect::route('user')->with('message', $removedUser);

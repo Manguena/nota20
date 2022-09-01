@@ -576,11 +576,6 @@ mounted(){
     border-radius:2px ;
 }
 
-.inputError, .inputError:focus {
- border-color: #e3342f;
- box-shadow: 0px 0px 3px 0px #e3342f;
-}
-
 .page-navigation{
     margin-top: 2rem;
 }
