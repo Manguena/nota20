@@ -15,6 +15,12 @@ html, body, .main{
     justify-content: center;
     align-items: center;
 }
+.breadcrumb{
+    background-color: #e2e2eb;
+    font-size:large;
+    padding-left:0;
+    padding-bottom:0;
+}
 
 .btn-link{
     padding: 0;
@@ -56,6 +62,11 @@ color:#096b71;
 .main-buttom{
     margin-top: auto;
 }
+
+.inputError, .inputError:focus {
+    border-color: #e3342f;
+    box-shadow: 0px 0px 3px 0px #e3342f;
+   }
 
 /**STLYLES FOR THE SETUP.BLADE FILE*/
 
