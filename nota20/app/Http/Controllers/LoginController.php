@@ -64,7 +64,12 @@ public function index(){
             return Inertia::render('login',['love'=>'fuck you nigger']); $credentials->errors();
         }
         ***/
-        $credentials = $request->validate([
+       /* $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
+**/
+            $credentials = $request->validate([
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]);
@@ -80,7 +85,7 @@ public function index(){
        // dd('The provided credentials do not match our records.');
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email ou Password incorrectos',
         ]);
     }
  

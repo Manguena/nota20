@@ -274,7 +274,9 @@ export default {
                     that.subjectFeedbackSpinner=false
             })
             .catch(function (error) {
-                $('#modal').modal('show');
+               // $('#modal').modal('show');
+              location.reload();
+             // console.log(error);
             })
             .then( (error) =>{
                that.searchItemName=null;
@@ -352,7 +354,8 @@ export default {
               that.classUpdateSpinner=false// disable the spinner
             })
             .catch((error)=>{
-                $('#modal').modal('show');
+                //$('#modal').modal('show');
+                location.reload();
             }) 
     },
 
@@ -372,7 +375,8 @@ export default {
                document.getElementById("subjectLink").click();
             })
             .catch((error)=>{
-                    $('#modal').modal('show');
+                   // $('#modal').modal('show');
+                   location.reload();
             })
     }
     },

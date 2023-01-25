@@ -26,14 +26,24 @@ class UserController extends Controller
         //Check if the array has a search query
         // This check is only necessary with meilisearh, and will be removed with laravel scout
         
+        $emptyDbSearch=DB::table('users')
+                                    ->orderBy('surname', 'asc')                        
+                                    ->paginate(15)
+                                    ->toArray();
+
+        
+
         if(array_key_exists('searchbar', $request->toArray())){// check if searchbar has an index
             if($request->toArray()['searchbar']!=null){// if a words is entered set maximum 20 results
                         $query=User::search($request->searchbar)->paginate(30)->toArray();
                     }else{// if a null search is executed by user, paginate with 15 items per page
-                        $query=User::search($request->searchbar)->paginate(10)->toArray();
+                        
+                       // $query=User::search($request->searchbar)->paginate(15)->toArray();
+                        $query=$emptyDbSearch;
                     }
         }else{
-            $query=User::search($request->searchbar)->paginate(10)->toArray();
+           $query=$emptyDbSearch;
+           // $query=User::search($request->searchbar)->paginate(15)->toArray();
         } 
         
         // Create pagination content
@@ -42,10 +52,12 @@ class UserController extends Controller
       
         //fiil the pagination content array
 
-        /**problema com pesquisa de 'jo' comexa aqui mesmo */
     // dd($query);
 
        foreach ($query['data'] as $user) {
+        
+        is_array($user)? :$user=(array)$user;// if it is an object change it to an array
+
            $userArray[$userArrayCounter]=
            array(
                 "id"=>$user['id'],
@@ -75,7 +87,6 @@ class UserController extends Controller
 
         }        
       
-        
         //Return pagination data to the front end (ath, last_page, and the 'current_page')
 
         return Inertia::render('user/index',[
@@ -102,20 +113,17 @@ class UserController extends Controller
         //Determinar ki tipo de usuarios podem ser criados pelo superadmin e o admin
         if ($user->currentUserRole()=='superadmin'){
             //1-check the number of admns and super admin and standard before creating the list
-            if(Role::where('name','superadmin')->count()< Config::all()->toArray()[0]['superadmin']){
+            if(self::numberOfUsersInConfig()['superadmin']> self::numberOfUsersInARole('superadmin')){
                 array_push($roleList, 'superadmin');
             }
-            if(Role::where('name','admin')->count()<Config::all()->toArray()[0]['admin']){
+            if(self::numberOfUsersInConfig()['admin']>self::numberOfUsersInARole('admin')){
                 array_push($roleList, 'admin');
             }
-            if(Role::where('name','standard')->count()<Config::all()->toArray()[0]['standard']){
-                array_push($roleList, 'standard');
-            }
-        }else if ($user->currentUserRole()=='admin'){
-            if(Role::where('name','standard')->count()<Config::all()->toArray()[0]['standard']){
+            if(self::numberOfUsersInConfig()['standard']>self::numberOfUsersInARole('standard')){
                 array_push($roleList, 'standard');
             }
         }
+
         // Define message of rejection of possibility of creating users
         if(count($roleList)==0){
             $userCreationMsg='Esgotou o número de possiveis de criar';
@@ -129,12 +137,13 @@ class UserController extends Controller
         // You can only create a user if you are an administrator,
         // otherwise throw error
         Gate::authorize('create-user');
+        //dd($request);
         //validation of input
          $request->validate([
             'surname' => 'required|max:255|min:3',
             'name' => 'required|max:255|min:3',
             'email' => 'required | max:50|min:3|unique:App\Models\User|email',
-            'bi' => 'required|min:3|max:255|unique:App\Models\User',
+            'user_id' => 'required|min:3|max:255|unique:App\Models\User',
             'password' =>'required|confirmed|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'password_confirmation' => 'required | min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'role'=>[
@@ -148,16 +157,16 @@ class UserController extends Controller
         $user->name=$request->name;
         $user->email=$request->email;
         $user->password=Hash::make($request->password);
-        $user->bi=$request->bi;
+        $user->user_id=$request->user_id;
         $user->surname=$request->surname;
         $user->save();
 
-        $userId=$user->id;
-        $role=new Role();
-        $role->name=$request->role;
-        $user=User::find($userId);
-        $user->roles()->save($role);
-        $user->refresh();
+        //Get the roleId of the current user
+        $roleId=self::getRoleId($request->input('role'));
+
+        //add role to a user in the pivot table
+        $user=User::find($user->id);
+        $user->roles()->attach($roleId);
 
 // Redirect to the same page
   return Redirect::route('user.create')->with('message', $request->surname);
@@ -201,7 +210,7 @@ public function update(Request $request, $id){
         'password_confirmation' => 'exclude_if:password,null|required|min:8|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
         'role'=>[
             'required',
-            Rule::in (['standard','admin'])
+            Rule::in (['standard','admin','superadmin'])
         ],
     ]);
 
@@ -209,6 +218,51 @@ public function update(Request $request, $id){
         $errors=$validator->errors();
         return response()->json($errors);
     }
+
+    // Get configuration information from database
+      
+    
+        // Get the defined number of user for each role
+       // $numberOfSuperadminUsers=$test['superadmin'];
+        //$numberOfAdminUsers=$test['admin'];
+        ///$numberOfStandardUsers=$test['standard'];
+        
+        if ($request->input('role')=='superadmin'){
+            if(self::numberOfUsersInARole('superadmin')>=self::numberOfUsersInConfig()['superadmin']){
+                return response()->json([
+                    'userLimitError' =>'Numero de utilizadores esgotados para este perfil'  
+                ]);
+            }
+        }
+            else if($request->input('role')=='admin'){
+                 if(self::numberOfUsersInARole('admin')>=self::numberOfUsersInConfig()['admin']){
+                return response()->json([
+                    'userLimitError' =>'Numero de utilizadores esgotados para este perfil'  
+                ]);
+            }
+            } 
+            else if($request->input('role')=='standard'){
+                if(self::numberOfUsersInARole('standard')>=self::numberOfUsersInConfig()['standard']){
+                    return response()->json([
+                        'userLimitError' =>'Numero de utilizadores esgotados para este perfil'  
+                    ]);
+                    }
+            }
+        
+
+       
+                                /*
+                                           DB::table('users')
+                                           ->select('users.id')
+                                           ->whereRaw('users.id=(SELECT user_id FROM role_user WHERE role_id=(
+                                                      SELECT id FROM roles WHERE roles.name=?))', [$request->input('role')])
+                                           ->get();
+***/
+        //if (){
+            // $request->input('role')=='superadmin'
+   //     }
+    
+    //
 
     $userUpdateArray=$request->toArray();
     
@@ -223,11 +277,14 @@ public function update(Request $request, $id){
     $user->save();
 
     //Update of the user role
-    $roleId=User::find($id)->roles()->get()->toArray()['0']['id'];
-    $role=Role::find($roleId);
-    $role->name=$userUpdateArray['role'];
-    $role->save();
-  
+    $currentRoleId=User::find($id)->roles()->get()->toArray()['0']['id'];
+    $newRoleId=self::getRoleId($request->input('role'));
+    
+
+  $user->roles()->updateExistingPivot($currentRoleId,[
+    'role_id'=>$newRoleId
+  ]);
+
     return response()->json([
         'message' =>  $user->surname
     ]);
@@ -242,5 +299,46 @@ public function destroy($id){
 
     return Redirect::route('user')->with('message', $removedUser);
 }
+
+/*
+    Get the number of users in a certain role
+*/
+public function numberOfUsersInARole($userRole){
+
+    $numberOfUsersInARole=DB::table('role_user')
+    ->select('user_id')
+    ->whereRaw('role_id=(
+        SELECT id FROM roles WHERE name=?)', [$userRole])
+        ->count();
+
+    return $numberOfUsersInARole;
+    
+}
+
+/**
+ * Gets the configuration about the number of users for each role
+ * 
+ */
+
+public function numberOfUsersInConfig(){
+    $configArray=DB::table('configs')
+    ->select('superadmin', 'admin', 'standard')
+    ->get()
+    ->toArray()[0];
+
+    return $configArray=(array) $configArray;
+}
+
+/**
+ * return the role id for a certain role
+ */
+public function getRoleId ($role){
+
+    $roleModel=Role::where('name',$role)->first();
+    $roleId=$roleModel->id;
+
+    return $roleId;
+}
+
 }
 

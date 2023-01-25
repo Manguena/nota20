@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
-        <span class="center-msg">{{$page.props.flash.message}}</span> 
+        <div v-if="flashMessage" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
+        <span class="center-msg">{{flashMessage.message}}</span> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -38,9 +38,9 @@
                         <td>{{item.surname}}</td>
                         <td>{{item.name}}</td>
                         <td> 
-                          <input type="text" :id="item.id" v-bind:class="{inputError:$page.props.errors[index]}" v-model="item.grade" class="gradeInput test">
-                            <div class="text-danger" v-if="$page.props.errors[index]">
-                                <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" />&nbsp;{{$page.props.errors[index]}}</small>
+                          <input type="text" :id="item.id" v-bind:class="{inputError:gradesError[index]}" v-model="item.grade" class="gradeInput test">
+                            <div class="text-danger" v-if="gradesError[index]">
+                                <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" />&nbsp;{{gradesError[index]}}</small>
                             </div>
                             </td>
                     </tr>
@@ -62,12 +62,15 @@
 </template>
 <script>
 import Layout from '../shared/layout';
+import NProgress from 'nprogress';
 
 export default {
       layout:Layout,
       props:['studentConfigArray','classConfigArray','subjectId','subjectName', 'gradeConfigArray', 'courseName'],  
      data(){
         return{
+           gradesError:[],
+           flashMessage:null,
            deleteEnrollmentSpinner:false,
            studentId:0,
            studentSurname:null,
@@ -84,7 +87,31 @@ export default {
             });
        },
        updateGrade(){
-            this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+            let that=this;
+            NProgress.start();
+      //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+             axios.patch(`/class/grade/updategrade`, this.studentGrade)
+            .then(response=>{
+                if(response.hasOwnProperty('data')){
+                    console.log(response);
+                    //Deal with data returned from server
+                let ServerResponse=response['data'];
+
+                if (ServerResponse.hasOwnProperty('message')){
+                    that.flashMessage=response['data'];
+                }else{
+                    that.gradesError=ServerResponse;
+                    console.log(that.gradesError);
+                }
+                }
+                
+                NProgress.done();
+            })
+            .catch(error=>{
+                //console.log(error);
+                NProgress.done();
+                location.reload();
+            })
        }
        
     },

@@ -7,6 +7,13 @@
             </button>
         </div>
         
+        <nav style="breadcrumb-divider: '';" class="nav-margin-top" aria-label="breadcrumb">
+            <ol class="breadcrumb page-navigation">
+                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
+                <li class="breadcrumb-item"><inertia-link href="/report">Estudante</inertia-link></li>
+                <li class="breadcrumb-item active" aria-current="page">Pauta</li>
+            </ol>
+        </nav>
 
        <div id="example-1">
             <div >

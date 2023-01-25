@@ -22,6 +22,10 @@ html, body, .main{
     padding-bottom:0;
 }
 
+.nav-margin-top{
+    margin-top: 2rem;
+}
+
 .btn-link{
     padding: 0;
     color: black;
@@ -96,9 +100,5 @@ MEDIA QUERIES FOR THE FIRST PAGE
    .main-formgroup{
         margin-left: 20px;
     }
-    /* 
-    .main-buttom{
-    position: absolute;
-    bottom: 0;
-    }***/
+    
 }

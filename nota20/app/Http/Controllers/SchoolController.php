@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\School;
 use App\Models\Config;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class SchoolController extends Controller
@@ -57,11 +59,15 @@ class SchoolController extends Controller
            $id= School::all()->toArray()[0]['id'];
         }
 
-        $request->validate([
+        $validator=Validator::make($request->all(),[
             'name'=>'required|string|min:5',
             'abbreviation' => 'required|string|min:1',
         ]);
 
+        if($validator->fails()){
+            $errors=$validator->errors();
+            return response()->json($errors);
+        }
         
         
         $school=School::find($id);
@@ -69,7 +75,9 @@ class SchoolController extends Controller
         $school->abbreviation=$request->abbreviation;
         $school->save();
 
-        return Redirect:: route('school.create')->with('message', $request->abbreviation);
-
+        //return Redirect:: route('school.create')->with('message', $request->abbreviation);
+        return response()->json([
+            'message' =>  $request->abbreviation
+        ]); 
     }
 }

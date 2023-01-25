@@ -16,6 +16,8 @@
     </div>
 </template>
 <script>
+import { logicalExpression } from '@babel/types';
+
 export default {
     props:['searchRoute', 'label', 'searchItemError'],
     //inicio
@@ -82,6 +84,7 @@ export default {
                
             })
             .catch((error)=>{
+                location.reload();
             })
         }
 

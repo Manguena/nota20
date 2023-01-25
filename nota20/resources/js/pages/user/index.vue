@@ -10,7 +10,7 @@
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
             <ol class="breadcrumb page-navigation">
                 <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-                <li class="breadcrumb-item active" aria-current="page">Configuração </li>
+                <li class="breadcrumb-item active" aria-current="page">Utilizador </li>
             </ol>
         </nav>
 

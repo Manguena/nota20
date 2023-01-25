@@ -192,4 +192,13 @@ form h4{
        margin-left: 10%;       
    }
 }
+
+
+@media screen and (min-width: 992px){
+    .page-navigation{
+        margin-right: 10%;
+        margin-left: 10%;       
+    }
+ 
+ }
 </style>

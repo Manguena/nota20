@@ -6,6 +6,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <div v-if="userLimitError" class="alert alert-danger alert-dismissible fade show mt-4 mb-1" role="alert">
+            <span class="center-msg">{{userLimitError}}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
@@ -56,6 +62,10 @@
              <div class="form-row">
                 <div class="form-group col-md-6">
                     <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="superadmin" value="superadmin" name="customRadioInline" class="custom-control-input" v-model="form.role">
+                    <label class="custom-control-label" for="superadmin">Usuário super administrador</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" id="admin" value="admin" name="customRadioInline" class="custom-control-input" v-model="form.role">
                     <label class="custom-control-label" for="admin">Usuário administrador</label>
                     </div>
@@ -67,7 +77,7 @@
                 </div>
              </div>
              <button class="btn btn-primary" type="button" v-on:click="update">Actualizar</button>
-             <button class="btn btn-danger ml-3" type="button" v-on:click="showDeleteModal">Excluir</button>
+             <button class="btn btn-danger ml-3" v-if="userRole!=='superadmin'" type="button" v-on:click="showDeleteModal">Excluir</button>
         </form>
         <!---MODAL ASKING THE USER IF HE/SHE REALLY WANTS TO CHANGE THE USER PASSWORD--->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -124,6 +134,7 @@ export default {
     data(){
         return{
             flashMessage:null,
+            userLimitError:null,
             surnameError:null,
             nameError:null,
             emailError:null,
@@ -150,11 +161,11 @@ export default {
          * */ 
       update(){
         let that=this;
-        NProgress.start();
-        //this.$inertia.patch(`/user/${this.user['0']['id']}`,this.form);
+       // this.$inertia.patch(`/user/${this.user['0']['id']}`,this.form);
+       
+         NProgress.start();
         axios.patch(`/user/${this.user['0']['id']}`,this.form)
         .then(response=>{
-            console.log(response);
             if(response.hasOwnProperty('data')){
                 //Empty the form error variables, before assigning new errors       
                     that.surnameError=null;
@@ -169,7 +180,11 @@ export default {
                 let ServerResponse=response['data'];
                 if (ServerResponse.hasOwnProperty('message')){
                     that.flashMessage=response['data'];
-                }else{
+                }
+                else if(ServerResponse.hasOwnProperty('userLimitError')){
+                        that.userLimitError= ServerResponse.userLimitError;
+                }
+                else{
                     if(ServerResponse.hasOwnProperty('surname')){
                         that.surnameError=response['data']['surname'][0];
                     }

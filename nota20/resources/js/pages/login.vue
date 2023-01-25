@@ -15,11 +15,13 @@
                     <form @submit.prevent="submit">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Email</label>
-                            <input type="email" id="email" v-model="form.email" class="form-control" name="email" value="" autocomplete="email" autofocus>  
+                            <input id="email" v-model="form.email" class="form-control" v-bind:class="inputErrorEmail" name="email" autocomplete="email" autofocus>
+                            <div class="text-danger" v-if="$page.props.errors.email"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.email}}</small></div>  
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Password</label>
-                            <input type="password" id="password" v-model="form.password" class="form-control main-input" name="password" required autocomplete="current-password">
+                            <input type="password" id="password" v-model="form.password" class="form-control main-input" v-bind:class="inputErrorPassword" name="password" autocomplete="current-password">
+                            <div class="text-danger" v-if="$page.props.errors.password"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.password}}</small></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -48,6 +50,7 @@ export default{
            // console.log(this.$page);
             this.$inertia.post('/login',this.form,{
                 onFinish:()=>{
+
                    /**   if(this.$page.props.flash.message==='419'){
                         console.log(`---request expired`);
                         location.reload();
@@ -59,6 +62,20 @@ export default{
            location.reload();
         }
         
+    },
+    computed: {
+        inputErrorEmail() {
+            return {
+            inputError: this.$page.props.errors.email,
+            'inputError:focus': this.$page.props.errors.email
+            }
+        },
+        inputErrorPassword() {
+            return {
+            inputError: this.$page.props.errors.password,
+            'inputError:focus': this.$page.props.errors.password
+            }
+        }
     },
     mounted() {  
     document.title = "Nota 20 - Gestão Academica";  

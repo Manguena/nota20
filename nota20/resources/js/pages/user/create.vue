@@ -18,8 +18,8 @@
             <div class="form-row ">
                 <div class="form-group col-md-4">
                     <label for="apelido">Apelido</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorApelido" id="apelido" v-model="form.apelido" >
-                    <div class="text-danger" v-if="$page.props.errors.apelido"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.apelido}}</small></div>
+                    <input type="text" class="form-control" v-bind:class="inputErrorApelido" id="apelido" v-model="form.surname" >
+                    <div class="text-danger" v-if="$page.props.errors.surname"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.surname}}</small></div>
                 </div>
                 <div class="form-group col-md-8">
                     <label for="name">Nome</label>
@@ -30,13 +30,13 @@
              <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" v-bind:class="inputErrorEmail" id="email" v-model="form.email">
+                    <input class="form-control" v-bind:class="inputErrorEmail" id="email" v-model="form.email">
                     <div class="text-danger" v-if="$page.props.errors.email"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.email}}</small></div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="bi">Documento de Identificação</label>
-                    <input type="text" class="form-control" v-bind:class="inputErrorDocIdentif" id="bi" v-model="form.bi">
-                    <div class="text-danger" v-if="$page.props.errors.bi"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.bi}}</small></div>
+                    <input type="text" class="form-control" v-bind:class="inputErrorDocIdentif" id="bi" v-model="form.user_id">
+                    <div class="text-danger" v-if="$page.props.errors.user_id"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.user_id}}</small></div>
                 </div>
              </div>
              <div class="form-row">
@@ -69,8 +69,8 @@
                 </div>
              </div>
              
-             <inertia-link href="/user/create" v-if="$page.props.flash.message" class="btn btn-primary" type="submit">Novo Usuário</inertia-link>
-             <button class="btn btn-primary" type="submit">Criar Usuário</button>
+             <inertia-link href="/user/create" v-if="$page.props.flash.message" class="btn btn-primary" type="submit">Novo Utilizador</inertia-link>
+             <button class="btn btn-primary" type="submit">Criar Utilizador</button>
 
         </form>
     </div>
@@ -83,12 +83,12 @@ export default {
     data(){
         return{
             form: {
-                apelido:null,
+                surname:null,
                 name:null,
                 email:null,
                 password:null,
                 password_confirmation:null,
-                bi:null,
+                user_id:null,
                 role:null
             }
         }
@@ -122,8 +122,8 @@ export default {
         },
         inputErrorDocIdentif() {
             return {
-            inputError: this.$page.props.errors.bi,
-            'inputError:focus': this.$page.props.errors.bi
+            inputError: this.$page.props.errors.id_number,
+            'inputError:focus': this.$page.props.errors.id_number
             }
         },
         inputErrorPassword() {
