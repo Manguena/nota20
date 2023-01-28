@@ -7,6 +7,13 @@
             </button>
         </div>
         
+        <nav style="breadcrumb-divider: '';" class="nav-margin-top" aria-label="breadcrumb">
+            <ol class="breadcrumb page-navigation">
+                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
+                <li class="breadcrumb-item"><inertia-link href="/report">Estudante</inertia-link></li>
+                <li class="breadcrumb-item active" aria-current="page">Pauta</li>
+            </ol>
+        </nav>
 
        <div id="example-1">
             <div >
@@ -15,9 +22,15 @@
 
         <div class="list-user-form">
             <div class="table-responsive-sm">
-                <div class="">
-                    <p> <span class="font-weight-bold">Apelido: </span>{{studentConfigArray.surname}}</p>
-                    <p> <span class="font-weight-bold">Nome: </span>{{studentConfigArray.name}}</p>
+                <div class="student-id">
+                    <div>
+                        <p> <span class="font-weight-bold">Apelido: </span>{{studentConfigArray.surname}}</p>
+                        <p> <span class="font-weight-bold">Nome: </span>{{studentConfigArray.name}}</p>
+
+                    </div>
+                    <!--font-awesome-icon icon="fas fa-" /--->
+                    <a v-bind:href="'/report/export/'+studentConfigArray['id']"><font-awesome-icon :icon="['fas', 'file-excel']" size="2x" class="excel-icon"/></a>
+                    
                 </div>
 
                 <table class="table table-hover table-light user-table">
@@ -94,13 +107,24 @@ export default {
         }
 },
 created(){
-    console.log(this.studentConfigArray);
-}
+    console.log(this.studentConfigArray['id']);
+},
+mounted() {  
+    document.title = "Nota 20 - Gerar Pauta";  
+  }
     }
 </script>
 
 
 <style scoped>
+.excel-icon{
+color: #6b6316;
+}
+
+.student-id{
+    display: flex;
+    justify-content: space-between;
+}
 
 .list-user-form{
     background-color: #fdfdfe;

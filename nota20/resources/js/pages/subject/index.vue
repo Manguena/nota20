@@ -230,6 +230,10 @@ export default {
 
             })
             .catch(function (error) {
+                //location.reload();
+                 if (error.response.status===401 ||error.response.status===419){
+                    location.reload();
+                }
             })
             .then( (error) =>{
                that.searchItemName=null;
@@ -270,7 +274,7 @@ export default {
               that.subjectUpdateSpinner=false
             })
             .catch((error)=>{
-                console.log(error);
+                location.reload();
             }) 
     },
 
@@ -287,7 +291,8 @@ export default {
               this.deleteSubjectSpinner=false;
             })
             .catch((error)=>{
-                console.log(error);
+                location.reload();
+               // console.log(error);
             })
     }
     },
@@ -305,7 +310,10 @@ export default {
             }
         }
 
-} 
+},
+mounted() {  
+    document.title = "Nota 20 - Disciplina";  
+  } 
 } 
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="paginationButton">
   <nav aria-label="...">
     <ul class="pagination justify-content-end">
       <li class="page-item">
@@ -190,5 +190,10 @@ export default {
   color: #fff;
   background-color:#3490dc;
   border-color:#3490dc;
+}
+
+.paginationButton{
+  margin-bottom: 1rem;
+  padding-bottom: 1px;
 }
 </style>

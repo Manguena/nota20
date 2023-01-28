@@ -104,6 +104,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 import Layout from '../shared/layout';
 
 export default {
@@ -126,7 +127,12 @@ export default {
         /*remove student from enrolled class*/ 
      removeEnrollment(){
          this.deleteEnrollmentSpinner=true;
-         this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
+         //this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
+         axios.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`)
+         .then()
+         .catch(error=>{
+            location.reload();
+         })
          this.deleteEnrollmentSpinner=false;
      }
     },

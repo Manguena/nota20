@@ -16,6 +16,7 @@ class LogUserOut extends Controller
      * returns the login page after the user logs out
     */
     public function index(Request $request){
+     
 
         Auth::logout();
 
@@ -23,7 +24,8 @@ class LogUserOut extends Controller
 
         $request->session()->regenerateToken();
 
-        $url='/';// the address to be loaded
+       $url='/';// the address to be loaded, 
+
         return Inertia::location($url);
     }
 

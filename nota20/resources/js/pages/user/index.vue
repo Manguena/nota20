@@ -1,14 +1,20 @@
 <template>
     <div class="container">
-
         <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
             <span class="center-msg">Utilizador&nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp;Excluido com sucesso</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-            <div class="search-create">
-            
+
+        <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
+            <ol class="breadcrumb page-navigation">
+                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
+                <li class="breadcrumb-item active" aria-current="page">Utilizador </li>
+            </ol>
+        </nav>
+
+        <div class="search-create">   
             <form @submit.prevent="submit" class="input-group data-table-input">
                 <input type="text" id="searchbar"
                  v-on:keyup.enter="submit"
@@ -44,7 +50,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="userdata in useraArray" :key="userdata.id">
-                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.apelido}}</inertia-link></td>
+                    <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.surname}}</inertia-link></td>
                     <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.nome}}</inertia-link></td>
                     <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.email}}</inertia-link></td>
                     <td><inertia-link class="text-dark" :href="userdata.editUri">{{userdata.role}}</inertia-link></td>
@@ -86,13 +92,17 @@ export default {
     methods:{
         submit(){
             this.$inertia.get('/user', this.form)}
-        }
+        },
+        mounted() {  
+         document.title = "Nota 20 - Utilizador";  
+  }
     }
     
  
 </script>
 
 <style>
+
 .search-create{
     display: flex;
     margin-top: 30px;
@@ -114,6 +124,9 @@ export default {
     margin-left: auto;
 }
 
+.page-navigation{
+    margin-top: 2rem;
+}
 
 
 .search-create-btn label, .search-group-btn span{ 
@@ -150,4 +163,5 @@ margin-left:auto;
        display: none;
    }
 }
+
 </style>

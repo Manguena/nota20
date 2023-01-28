@@ -96,7 +96,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id){
 
-        $request->validate( [
+        $validator=Validator::make($request->all(),[
             'surname' => [
                 'required',
                 'string',
@@ -120,6 +120,12 @@ class StudentController extends Controller
                 'min:4',
             ]
         ]);
+ 
+        if($validator->fails()){
+            $errors=$validator->errors();
+            return response()->json($errors);
+        }
+        
         
         $studentUpdateArray=$request->toArray();
         $student=Student::find($id);
@@ -129,7 +135,12 @@ class StudentController extends Controller
         $student->year=$studentUpdateArray['year'];
         $student->save();
 
-        return Redirect::route('student.edit', ['id' => $id])->with('message', $student->surname);
+        
+        return response()->json([
+            'message' =>$student->surname
+        ]);
+        
+      //  return Redirect::route('student.edit', ['id' => $id])->with('message', $student->surname);
 
 
 ;    }

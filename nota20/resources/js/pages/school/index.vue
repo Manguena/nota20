@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-            <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
-                    <span class="center-msg">Escola &nbsp;<strong >{{$page.props.flash.message}}</strong>&nbsp; {{schoolAction}} com sucesso</span>                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <div v-if="flashMessage" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
+                    <span class="center-msg">Escola &nbsp;<strong >{{flashMessage.message}}</strong>&nbsp; {{schoolAction}} com sucesso</span>                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -20,12 +20,12 @@
                 <div class="form-group col-md-8">
                     <label for="apelido">Nome</label>
                     <input type="text" class="form-control" v-bind:class="inputErrorSchoolName" id="school_name" v-model="schoolForm.name">
-                    <div class="text-danger" v-if="$page.props.errors.name"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.name}}</small></div>
+                    <div class="text-danger" v-if="schoolNameError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{schoolNameError}}</small></div>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="name">Abreviatura</label>
                     <input type="text" class="form-control" id="school_abbreviation" v-bind:class="inputErrorAbbreviation" v-model="schoolForm.abbreviation">
-                     <div class="text-danger" v-if="$page.props.errors.abbreviation"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.abbreviation}}</small></div>
+                     <div class="text-danger" v-if="schoolAbbreviationError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{schoolAbbreviationError}}</small></div>
                 </div>
              </div>
              <button class="btn btn-primary" v-if="createSchool" type="submit">Criar</button>
@@ -186,13 +186,18 @@
 </template>
 <script>
 import Layout from '../shared/layout';
-
+import NProgress from 'nprogress';
 
 export default {
     layout:Layout,
     props:['schoolConfigArray', 'createSchool'],
      data(){
         return{
+            //update flash message variable
+            flashMessage:null,
+            //error variables
+            schoolNameError:null,
+            schoolAbbreviationError:null,
            // orderNr:'',
             //level variables
             levelErrorName:null,
@@ -239,7 +244,38 @@ export default {
         this.$inertia.post(`/school`, this.schoolForm);
         },
       updateSchool(){
-        this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm);
+        //this.$inertia.patch(`/school/${this.schoolForm.id}`,this.schoolForm);
+        let that=this;
+        NProgress.start();
+
+        axios.patch(`/school/${this.schoolForm.id}`,this.schoolForm)
+        .then(response=>{
+            if(response.hasOwnProperty('data')){
+                 that.schoolNameError=null;
+                that.schoolAbbreviationError=null;
+                //Deal with the data returned from the server
+                let ServerResponse=response['data'];
+                if (ServerResponse.hasOwnProperty('message')){
+                    that.flashMessage=response['data'];
+                }
+                else{
+                     if(ServerResponse.hasOwnProperty('name')){
+                        that.schoolNameError=response['data']['name'][0];
+                    }
+                    if(ServerResponse.hasOwnProperty('abbreviation')){
+                        that.schoolAbbreviationError=response['data']['abbreviation'][0];
+                    }
+
+                }
+
+            }
+
+        NProgress.done();
+        })
+        .catch(error=>{
+            NProgress.done();
+            location.reload();
+        })
       },
       /*
       Level methods
@@ -248,7 +284,6 @@ export default {
           let that=this;
           this.storeLevelSpinner=true;
           //this.$inertia.post(`/level`,this.levelForm); 
- 
           axios.post('/level',this.levelForm)
             .then(function (response) {
                     //console.log(response['data'].hasOwnProperty('orderNr')); 
@@ -276,7 +311,15 @@ export default {
                     that.storeLevelSpinner=false
             })
             .catch(function (error) {
-                console.log(error);
+
+                   if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             });
       },
       listLevel(){
@@ -288,7 +331,14 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             }) 
          },
          editLevel(id, name){
@@ -303,9 +353,9 @@ export default {
             let that=this;
             this.updateLevelSpinner=true;
             //this.$inertia.patch(`/level/${this.levelId}`, this.levelForm);
-
             axios.patch(`/level/${this.levelId}`, this.levelForm)
             .then((response)=>{
+                //console.log(response);
                 if(response['data'].hasOwnProperty('levelName')){
                     this.updateLevelError=response['data']['levelName'][0];
                 }else{ 
@@ -318,7 +368,14 @@ export default {
                 that.updateLevelSpinner=false;
             })
             .catch((error)=>{
-                console.log(error);
+                 if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             })
 
         },
@@ -339,7 +396,19 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ||error.response.status===405){
+                            location.reload();
+                        }
+                        
+                        else if (error.response.status===500){// level cannot be deleted because it has items associated to it
+                            that.deleteLevelSpinner=false;
+                        }
+                }
+                    
             }) 
 
       },
@@ -355,7 +424,14 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             }) 
          }, 
      
@@ -391,7 +467,14 @@ export default {
                     that.storeCourseSpinner=false
             })
             .catch(function (error) {
-                //console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+                }
             });
       },
         editCourse(id, name){
@@ -419,7 +502,18 @@ export default {
                 that.updateCourseSpinner=false;
             })
             .catch((error)=>{
-                console.log(error);
+                if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ){
+                    location.reload();
+                }
+               
+                } else if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else{
+                    location.reload();
+                }
+                
             })
 
         },
@@ -439,7 +533,18 @@ export default {
                 //console.log(that.courseConfigArray);
             })
             .catch((error)=>{
-                console.log(error);
+                  if(error.request){// no response from the server
+                    location.reload(); 
+                }
+                else if (error.response){
+                    if (error.response.status===401 ||error.response.status===419 ||error.response.status===405){
+                            location.reload();
+                        }
+                        
+                        else if (error.response.status===500){// level cannot be deleted because it has items associated to it
+                            that.deleteCourseSpinner=false;
+                        }
+                }
             }) 
 
       }
@@ -447,14 +552,14 @@ export default {
     computed: {
         inputErrorSchoolName() {
             return {
-            inputError: this.$page.props.errors.name,
-            'inputError:focus': this.$page.props.errors.name
+            inputError: this.schoolNameError,
+            'inputError:focus': this.schoolNameError
             }
         },
         inputErrorAbbreviation() {
             return {
-            inputError: this.$page.props.errors.abbreviation,
-            'inputError:focus': this.$page.props.errors.abbreviation
+            inputError: this.schoolAbbreviationError,
+            'inputError:focus': this.schoolAbbreviationError
             }
         },
         inputErrorCourse() {
@@ -491,6 +596,7 @@ export default {
 mounted(){
     this.listLevel();
     this.listCourse();
+    document.title = "Nota 20 - Escola"; 
 }
 } 
 </script>
@@ -508,11 +614,6 @@ mounted(){
     padding: 1.25rem;
     margin-top: 0;
     border-radius:2px ;
-}
-
-.inputError, .inputError:focus {
- border-color: #e3342f;
- box-shadow: 0px 0px 3px 0px #e3342f;
 }
 
 .page-navigation{

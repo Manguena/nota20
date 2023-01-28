@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-       <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
-            <strong class="center-msg" >{{$page.props.flash.message}}</strong>
+       <div v-if="flashMessage" class="alert alert-success alert-dismissible fade show mt-4 mb-1" role="alert">
+            <strong class="center-msg" >{{flashMessage.message}}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -13,32 +13,33 @@
         </ol>
         </nav>
         <div class="page-navigation font-weight-bold h3 mb-1"></div>
-        <form class="create-user-form" @submit.prevent="submit">
+        <form class="create-user-form">
            <h4>Número de utilizadores</h4>
            <p></p>
             <div class="form-row ">
                 <div class="form-group col-md-4">
                     <label for="apelido">Super Admin</label>
                     <input type="text" class="form-control" v-bind:class="inputErrorSuperAdmin" id="superadmin" v-model="form.superadmin">
-                    <div class="text-danger" v-if="$page.props.errors.superadmin"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{$page.props.errors.superadmin}}</small></div>
+                    <div class="text-danger" v-if="superUserError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{superUserError}}</small></div>                                      
                 </div>
                 <div class="form-group col-md-4">
                     <label for="name">Admin</label>
                     <input type="text" class="form-control" id="admin" v-bind:class="inputErrorAdmin" v-model="form.admin">
-                     <div class="text-danger" v-if="$page.props.errors.admin"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.admin}}</small></div>
+                     <div class="text-danger" v-if="adminUserError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{adminUserError}}</small></div>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="name">Standard</label>
                     <input type="text" class="form-control" id="standard"  v-bind:class="inputErrorStandard" v-model="form.standard">
-                     <div class="text-danger" v-if="$page.props.errors.standard"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{$page.props.errors.standard}}</small></div>
+                     <div class="text-danger" v-if="standardUserError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{standardUserError}}</small></div>
                 </div>
              </div>
-             <button class="btn btn-primary" type="submit">Actualizar</button>
+             <button class="btn btn-primary" type="button" v-on:click="update">Actualizar</button>
         </form>
-    </div>
+    </div> 
 </template>
 <script>
 import Layout from '../shared/layout';
+import NProgress from 'nprogress';
 
 
 export default {
@@ -46,20 +47,64 @@ export default {
     props:['configArray'],
      data(){
         return{
+            flashMessage:null,
+            adminUserError:null,
+            standardUserError:null,
+            superUserError:null,
             form: {
                 superadmin:this.configArray['superadmin'],
                 admin:this.configArray['admin'],
                 standard:this.configArray['standard']
             }
         }
-    },
+    }, 
 
     methods:{
         /**
          * THIS METHOD SUBMITS THE FORM
          * */ 
-      submit(){
-        this.$inertia.patch(`/config/${this.configArray['id']}`,this.form);
+      update(){
+        
+        let that=this;
+        NProgress.start();//start the progressbar
+         axios.patch(`/config/${this.configArray['id']}`,this.form)
+        .then((response)=>{  
+            if(response.hasOwnProperty('data')){
+            
+            //Empty the form error variables, before assigning new errors       
+            that.adminUserError=null;
+            that.standardUserError=null;
+            that.superUserError=null;
+
+                //Deal with data returned from server
+                let ServerResponse=response['data'];
+                if (ServerResponse.hasOwnProperty('message')){
+                    that.flashMessage=response['data'];
+                }else{
+                    if(ServerResponse.hasOwnProperty('superadmin')){
+                        that.superUserError=response['data']['superadmin'][0];
+                    }
+                    else{
+                        that.superUserError='';
+                    }
+                    if(ServerResponse.hasOwnProperty('admin')){
+                        that.adminUserError=response['data']['admin'][0];
+                    }
+                    if(ServerResponse.hasOwnProperty('standard')){
+                        that.standardUserError=response['data']['standard'][0];
+                    }
+                }
+
+                NProgress.done();//end the progressbar
+            }
+        })
+        .catch(
+            (error)=>{
+               NProgress.done();//end the progressbar
+               location.reload();
+            }
+        ); 
+          
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){
@@ -94,23 +139,26 @@ export default {
     computed: {
         inputErrorSuperAdmin() {
             return {
-            inputError: this.$page.props.errors.superadmin,
-            'inputError:focus': this.$page.props.errors.superadmin
+            inputError:this.superUserError,
+            'inputError:focus': this.superUserError
             }
         },
         inputErrorAdmin() {
             return {
-            inputError: this.$page.props.errors.admin,
-            'inputError:focus': this.$page.props.errors.admin
+            inputError: this.adminUserError,
+            'inputError:focus': this.adminUserError
             }
         },
         inputErrorStandard() {
             return {
-            inputError: this.$page.props.errors.standard,
-            'inputError:focus': this.$page.props.errors.standard
+            inputError: this.standardUserError,
+            'inputError:focus': this.standardUserError
             }
         }
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Configuração";  
+  }
 }
 
 
@@ -118,22 +166,11 @@ export default {
 </script>
 
 <style>
-.breadcrumb{
-    background-color: #e2e2eb;
-    font-size:large;
-    padding-left:0;
-    padding-bottom:0;
-}
 .create-user-form{
     background-color: #fdfdfe;
     padding: 1.25rem;
     margin-top: 0;
     border-radius:2px ;
-}
-
-.inputError, .inputError:focus {
- border-color: #e3342f;
- box-shadow: 0px 0px 3px 0px #e3342f;
 }
 
 .page-navigation{
@@ -150,9 +187,18 @@ form h4{
     font-weight: 700;
 }
 @media screen and (min-width: 992px){
-   .create-user-form, .page-navigation{
+   .create-user-form{
        margin-right: 10%;
        margin-left: 10%;       
    }
 }
+
+
+@media screen and (min-width: 992px){
+    .page-navigation{
+        margin-right: 10%;
+        margin-left: 10%;       
+    }
+ 
+ }
 </style>

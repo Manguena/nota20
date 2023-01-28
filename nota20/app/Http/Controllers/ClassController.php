@@ -297,7 +297,7 @@ pagination section
     public function updateGrade(Request $request){
        
         $data=$request->toArray();
-        
+    
        // $classId=$request[0]['class'];->Not used
         $studentArray=$request->toArray();
         $subjectId=$request[0]['subject'];
@@ -335,12 +335,17 @@ pagination section
 
         if($validator->fails() || strlen(implode($validatorErrorArray)) >0){
             
-            return Redirect::route('class.grade',['classId'=>$classId, 'subjectId'=>$subjectId])->withErrors($validatorErrorArray);
-
+            //return Redirect::route('class.grade',['classId'=>$classId, 'subjectId'=>$subjectId])->withErrors($validatorErrorArray);
+            return response()->json($validatorErrorArray);
         }
 
        // loop the request and update the table in the DB
         foreach ($data as $value) {
+            //if $value is empty, set it to null
+            if(strlen(trim($value['grade']))==0){
+                $value['grade']=null;
+            }
+
             //$subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
             if($value['operation']=='update'){// determine if an update is going to occur 
             $subject->students()->updateExistingPivot($value['id'], [
@@ -359,7 +364,10 @@ pagination section
 
         unset($value);// Break reference with the last element(Fom PHP.NET)
 
-        return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
+        return response()->json([
+            'message' => 'Notas actualizadas com sucesso'
+        ]);
+        //return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
     }
 
     /****

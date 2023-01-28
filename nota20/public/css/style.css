@@ -3,6 +3,7 @@ body{
     background-color: rgb(226, 226, 235);
 }
 
+
 html, body, .main{
     height: 100%;
 }
@@ -10,6 +11,36 @@ html, body, .main{
 .main{
     position: relative;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.breadcrumb{
+    background-color: #e2e2eb;
+    font-size:large;
+    padding-left:0;
+    padding-bottom:0;
+}
+
+.nav-margin-top{
+    margin-top: 2rem;
+}
+
+.btn-link{
+    padding: 0;
+    color: black;
+}
+
+.session{
+position: relative;
+display: flex;
+justify-content: center;
+align-content: center;
+}
+
+.login{
+    position: relative;
+    display:flex;
     justify-content: center;
     align-items: center;
 }
@@ -33,9 +64,13 @@ color:#096b71;
     width: 18.75rem;
 }
 .main-buttom{
-
     margin-top: auto;
 }
+
+.inputError, .inputError:focus {
+    border-color: #e3342f;
+    box-shadow: 0px 0px 3px 0px #e3342f;
+   }
 
 /**STLYLES FOR THE SETUP.BLADE FILE*/
 
@@ -50,18 +85,20 @@ MEDIA QUERIES FOR THE FIRST PAGE
 **/
 
 @media screen and (max-width:767px){
-.main{
+    .login{
+        flex-direction: column;
+    }
+/*
+    .main{
     flex-direction: column;
     padding-top: 20%;
 }
+***/
 }
 @media screen and (min-width:768px) {
-    .main-formgroup{
+   
+   .main-formgroup{
         margin-left: 20px;
     }
     
-    .main-buttom{
-    position: absolute;
-    bottom: 0;
-    }
 }

@@ -7,6 +7,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+        <nav style="breadcrumb-divider: '';" class="nav-margin-top" aria-label="breadcrumb">
+            <ol class="breadcrumb page-navigation">
+                <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
+                <li class="breadcrumb-item active" aria-current="page">Estudante</li>
+            </ol>
+        </nav>
             <div class="search-create">
                 <form>
                     <div class="form-row">
@@ -108,7 +115,10 @@ export default {
 },
 created(){
     console.log(this.route);
-}
+},
+mounted() {  
+    document.title = "Nota 20 - Estudante";  
+  }
     }
 </script>
 
