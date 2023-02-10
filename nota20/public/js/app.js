@@ -32739,6 +32739,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -82001,6 +82003,12 @@ var render = function () {
                   ),
                 ])
               : _vm._e(),
+            _vm._v(" "),
+            _vm.$page.props.errors.name
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(_vm.$page.props.errors.name)),
+                ])
+              : _vm._e(),
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group col-md-4" }, [
@@ -82041,6 +82049,12 @@ var render = function () {
                     ],
                     1
                   ),
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.$page.props.errors.abbreviation
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(_vm.$page.props.errors.abbreviation)),
                 ])
               : _vm._e(),
           ]),
