@@ -278,11 +278,21 @@ pagination section
 
     // Get the Current Subject object from eloquent
     $subject=Subject::find( $subjectId);
+    
+    //if grade from front end is empty 
 
     $data=$request->toArray();
+
         // insert the data into the database by looping the request from the front end
     foreach ($data as $value) {
-        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['grade']]);
+       $grade=$value["grade"];
+       
+        if($value["grade"]==""){
+            $grade=null;
+        }
+        
+        
+       $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$grade]);
     }
     
     unset($value);// Break reference with the last element(Fom PHP.NET)
@@ -295,7 +305,7 @@ pagination section
      * update the students grade for a certain subject
      */
     public function updateGrade(Request $request){
-       
+
         $data=$request->toArray();
     
        // $classId=$request[0]['class'];->Not used
@@ -346,20 +356,10 @@ pagination section
                 $value['grade']=null;
             }
 
-            //$subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
-            if($value['operation']=='update'){// determine if an update is going to occur 
             $subject->students()->updateExistingPivot($value['id'], [
                 'class_id'=>$value['class'],
                 'grade'=>$value['grade']
             ]);
-        }
-        else {
-            $subject->students()->attach($value['id'], [
-                'class_id'=>$value['class'],
-                'grade'=>$value['grade']
-            ]);
-            
-        }
         }
 
         unset($value);// Break reference with the last element(Fom PHP.NET)
@@ -426,7 +426,8 @@ pagination section
      }
 
      /**
-      *  Remove enrollment
+      *  -Remove enrollment
+        * -Remove student grades related to this class
       */ 
       public function unenroll($id,$classId,$studentSurname){
 
@@ -435,7 +436,9 @@ pagination section
         $studentSurname=htmlspecialchars($studentSurname,ENT_QUOTES);
       
        $class=Studentclass::find($classId);
-       $class->students()->detach($studentId);
+      $class->students()->detach($studentId);
+    
+        DB::delete('delete from student_subject where class_id=? and student_id=?',[$classId,$studentId]);
 
        return Redirect::route('class.show',['classId'=>$classId])->with('message', $studentSurname);
           

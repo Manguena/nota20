@@ -30614,6 +30614,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -30637,7 +30644,11 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$inertia.post("/class/grade", this.studentGrade, {
         onSuccess: function onSuccess() {
-          return _this.updateButton = true;
+          _this.gradesError = [''];
+          _this.updateButton = true;
+        },
+        onError: function onError(errors) {
+          _this.gradesError = errors; //    console.log(errors);
         }
       });
     },
@@ -30646,16 +30657,17 @@ __webpack_require__.r(__webpack_exports__);
       nprogress__WEBPACK_IMPORTED_MODULE_1___default().start(); //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
 
       axios.patch("/class/grade/updategrade", this.studentGrade).then(function (response) {
+        //console.log(response);
         if (response.hasOwnProperty('data')) {
-          console.log(response); //Deal with data returned from server
-
+          //console.log(response);
+          //Deal with data returned from server
           var ServerResponse = response['data'];
 
           if (ServerResponse.hasOwnProperty('message')) {
             that.flashMessage = response['data'];
+            that.gradesError = ['']; //empty the error if there was an error previously
           } else {
-            that.gradesError = ServerResponse;
-            console.log(that.gradesError);
+            that.gradesError = ServerResponse; //console.log(that.gradesError);
           }
         }
 
@@ -31380,7 +31392,7 @@ __webpack_require__.r(__webpack_exports__);
 
     /*remove student from enrolled class*/
     removeEnrollment: function removeEnrollment() {
-      this.deleteEnrollmentSpinner = true; //this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
+      this.deleteEnrollmentSpinner = true; // this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/class/unenroll/".concat(this.studentId, "/").concat(this.classConfigArray['id'], "/").concat(this.studentSurname)).then()["catch"](function (error) {
         location.reload();
@@ -31388,10 +31400,9 @@ __webpack_require__.r(__webpack_exports__);
       this.deleteEnrollmentSpinner = false;
     }
   },
-  created: function created() {
-    // console.log(this.classConfigArray);
+  created: function created() {// console.log(this.classConfigArray);
     //...after the operation is done....
-    console.log(this.courseConfigArray);
+    //console.log(this.courseConfigArray);
   }
 });
 
@@ -77968,6 +77979,24 @@ var render = function () {
         )
       : _vm._e(),
     _vm._v(" "),
+    _vm.$page.props.flash.message
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert",
+            attrs: { role: "alert" },
+          },
+          [
+            _c("span", { staticClass: "center-msg" }, [
+              _vm._v(_vm._s(_vm.$page.props.flash.message)),
+            ]),
+            _vm._v(" "),
+            _vm._m(1),
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c(
       "nav",
       {
@@ -78085,7 +78114,7 @@ var render = function () {
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(1),
+            _vm._m(2),
             _vm._v(" "),
             _c(
               "tbody",
@@ -78171,6 +78200,23 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close",
+        },
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
