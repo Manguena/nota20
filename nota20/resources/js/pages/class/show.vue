@@ -127,11 +127,11 @@ export default {
         /*remove student from enrolled class*/ 
      removeEnrollment(){
          this.deleteEnrollmentSpinner=true;
-         //this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
-         axios.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`)
-         .then()
-         .catch(error=>{
-            location.reload();
+        // this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
+       axios.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`)
+        .then()
+        .catch(error=>{
+           location.reload();
          })
          this.deleteEnrollmentSpinner=false;
      }
@@ -140,7 +140,7 @@ export default {
        // console.log(this.classConfigArray);
        
        //...after the operation is done....
-       console.log(this.courseConfigArray);
+       //console.log(this.courseConfigArray);
 
     } 
 } 
