@@ -11,7 +11,7 @@
          <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
             <ol class="breadcrumb page-navigation">
                 <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
-                <li class="breadcrumb-item"><inertia-link href="/student">Estudante</inertia-link></li>
+                <li class="breadcrumb-item"><inertia-link v-bind:href="'/class/'+classId">Inscrição</inertia-link></li>
                 <li class="breadcrumb-item active" aria-current="page">Inscrever</li>
             </ol>
         </nav>

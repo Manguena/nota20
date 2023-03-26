@@ -11,8 +11,11 @@ use App\Models\Studentclass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Exports\ClassListExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassController extends Controller
 {
@@ -492,6 +495,16 @@ pagination section
         ]);
      }
 
+     /**
+ * Export the current class list to excel
+  */
+  public function export($classId){
+    return Excel::download(new ClassListExport($classId), 'classlist.xlsx');
+  }
+
+
+
+
     /***
      *Show students page, excludes all students already enrolled in the class from the list 
      */
@@ -598,8 +611,48 @@ pagination section
         'isSearchable'=>false,
         'queryString'=>''
     ]);
-      }
+    
+}
 
+
+public function classSearch($searchItem){
+/*
+$levelId=DB::table('studentclasses')
+            ->select('*')
+            ->whereRaw('LOCATE ("TURMA B",name)>0')
+            ->distinct();
+
+
+
+$classes=DB::table('levels')
+            ->joinSub($levelId, 'levelId',function($join){
+                $join->on('levels.id','=','levelId.level_id');
+            })
+            ->select( 'levels.name', '')
+
+            ->get();
+***/
+
+//dd($classes);
+
+
+$result=DB::table('studentclasses')
+    ->select('levels.name as level', 'studentclasses.*')
+    ->join('levels', function(JoinClause $join) use ($searchItem){
+        $join->on('levels.id','=', DB::raw("
+    (SELECT DISTINCT level_id FROM studentclasses WHERE LOCATE ('$searchItem',name)>0 LIMIT 10)
+    AND studentclasses.id IN (SELECT id FROM studentclasses WHERE LOCATE ('$searchItem',name)>0 )
+    "));
+    }
+    )
+
+    ->paginate(15);
+
+
+
+    dd($result);
+
+}
 
 
 
@@ -664,4 +717,5 @@ pagination section
 
         return $subjectArray;
   }
+
 }

@@ -30533,6 +30533,9 @@ __webpack_require__.r(__webpack_exports__);
         }, 3);
       }
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Cursos";
   }
 });
 
@@ -30880,6 +30883,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -30908,6 +30918,7 @@ __webpack_require__.r(__webpack_exports__);
         levelName: ''
       },
       //class variables
+      classSearchItem: null,
       className: null,
       schoolYear: null,
       classArray: this.classConfigArray,
@@ -31008,6 +31019,10 @@ __webpack_require__.r(__webpack_exports__);
     cancelClassUpdate: function cancelClassUpdate() {
       this.enableClassUpdateForm = false;
     },
+    searchClass: function searchClass() {
+      this.$inertia.get("/class/search/".concat(this.classSearchItem));
+      console.log(this.classSearchItem);
+    },
     //Update the subject name
     updateClass: function updateClass() {
       /*** 
@@ -31097,6 +31112,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.yearUpdateError
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Turmas";
   }
 });
 
@@ -31362,14 +31380,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -31400,9 +31410,8 @@ __webpack_require__.r(__webpack_exports__);
       this.deleteEnrollmentSpinner = false;
     }
   },
-  created: function created() {// console.log(this.classConfigArray);
-    //...after the operation is done....
-    //console.log(this.courseConfigArray);
+  mounted: function mounted() {
+    document.title = "Nota 20 - Lista da turma";
   }
 });
 
@@ -31562,6 +31571,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
+//
 //
 //
 //
@@ -31879,7 +31889,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__["default"]
+  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__["default"],
+  mounted: function mounted() {
+    document.title = "Nota 20 -Painel";
+  }
 });
 
 /***/ }),
@@ -39809,7 +39822,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.table-button[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-16102d7d]{\r\n    color: #dc2020;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d], .createdAlert[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.icon[data-v-16102d7d]{\r\n    color:#6b6316;\n}\n.form-row[data-v-16102d7d]{\r\n    display: flex;\r\n    justify-content: space-between;\n}\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.table-button[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-16102d7d]{\r\n    color: #dc2020;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d], .createdAlert[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -78479,6 +78492,47 @@ var render = function () {
         _vm._v(" "),
         _c("p"),
         _vm._v(" "),
+        _c("div", { staticClass: "input-group mb-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.classSearchItem,
+                expression: "classSearchItem",
+              },
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              placeholder: "Pesquise a Turma",
+              "aria-label": "Recipient's username",
+              "aria-describedby": "button-addon2",
+            },
+            domProps: { value: _vm.classSearchItem },
+            on: {
+              input: function ($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.classSearchItem = $event.target.value
+              },
+            },
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button", id: "button-addon2" },
+                on: { click: _vm.searchClass },
+              },
+              [_vm._v("Pesquisar")]
+            ),
+          ]),
+        ]),
+        _vm._v(" "),
         _vm.enableClassUpdateForm
           ? _c("div", { staticClass: "form-row" }, [
               _c("div", { staticClass: "form-group col-md-6" }, [
@@ -79286,7 +79340,7 @@ var render = function () {
       _c("div", { staticClass: "form-row " }, [
         _c(
           "div",
-          { staticClass: "form-group col-12" },
+          { staticClass: "form-group" },
           [
             _c(
               "inertia-link",
@@ -79337,6 +79391,21 @@ var render = function () {
               ],
               1
             ),
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "icon",
+            attrs: { href: "/class/export/" + _vm.classConfigArray["id"] },
+          },
+          [
+            _c("font-awesome-icon", {
+              staticClass: "excel-icon",
+              attrs: { icon: ["fas", "file-excel"], size: "2x" },
+            }),
           ],
           1
         ),
@@ -79593,8 +79662,8 @@ var render = function () {
             "li",
             { staticClass: "breadcrumb-item" },
             [
-              _c("inertia-link", { attrs: { href: "/student" } }, [
-                _vm._v("Estudante"),
+              _c("inertia-link", { attrs: { href: "/class/" + _vm.classId } }, [
+                _vm._v("Inscrição"),
               ]),
             ],
             1
@@ -79946,6 +80015,17 @@ var render = function () {
                 },
                 [_vm._v("Turma")]
               ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("inertia-link", { attrs: { href: "/class/" + _vm.classId } }, [
+                _vm._v("Inscrição"),
+              ]),
             ],
             1
           ),
