@@ -54,6 +54,13 @@
         <form class="create-user-form" >
            <h4 id="">Curso de: {{courseName}} </h4>
             <p></p>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" v-model="classSearchItem" placeholder="Pesquise a Turma" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" v-on:click="searchClass" id="button-addon2">Pesquisar</button>
+                </div>
+            </div>
          <div class="form-row" v-if="enableClassUpdateForm">
                <div class="form-group col-md-6" >
                     <label for="apelido">Nome</label>
@@ -177,6 +184,7 @@ export default {
                 levelName:''
             },
             //class variables
+            classSearchItem:null,
             className:null,
             schoolYear:null,
             classArray:this.classConfigArray,
@@ -299,7 +307,11 @@ export default {
     cancelClassUpdate(){
         this.enableClassUpdateForm=false;
     },
+    searchClass(){
+        this.$inertia.get(`/class/search/${this.classSearchItem}`); 
 
+        console.log(this.classSearchItem);
+    },
     //Update the subject name
     updateClass(){
             /*** 
@@ -409,7 +421,10 @@ export default {
             }
         }
 
-} 
+},
+mounted() {  
+    document.title = "Nota 20 - Turmas";  
+  }
 } 
 </script>
 

@@ -23,18 +23,7 @@
             <p></p>
 
             <div class="form-row "> 
-                <!----div class="form-group col-12">
-                    <inertia-link v-bind:href="'/class/'+courseName+'/'+courseId" class="btn btn-primary">
-                        Criar turma
-                        <font-awesome-icon :icon="['fas', 'plus']" size="1x" />
-                    </inertia-link>
-                        +"name": "Eng. Civil"
-      +"course_id": 2
-      +"level_id": 6
-                </div--->
-
-
-                <div class="form-group col-12">
+                <div class="form-group">
                     <inertia-link :href="'/class/student/'+classConfigArray['id']+'/'+classConfigArray['name']" class="btn btn-primary">
                         Inscrever
                         <font-awesome-icon :icon="['fas', 'list']" size="1x"/>
@@ -44,6 +33,9 @@
                         <font-awesome-icon :icon="['fas', 'list']" size="1x"/>
                     </inertia-link>
                 </div>
+            
+                <a class="icon" v-bind:href="'/class/export/'+classConfigArray['id']"><font-awesome-icon :icon="['fas', 'file-excel']" size="2x" class="excel-icon"/></a>
+
             </div>
 
 
@@ -136,17 +128,21 @@ export default {
          this.deleteEnrollmentSpinner=false;
      }
     },
-    created(){
-       // console.log(this.classConfigArray);
-       
-       //...after the operation is done....
-       //console.log(this.courseConfigArray);
-
-    } 
+    mounted() {  
+    document.title = "Nota 20 - Lista da turma";  
+  }
 } 
 </script>
 
 <style scoped>
+.icon{
+    color:#6b6316;
+}
+.form-row{
+    display: flex;
+    justify-content: space-between;
+}
+
 .breadcrumb{
     background-color: #e2e2eb;
     font-size:large;
