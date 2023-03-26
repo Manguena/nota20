@@ -21,7 +21,7 @@ class ReportController extends Controller
         $studentConfigArray=DB::table('students')
                                     ->orderBy('year', 'desc')
                                     ->orderBy('surname', 'asc')                        
-                                    ->paginate(15);
+                                    ->paginate(30);
                                     
         $studentConfigArray=$studentConfigArray->toArray();
     
@@ -77,14 +77,28 @@ class ReportController extends Controller
              $studentConfigArray=DB::table('students')
                              ->select('*')
                              ->whereRaw('year=?', [$year])
-                             ->paginate(1);
+                             ->paginate(30);
          }
          else{
+            /*
              $studentConfigArray=DB::table('students')
                  ->select('*')
                  ->whereRaw('MATCH(surname, name)AGAINST (? WITH QUERY EXPANSION) AND year=?', [$surname, $year])
-                 ->paginate(1);
-         }
+                 ->paginate(30);***/
+                 $studentConfigArray=DB::table('students')
+                 ->select('*')
+                 ->whereRaw('LOCATE(?, surname)>0 AND year=?',[ $surname, $year])
+                 ->paginate(30);
+
+                  //if searching the surname does not return a result, search the name and return the result
+                if($studentConfigArray->toArray()['data']===[]){
+                    $studentConfigArray=DB::table('students')
+                        ->select('*')
+                        ->whereRaw('LOCATE(?, name)>0 AND year=?',[ $surname, $year])
+                        ->paginate(30);
+                }
+         
+            }
          
          
         $studentConfigArray->appends(['year'=>$request->year, 'surname'=>$request->surname]);
@@ -160,14 +174,8 @@ class ReportController extends Controller
         ->toArray();
    
         
-        /*** 
-        $studentConfigArray=DB::table('students')
-        ->orderBy('year', 'desc')
-        ->orderBy('surname', 'asc')                        
-        ->paginate(15);
-        **/
         $gradeConfigArray=$gradeConfigArray->toArray();
-        //dd($gradeConfigArray);
+        
 
         return Inertia::render('report/create',[
         'studentConfigArray'=>$studentConfigArray,    
