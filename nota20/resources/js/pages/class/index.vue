@@ -308,9 +308,11 @@ export default {
         this.enableClassUpdateForm=false;
     },
     searchClass(){
-        this.$inertia.get(`/class/search/${this.classSearchItem}`); 
 
-        console.log(this.classSearchItem);
+        //console.log(this.courseId);
+        this.$inertia.get(`/class/search/${this.classSearchItem}/${this.courseId}/${this.courseName}`); 
+
+        
     },
     //Update the subject name
     updateClass(){

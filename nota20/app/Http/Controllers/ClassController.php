@@ -96,16 +96,7 @@ pagination section
         $classConfigArray=self::listClasses($courseId);
 
         $classConfigArray=$classConfigArray->toArray();
-        /*
-        $classConfigArray=DB::table('class')
-        ->select('class.id as id', 'class.name as name','class.year as year','levels.name as level')
-        ->join('levels', function($join){
-            $join->on('class.level_id','=','levels.id');
-        })
-        ->where('class.course_id','=',$courseId)
-        ->orderByDesc('class.year')
-        ->get();
-        **/;
+        
         
         return Inertia::render('class/index',[
             'courseName'=>$courseName,
@@ -615,42 +606,31 @@ pagination section
 }
 
 
-public function classSearch($searchItem){
-/*
-$levelId=DB::table('studentclasses')
-            ->select('*')
-            ->whereRaw('LOCATE ("TURMA B",name)>0')
-            ->distinct();
+public function classSearch($searchItem, $courseId,$courseName){
 
 
 
-$classes=DB::table('levels')
-            ->joinSub($levelId, 'levelId',function($join){
-                $join->on('levels.id','=','levelId.level_id');
-            })
-            ->select( 'levels.name', '')
+        
 
-            ->get();
-***/
+    $classConfigArray=DB::table('studentclasses')
+            ->select('studentclasses.id as id', 'studentclasses.name as name','studentclasses.year as year','levels.name as level')
+            ->join('levels','levels.id','=','studentclasses.level_id')
+            ->whereRaw('studentclasses.id in (SELECT id FROM studentclasses WHERE LOCATE (?,name)>0)',[$searchItem])
+            ->orderByDesc('studentclasses.year')
+            ->paginate(15)
+            ->toArray();
 
-//dd($classes);
-
-
-$result=DB::table('studentclasses')
-    ->select('levels.name as level', 'studentclasses.*')
-    ->join('levels', function(JoinClause $join) use ($searchItem){
-        $join->on('levels.id','=', DB::raw("
-    (SELECT DISTINCT level_id FROM studentclasses WHERE LOCATE ('$searchItem',name)>0 LIMIT 10)
-    AND studentclasses.id IN (SELECT id FROM studentclasses WHERE LOCATE ('$searchItem',name)>0 )
-    "));
-    }
-    )
-
-    ->paginate(15);
-
-
-
-    dd($result);
+            return Inertia::render('class/index',[
+                'courseName'=>$courseName,
+                'courseId'=>$courseId,
+                'classConfigArray'=>$classConfigArray['data'],
+                'currentPage'=>$classConfigArray['current_page'],
+                'lastPage'=>$classConfigArray['last_page'],
+                'route'=>'',// no need, but must appear as empty, because of the front error implementation 
+                'isSearchable'=>false,
+                'queryString'=>''
+    
+            ]);
 
 }
 

@@ -31020,8 +31020,8 @@ __webpack_require__.r(__webpack_exports__);
       this.enableClassUpdateForm = false;
     },
     searchClass: function searchClass() {
-      this.$inertia.get("/class/search/".concat(this.classSearchItem));
-      console.log(this.classSearchItem);
+      //console.log(this.courseId);
+      this.$inertia.get("/class/search/".concat(this.classSearchItem, "/").concat(this.courseId, "/").concat(this.courseName));
     },
     //Update the subject name
     updateClass: function updateClass() {
