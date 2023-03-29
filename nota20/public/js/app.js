@@ -30917,8 +30917,10 @@ __webpack_require__.r(__webpack_exports__);
         classId: '',
         levelName: ''
       },
-      //class variables
+      // class search variables
       classSearchItem: null,
+      showSearchInput: true,
+      //class variables
       className: null,
       schoolYear: null,
       classArray: this.classConfigArray,
@@ -31008,6 +31010,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     //edit the selected subject
     editClass: function editClass(id, name, year, level) {
+      this.showSearchInput = false;
       this.enableClassUpdateForm = true;
       document.getElementById('viewEditForm').scrollIntoView();
       this.classUpdateForm.classId = id;
@@ -31018,6 +31021,7 @@ __webpack_require__.r(__webpack_exports__);
     //disable the subjcet update form
     cancelClassUpdate: function cancelClassUpdate() {
       this.enableClassUpdateForm = false;
+      this.showSearchInput = true;
     },
     searchClass: function searchClass() {
       //console.log(this.courseId);
@@ -31066,6 +31070,9 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         that.classUpdateSpinner = false; // disable the spinner
+        //Enables the search input back into the web page
+
+        that.showSearchInput = true;
       })["catch"](function (error) {
         //$('#modal').modal('show');
         location.reload();
@@ -78492,46 +78499,48 @@ var render = function () {
         _vm._v(" "),
         _c("p"),
         _vm._v(" "),
-        _c("div", { staticClass: "input-group mb-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.classSearchItem,
-                expression: "classSearchItem",
-              },
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              placeholder: "Pesquise a Turma",
-              "aria-label": "Recipient's username",
-              "aria-describedby": "button-addon2",
-            },
-            domProps: { value: _vm.classSearchItem },
-            on: {
-              input: function ($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.classSearchItem = $event.target.value
-              },
-            },
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group-append" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary",
-                attrs: { type: "button", id: "button-addon2" },
-                on: { click: _vm.searchClass },
-              },
-              [_vm._v("Pesquisar")]
-            ),
-          ]),
-        ]),
+        _vm.showSearchInput
+          ? _c("div", { staticClass: "input-group mb-3" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.classSearchItem,
+                    expression: "classSearchItem",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  placeholder: "Pesquise a Turma",
+                  "aria-label": "Recipient's username",
+                  "aria-describedby": "button-addon2",
+                },
+                domProps: { value: _vm.classSearchItem },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.classSearchItem = $event.target.value
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-group-append" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button", id: "button-addon2" },
+                    on: { click: _vm.searchClass },
+                  },
+                  [_vm._v("Pesquisar")]
+                ),
+              ]),
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _vm.enableClassUpdateForm
           ? _c("div", { staticClass: "form-row" }, [
