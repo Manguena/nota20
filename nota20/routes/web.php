@@ -205,5 +205,5 @@ Route::get('/student/search', [App\Http\Controllers\StudentController::class, 's
   //show the page with the student data
   Route::get('/report/create/{id}', [App\Http\Controllers\ReportController::class, 'create'])->name('report.create')->middleware('auth');
   //Export the student data in Excel format
-  Route::get('/report/export/{id}', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export')->middleware('auth');
+  Route::get('/report/export/{id}', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export')->middleware('auth','download.Error');
  
