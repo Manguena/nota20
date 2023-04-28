@@ -97,7 +97,6 @@ pagination section
 
         $classConfigArray=$classConfigArray->toArray();
         
-        
         return Inertia::render('class/index',[
             'courseName'=>$courseName,
             'courseId'=>$courseId,
@@ -343,25 +342,33 @@ pagination section
             return response()->json($validatorErrorArray);
         }
 
+       // Test
+       // $test=
+
+        //test
+
        // loop the request and update the table in the DB
-        foreach ($data as $value) {
+     foreach ($data as &$value) {
             //if $value is empty, set it to null
             if(strlen(trim($value['grade']))==0){
                 $value['grade']=null;
             }
 
-            $subject->students()->updateExistingPivot($value['id'], [
-                'class_id'=>$value['class'],
-                'grade'=>$value['grade']
-            ]);
+
+            DB::table('student_subject')
+                ->where('student_id',$value['id'])
+                ->where('class_id',$value['class'])
+                ->where('subject_id',$value['subject'])
+                ->update(['grade'=>$value['grade']]);
         }
 
         unset($value);// Break reference with the last element(Fom PHP.NET)
-
+        /*** 
         return response()->json([
             'message' => 'Notas actualizadas com sucesso'
-        ]);
-        //return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
+        ]);*/
+        return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
+        
     }
 
     /****
