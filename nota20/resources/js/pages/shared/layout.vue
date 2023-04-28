@@ -24,6 +24,9 @@
       <li class="nav-item">
         <inertia-link class="nav-link dashboard-menu" href="/student">Estudante </inertia-link>
       </li>
+      <li class="nav-item">
+        <inertia-link class="nav-link dashboard-menu" href="/report">Pauta </inertia-link>
+      </li>
     </ul>
     <span class="navbar-text">
 
