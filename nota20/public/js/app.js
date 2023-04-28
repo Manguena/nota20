@@ -30656,9 +30656,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateGrade: function updateGrade() {
+      //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
       var that = this;
-      nprogress__WEBPACK_IMPORTED_MODULE_1___default().start(); //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
-
+      nprogress__WEBPACK_IMPORTED_MODULE_1___default().start();
       axios.patch("/class/grade/updategrade", this.studentGrade).then(function (response) {
         //console.log(response);
         if (response.hasOwnProperty('data')) {
@@ -33207,6 +33207,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -34826,7 +34829,8 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             if (ServerResponse.hasOwnProperty('role')) {
-              that.newPwdError = response['data']['role'][0]; //roleError
+              that.newPwdError = response['data']['role'][0];
+              console.log(ServerResponse); //roleError
             }
           }
         }
@@ -83033,6 +83037,22 @@ var render = function () {
                   ],
                   1
                 ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  { staticClass: "nav-item" },
+                  [
+                    _c(
+                      "inertia-link",
+                      {
+                        staticClass: "nav-link dashboard-menu",
+                        attrs: { href: "/report" },
+                      },
+                      [_vm._v("Pauta ")]
+                    ),
+                  ],
+                  1
+                ),
               ]),
               _vm._v(" "),
               _c(
@@ -84828,7 +84848,7 @@ var render = function () {
               staticClass: "breadcrumb-item active",
               attrs: { "aria-current": "page" },
             },
-            [_vm._v("Criar: " + _vm._s(_vm.form.apelido) + " ")]
+            [_vm._v("Criar: " + _vm._s(_vm.form.surname) + " ")]
           ),
         ]),
       ]
@@ -85281,11 +85301,13 @@ var render = function () {
             )
           : _vm._e(),
         _vm._v(" "),
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("Criar Utilizador")]
-        ),
+        !_vm.$page.props.flash.message
+          ? _c(
+              "button",
+              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+              [_vm._v("Criar Utilizador")]
+            )
+          : _vm._e(),
       ],
       1
     ),

@@ -103,9 +103,11 @@ export default {
             });
        },
        updateGrade(){
+        
+            //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
             let that=this;
             NProgress.start();
-      //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+
              axios.patch(`/class/grade/updategrade`, this.studentGrade)
             .then(response=>{
                 //console.log(response);
