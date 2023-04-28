@@ -16,9 +16,9 @@
     
     <div class="form-row"> 
       <div class="form-group col-md-4">
-          <label for="apelido">Apelido</label>
-          <input type="text" name="apelido" class="form-control main-input @error('apelido') is-invalid @enderror" id="apelido" value="{{ old('apelido') }}" required autocomplete="">
-          @error('apelido')
+          <label for="surname">Apelido</label>
+          <input type="text" name="surname" class="form-control main-input @error('surname') is-invalid @enderror" id="surname" value="{{ old('surname') }}" required autocomplete="">
+          @error('surname')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
             </span>
@@ -48,9 +48,9 @@
             @enderror
         </div>
         <div class="form-group col-md-6">
-          <label for="bi">Documento de Identificação</label>
-          <input type="text" name="bi" class="form-control main-input @error('bi') is-invalid @enderror" id="bi" value="{{ old('bi') }}" required autocomplete="">
-          @error('bi')
+          <label for="user_id">Documento de Identificação</label>
+          <input type="text" name="user_id" class="form-control main-input @error('user_id') is-invalid @enderror" id="user_id" value="{{ old('user_id') }}" required autocomplete="">
+          @error('user_id')
             <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
             </span>
@@ -71,8 +71,8 @@
           </div>
 
           <div class="form-group col-md-6">
-            <label for="exampleInputPassword1">Confirmação de Password</label>
-            <input type="password" class="form-control main-input" id="password-confirm" name="password_confirmation" required autocomplete="new-password">
+            <label for="password_confirmation">Confirmação de Password</label>
+            <input type="password" name="password_confirmation" class="form-control main-input" id="password-confirm" name="password_confirmation" required autocomplete="new-password">
           </div>
       </div>
       <button type="submit" class="btn btn-primary">Registrar</button>
