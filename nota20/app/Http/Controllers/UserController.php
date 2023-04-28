@@ -31,7 +31,7 @@ class UserController extends Controller
                                     ->paginate(15)
                                     ->toArray();
 
-        
+       
 
         if(array_key_exists('searchbar', $request->toArray())){// check if searchbar has an index
             if($request->toArray()['searchbar']!=null){// if a words is entered set maximum 20 results
@@ -53,7 +53,7 @@ class UserController extends Controller
         //fiil the pagination content array
 
     // dd($query);
-
+        
        foreach ($query['data'] as $user) {
         
         is_array($user)? :$user=(array)$user;// if it is an object change it to an array
@@ -69,7 +69,7 @@ class UserController extends Controller
                  );
            $userArrayCounter++;
         }
-
+        
          
         // determines if a user entered a search content or a null search which returns all the User Model
         $url=url()->full();
@@ -250,20 +250,6 @@ public function update(Request $request, $id){
             }
         
 
-       
-                                /*
-                                           DB::table('users')
-                                           ->select('users.id')
-                                           ->whereRaw('users.id=(SELECT user_id FROM role_user WHERE role_id=(
-                                                      SELECT id FROM roles WHERE roles.name=?))', [$request->input('role')])
-                                           ->get();
-***/
-        //if (){
-            // $request->input('role')=='superadmin'
-   //     }
-    
-    //
-
     $userUpdateArray=$request->toArray();
     
     $user=User::find($id);
@@ -333,8 +319,10 @@ public function numberOfUsersInConfig(){
  * return the role id for a certain role
  */
 public function getRoleId ($role){
-
+    
     $roleModel=Role::where('name',$role)->first();
+    
+
     $roleId=$roleModel->id;
 
     return $roleId;
