@@ -10,7 +10,7 @@
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
             <li class="breadcrumb-item"><inertia-link href="/user"> Utilizador</inertia-link></li>
-            <li class="breadcrumb-item active" aria-current="page">Criar: {{form.apelido}} </li>
+            <li class="breadcrumb-item active" aria-current="page">Criar: {{form.surname}} </li>
         </ol>
         </nav>
         <div class="page-navigation font-weight-bold h3 mb-1"></div>  
@@ -70,7 +70,7 @@
              </div>
              
              <inertia-link href="/user/create" v-if="$page.props.flash.message" class="btn btn-primary" type="submit">Novo Utilizador</inertia-link>
-             <button class="btn btn-primary" type="submit">Criar Utilizador</button>
+             <button class="btn btn-primary" v-if="!$page.props.flash.message" type="submit">Criar Utilizador</button>
 
         </form>
     </div>
