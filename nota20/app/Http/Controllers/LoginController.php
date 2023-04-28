@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 //validator
 use Illuminate\Support\Facades\Validator;
 
@@ -26,6 +27,9 @@ public function index(){
                 ->header('X-inertia-location', url()->current());
         }
         ***/
+        $query=DB::table('users')->orderBy('email')->take(1)->get();
+      
+        if (count($query)<1) return view('nota20auth.setup');
         return Inertia::render('login');
 }
 
