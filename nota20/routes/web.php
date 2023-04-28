@@ -150,8 +150,12 @@ Route::get('/class/subject/{courseName}/{courseId}/{className}/{classId}/{levelI
 Route::get('/class/student/{id}/{className}', [App\Http\Controllers\ClassController::class, 'student'])->name('class.student')->middleware('auth');
 //search for student to be enrolled
 Route::get('/class/studentsearch/{id}/{className}', [App\Http\Controllers\ClassController::class, 'studentSearch'])->name('class.studentsearch')->middleware('auth');
+// Download the current class list
+Route::get('/class/export/{classId}', [App\Http\Controllers\ClassController::class, 'export'])->name('class.export')->middleware('auth');
+//search classes using a keywork
+Route::get('/class/search/{searchItem}/{courseId}/{courseName}', [App\Http\Controllers\ClassController::class, 'classSearch'])->name('class.classSearch')->middleware('auth');
 //page to create the class and list classes stored in the database
-Route::get('/class/{courseName}/{courseId}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
+Route::get('/class/{courseId}/{courseName}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
   //stores the classes into the database
 Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth','can:create, App\Models\Studentclass');
 //stores grades in the database
@@ -201,5 +205,5 @@ Route::get('/student/search', [App\Http\Controllers\StudentController::class, 's
   //show the page with the student data
   Route::get('/report/create/{id}', [App\Http\Controllers\ReportController::class, 'create'])->name('report.create')->middleware('auth');
   //Export the student data in Excel format
-  Route::get('/report/export/{id}', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export')->middleware('auth');
+  Route::get('/report/export/{id}', [App\Http\Controllers\ReportController::class, 'export'])->name('report.export')->middleware('auth','download.Error');
  

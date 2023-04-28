@@ -11,8 +11,11 @@ use App\Models\Studentclass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Exports\ClassListExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClassController extends Controller
 {
@@ -93,16 +96,6 @@ pagination section
         $classConfigArray=self::listClasses($courseId);
 
         $classConfigArray=$classConfigArray->toArray();
-        /*
-        $classConfigArray=DB::table('class')
-        ->select('class.id as id', 'class.name as name','class.year as year','levels.name as level')
-        ->join('levels', function($join){
-            $join->on('class.level_id','=','levels.id');
-        })
-        ->where('class.course_id','=',$courseId)
-        ->orderByDesc('class.year')
-        ->get();
-        **/;
         
         return Inertia::render('class/index',[
             'courseName'=>$courseName,
@@ -278,11 +271,21 @@ pagination section
 
     // Get the Current Subject object from eloquent
     $subject=Subject::find( $subjectId);
+    
+    //if grade from front end is empty 
 
     $data=$request->toArray();
+
         // insert the data into the database by looping the request from the front end
     foreach ($data as $value) {
-        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['grade']]);
+       $grade=$value["grade"];
+       
+        if($value["grade"]==""){
+            $grade=null;
+        }
+        
+        
+       $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$grade]);
     }
     
     unset($value);// Break reference with the last element(Fom PHP.NET)
@@ -295,7 +298,7 @@ pagination section
      * update the students grade for a certain subject
      */
     public function updateGrade(Request $request){
-       
+
         $data=$request->toArray();
     
        // $classId=$request[0]['class'];->Not used
@@ -339,35 +342,33 @@ pagination section
             return response()->json($validatorErrorArray);
         }
 
+       // Test
+       // $test=
+
+        //test
+
        // loop the request and update the table in the DB
-        foreach ($data as $value) {
+     foreach ($data as &$value) {
             //if $value is empty, set it to null
             if(strlen(trim($value['grade']))==0){
                 $value['grade']=null;
             }
 
-            //$subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['value']]);
-            if($value['operation']=='update'){// determine if an update is going to occur 
-            $subject->students()->updateExistingPivot($value['id'], [
-                'class_id'=>$value['class'],
-                'grade'=>$value['grade']
-            ]);
-        }
-        else {
-            $subject->students()->attach($value['id'], [
-                'class_id'=>$value['class'],
-                'grade'=>$value['grade']
-            ]);
-            
-        }
+
+            DB::table('student_subject')
+                ->where('student_id',$value['id'])
+                ->where('class_id',$value['class'])
+                ->where('subject_id',$value['subject'])
+                ->update(['grade'=>$value['grade']]);
         }
 
         unset($value);// Break reference with the last element(Fom PHP.NET)
-
+        /*** 
         return response()->json([
             'message' => 'Notas actualizadas com sucesso'
-        ]);
-        //return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
+        ]);*/
+        return Redirect::route('class.grade', ['classId' =>$classId, 'subjectId'=>$subjectId])->with('message', 'Notas Actualizadas com Sucesso');
+        
     }
 
     /****
@@ -426,7 +427,8 @@ pagination section
      }
 
      /**
-      *  Remove enrollment
+      *  -Remove enrollment
+        * -Remove student grades related to this class
       */ 
       public function unenroll($id,$classId,$studentSurname){
 
@@ -435,7 +437,9 @@ pagination section
         $studentSurname=htmlspecialchars($studentSurname,ENT_QUOTES);
       
        $class=Studentclass::find($classId);
-       $class->students()->detach($studentId);
+      $class->students()->detach($studentId);
+    
+        DB::delete('delete from student_subject where class_id=? and student_id=?',[$classId,$studentId]);
 
        return Redirect::route('class.show',['classId'=>$classId])->with('message', $studentSurname);
           
@@ -488,6 +492,16 @@ pagination section
             'courseConfigArray'=>$courseConfigArray[0]
         ]);
      }
+
+     /**
+ * Export the current class list to excel
+  */
+  public function export($classId){
+    return Excel::download(new ClassListExport($classId), 'classlist.xlsx');
+  }
+
+
+
 
     /***
      *Show students page, excludes all students already enrolled in the class from the list 
@@ -595,8 +609,37 @@ pagination section
         'isSearchable'=>false,
         'queryString'=>''
     ]);
-      }
+    
+}
 
+
+public function classSearch($searchItem, $courseId,$courseName){
+
+
+
+        
+
+    $classConfigArray=DB::table('studentclasses')
+            ->select('studentclasses.id as id', 'studentclasses.name as name','studentclasses.year as year','levels.name as level')
+            ->join('levels','levels.id','=','studentclasses.level_id')
+            ->whereRaw('studentclasses.id in (SELECT id FROM studentclasses WHERE LOCATE (?,name)>0)',[$searchItem])
+            ->orderByDesc('studentclasses.year')
+            ->paginate(15)
+            ->toArray();
+
+            return Inertia::render('class/index',[
+                'courseName'=>$courseName,
+                'courseId'=>$courseId,
+                'classConfigArray'=>$classConfigArray['data'],
+                'currentPage'=>$classConfigArray['current_page'],
+                'lastPage'=>$classConfigArray['last_page'],
+                'route'=>'',// no need, but must appear as empty, because of the front error implementation 
+                'isSearchable'=>false,
+                'queryString'=>''
+    
+            ]);
+
+}
 
 
 
@@ -661,4 +704,5 @@ pagination section
 
         return $subjectArray;
   }
+
 }

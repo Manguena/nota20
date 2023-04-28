@@ -206,6 +206,7 @@ export default {
                     }
                     if(ServerResponse.hasOwnProperty('role')){
                         that.newPwdError=response['data']['role'][0];
+                        console.log(ServerResponse);
                     //roleError
                     }
 

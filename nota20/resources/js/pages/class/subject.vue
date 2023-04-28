@@ -5,6 +5,7 @@
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
             <li class="breadcrumb-item"><inertia-link href="/class/course">Curso</inertia-link></li>
             <li class="breadcrumb-item"><inertia-link :href="'/class/'+courseName+'/'+courseId">Turma</inertia-link></li>
+            <li class="breadcrumb-item"><inertia-link :href="'/class/'+classId">Inscrição</inertia-link></li>
             <li class="breadcrumb-item active" aria-current="page">Disciplina</li>
         </ol>
         </nav>

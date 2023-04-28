@@ -70,6 +70,9 @@
 <script>
 import Layout from '../shared/layout';
 export default {
-    layout:Layout
+    layout:Layout,
+    mounted() {  
+    document.title = "Nota 20 -Painel";  
+  }
 }
 </script>

@@ -28,6 +28,9 @@ public function create(User $user){
 //Gate to edit user profiles
 public function edit(User $user, $listedUserIid){
     $listedUserRole=User::find($listedUserIid)->roles()->get()[0]['name'];
+    $numberOfSuperAdminUsers=0;
+    
+    if ($listedUserRole=='superadmin') return false;
 
      if ($user->currentUserRole()=='superadmin'){
         return true;

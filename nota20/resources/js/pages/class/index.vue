@@ -54,6 +54,13 @@
         <form class="create-user-form" >
            <h4 id="">Curso de: {{courseName}} </h4>
             <p></p>
+
+            <div class="input-group mb-3" v-if="showSearchInput">
+                <input type="text" class="form-control" v-model="classSearchItem" placeholder="Pesquise a Turma" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" v-on:click="searchClass" id="button-addon2">Pesquisar</button>
+                </div>
+            </div>
          <div class="form-row" v-if="enableClassUpdateForm">
                <div class="form-group col-md-6" >
                     <label for="apelido">Nome</label>
@@ -176,6 +183,9 @@ export default {
                 classId:'',
                 levelName:''
             },
+            // class search variables
+             classSearchItem:null,
+             showSearchInput: true,
             //class variables
             className:null,
             schoolYear:null,
@@ -285,6 +295,7 @@ export default {
 
     //edit the selected subject
     editClass(id, name, year,level){
+        this.showSearchInput=false;
         this.enableClassUpdateForm=true;
         document.getElementById('viewEditForm').scrollIntoView();
 
@@ -297,9 +308,17 @@ export default {
     },
     //disable the subjcet update form
     cancelClassUpdate(){
+        
         this.enableClassUpdateForm=false;
+        this.showSearchInput=true;
     },
+    searchClass(){
 
+        //console.log(this.courseId);
+        this.$inertia.get(`/class/search/${this.classSearchItem}/${this.courseId}/${this.courseName}`); 
+
+        
+    },
     //Update the subject name
     updateClass(){
             /*** 
@@ -312,6 +331,7 @@ export default {
           ); ***/
 
         
+
         let that=this;
         this.classUpdateSpinner=true;
         axios.patch(`/class/${that.classUpdateForm.classId}`,{
@@ -352,11 +372,14 @@ export default {
                }
 
               that.classUpdateSpinner=false// disable the spinner
+              //Enables the search input back into the web page
+            that.showSearchInput=true;
             })
             .catch((error)=>{
                 //$('#modal').modal('show');
                 location.reload();
-            }) 
+            })
+            
     },
 
     // delete the selected subject
@@ -409,7 +432,10 @@ export default {
             }
         }
 
-} 
+},
+mounted() {  
+    document.title = "Nota 20 - Turmas";  
+  }
 } 
 </script>
 

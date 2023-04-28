@@ -114,7 +114,10 @@ export default {
 
         }
     
-    }
+    },
+    mounted() {  
+    document.title = "Nota 20 - Cursos";  
+  }
 }
 </script>
 

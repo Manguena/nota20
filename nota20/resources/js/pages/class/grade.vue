@@ -7,6 +7,13 @@
             </button>
         </div>
 
+        <div v-if="$page.props.flash.message" class="alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert" role="alert">
+        <span class="center-msg">{{$page.props.flash.message}}</span> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <nav style="breadcrumb-divider: '';" aria-label="breadcrumb">
         <ol class="breadcrumb page-navigation">
             <li class="breadcrumb-item"><inertia-link href="/"> Painel</inertia-link></li>
@@ -82,27 +89,40 @@ export default {
     methods:{
        storeGrade(){
             this.$inertia.post(`/class/grade`,this.studentGrade, {
-                onSuccess:()=>this.updateButton=true
+                onSuccess:()=>{
+                    this.gradesError=[''];
+                    this.updateButton=true;
+                    
+
+                },
+                onError: errors => {
+                    this.gradesError=errors;
+                //    console.log(errors);
+                },
                 
             });
        },
        updateGrade(){
+        
+            //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
             let that=this;
             NProgress.start();
-      //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+
              axios.patch(`/class/grade/updategrade`, this.studentGrade)
             .then(response=>{
+                //console.log(response);
                 if(response.hasOwnProperty('data')){
-                    console.log(response);
+                    //console.log(response);
                     //Deal with data returned from server
-                let ServerResponse=response['data'];
+                    let ServerResponse=response['data'];
 
-                if (ServerResponse.hasOwnProperty('message')){
-                    that.flashMessage=response['data'];
-                }else{
-                    that.gradesError=ServerResponse;
-                    console.log(that.gradesError);
-                }
+                    if (ServerResponse.hasOwnProperty('message')){
+                        that.flashMessage=response['data'];
+                        that.gradesError=[''];//empty the error if there was an error previously
+                    }else{
+                        that.gradesError=ServerResponse;
+                        //console.log(that.gradesError);
+                    }
                 }
                 
                 NProgress.done();

@@ -21,11 +21,13 @@
                     <label for="apelido">Nome</label>
                     <input type="text" class="form-control" v-bind:class="inputErrorSchoolName" id="school_name" v-model="schoolForm.name">
                     <div class="text-danger" v-if="schoolNameError"> <small><font-awesome-icon :icon="['fas', 'exclamation-circle']"/> {{schoolNameError}}</small></div>
+                    <div class="text-danger" v-if="$page.props.errors.name">{{$page.props.errors.name}}</div>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="name">Abreviatura</label>
                     <input type="text" class="form-control" id="school_abbreviation" v-bind:class="inputErrorAbbreviation" v-model="schoolForm.abbreviation">
-                     <div class="text-danger" v-if="schoolAbbreviationError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{schoolAbbreviationError}}</small></div>
+                    <div class="text-danger" v-if="schoolAbbreviationError"><small><font-awesome-icon :icon="['fas', 'exclamation-circle']" /> {{schoolAbbreviationError}}</small></div>
+                    <div class="text-danger" v-if="$page.props.errors.abbreviation">{{$page.props.errors.abbreviation}}</div>
                 </div>
              </div>
              <button class="btn btn-primary" v-if="createSchool" type="submit">Criar</button>

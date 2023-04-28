@@ -30533,6 +30533,9 @@ __webpack_require__.r(__webpack_exports__);
         }, 3);
       }
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Cursos";
   }
 });
 
@@ -30552,6 +30555,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
 /* harmony import */ var nprogress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! nprogress */ "./node_modules/nprogress/nprogress.js");
 /* harmony import */ var nprogress__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nprogress__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -30637,25 +30647,30 @@ __webpack_require__.r(__webpack_exports__);
 
       this.$inertia.post("/class/grade", this.studentGrade, {
         onSuccess: function onSuccess() {
-          return _this.updateButton = true;
+          _this.gradesError = [''];
+          _this.updateButton = true;
+        },
+        onError: function onError(errors) {
+          _this.gradesError = errors; //    console.log(errors);
         }
       });
     },
     updateGrade: function updateGrade() {
+      //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
       var that = this;
-      nprogress__WEBPACK_IMPORTED_MODULE_1___default().start(); //      this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
-
+      nprogress__WEBPACK_IMPORTED_MODULE_1___default().start();
       axios.patch("/class/grade/updategrade", this.studentGrade).then(function (response) {
+        //console.log(response);
         if (response.hasOwnProperty('data')) {
-          console.log(response); //Deal with data returned from server
-
+          //console.log(response);
+          //Deal with data returned from server
           var ServerResponse = response['data'];
 
           if (ServerResponse.hasOwnProperty('message')) {
             that.flashMessage = response['data'];
+            that.gradesError = ['']; //empty the error if there was an error previously
           } else {
-            that.gradesError = ServerResponse;
-            console.log(that.gradesError);
+            that.gradesError = ServerResponse; //console.log(that.gradesError);
           }
         }
 
@@ -30868,6 +30883,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -30895,6 +30917,9 @@ __webpack_require__.r(__webpack_exports__);
         classId: '',
         levelName: ''
       },
+      // class search variables
+      classSearchItem: null,
+      showSearchInput: true,
       //class variables
       className: null,
       schoolYear: null,
@@ -30985,6 +31010,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     //edit the selected subject
     editClass: function editClass(id, name, year, level) {
+      this.showSearchInput = false;
       this.enableClassUpdateForm = true;
       document.getElementById('viewEditForm').scrollIntoView();
       this.classUpdateForm.classId = id;
@@ -30995,6 +31021,11 @@ __webpack_require__.r(__webpack_exports__);
     //disable the subjcet update form
     cancelClassUpdate: function cancelClassUpdate() {
       this.enableClassUpdateForm = false;
+      this.showSearchInput = true;
+    },
+    searchClass: function searchClass() {
+      //console.log(this.courseId);
+      this.$inertia.get("/class/search/".concat(this.classSearchItem, "/").concat(this.courseId, "/").concat(this.courseName));
     },
     //Update the subject name
     updateClass: function updateClass() {
@@ -31039,6 +31070,9 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         that.classUpdateSpinner = false; // disable the spinner
+        //Enables the search input back into the web page
+
+        that.showSearchInput = true;
       })["catch"](function (error) {
         //$('#modal').modal('show');
         location.reload();
@@ -31085,6 +31119,9 @@ __webpack_require__.r(__webpack_exports__);
         'inputError:focus': this.yearUpdateError
       };
     }
+  },
+  mounted: function mounted() {
+    document.title = "Nota 20 - Turmas";
   }
 });
 
@@ -31350,14 +31387,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -31380,7 +31409,7 @@ __webpack_require__.r(__webpack_exports__);
 
     /*remove student from enrolled class*/
     removeEnrollment: function removeEnrollment() {
-      this.deleteEnrollmentSpinner = true; //this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
+      this.deleteEnrollmentSpinner = true; // this.$inertia.delete(`/class/unenroll/${this.studentId}/${this.classConfigArray['id']}/${this.studentSurname}`);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/class/unenroll/".concat(this.studentId, "/").concat(this.classConfigArray['id'], "/").concat(this.studentSurname)).then()["catch"](function (error) {
         location.reload();
@@ -31388,10 +31417,8 @@ __webpack_require__.r(__webpack_exports__);
       this.deleteEnrollmentSpinner = false;
     }
   },
-  created: function created() {
-    // console.log(this.classConfigArray);
-    //...after the operation is done....
-    console.log(this.courseConfigArray);
+  mounted: function mounted() {
+    document.title = "Nota 20 - Lista da turma";
   }
 });
 
@@ -31551,6 +31578,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _shared_layout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/layout */ "./resources/js/Pages/shared/layout.vue");
+//
 //
 //
 //
@@ -31868,7 +31896,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__["default"]
+  layout: _shared_layout__WEBPACK_IMPORTED_MODULE_0__["default"],
+  mounted: function mounted() {
+    document.title = "Nota 20 -Painel";
+  }
 });
 
 /***/ }),
@@ -32739,6 +32770,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -33132,6 +33165,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
 //
 //
 //
@@ -34793,7 +34829,8 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             if (ServerResponse.hasOwnProperty('role')) {
-              that.newPwdError = response['data']['role'][0]; //roleError
+              that.newPwdError = response['data']['role'][0];
+              console.log(ServerResponse); //roleError
             }
           }
         }
@@ -39796,7 +39833,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.table-button[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-16102d7d]{\r\n    color: #dc2020;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d], .createdAlert[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.icon[data-v-16102d7d]{\r\n    color:#6b6316;\n}\n.form-row[data-v-16102d7d]{\r\n    display: flex;\r\n    justify-content: space-between;\n}\n.breadcrumb[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\r\n    font-size:large;\r\n    padding-left:0;\r\n    padding-bottom:0;\n}\n.create-user-form[data-v-16102d7d]{\r\n    background-color: #fdfdfe;\r\n    padding: 1.25rem;\r\n    margin-top: 0;\r\n    border-radius:2px ;\n}\n.table-button[data-v-16102d7d]{\r\n    background-color: #e2e2eb;\n}\n.table-delete[data-v-16102d7d]{\r\n    color: #dc2020;\n}\n.inputError[data-v-16102d7d], .inputError[data-v-16102d7d]:focus {\r\n border-color: #e3342f;\r\n box-shadow: 0px 0px 3px 0px #e3342f;\n}\n.page-navigation[data-v-16102d7d]{\r\n    margin-top: 2rem;\n}\nform h4[data-v-16102d7d]{\r\n    font-weight: 700;\n}\n.table-light[data-v-16102d7d], .table-light > th[data-v-16102d7d], .table-light > td[data-v-16102d7d] {\r\n    background-color: #e2e2eb;\n}\n@media screen and (min-width: 992px){\n.create-user-form[data-v-16102d7d], .page-navigation[data-v-16102d7d], .createdAlert[data-v-16102d7d] {\r\n       margin-right: 10%;\r\n       margin-left: 10%;\n}\n}\n@media screen and (max-width: 767px){\n.remove_label[data-v-16102d7d]{\r\n      display: none;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -77966,6 +78003,24 @@ var render = function () {
         )
       : _vm._e(),
     _vm._v(" "),
+    _vm.$page.props.flash.message
+      ? _c(
+          "div",
+          {
+            staticClass:
+              "alert alert-success alert-dismissible fade show mt-4 mb-1 createdAlert",
+            attrs: { role: "alert" },
+          },
+          [
+            _c("span", { staticClass: "center-msg" }, [
+              _vm._v(_vm._s(_vm.$page.props.flash.message)),
+            ]),
+            _vm._v(" "),
+            _vm._m(1),
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c(
       "nav",
       {
@@ -78083,7 +78138,7 @@ var render = function () {
           "table",
           { staticClass: "table table-hover table-light user-table" },
           [
-            _vm._m(1),
+            _vm._m(2),
             _vm._v(" "),
             _c(
               "tbody",
@@ -78169,6 +78224,23 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close",
+        },
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
   function () {
     var _vm = this
     var _h = _vm.$createElement
@@ -78430,6 +78502,49 @@ var render = function () {
         ]),
         _vm._v(" "),
         _c("p"),
+        _vm._v(" "),
+        _vm.showSearchInput
+          ? _c("div", { staticClass: "input-group mb-3" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.classSearchItem,
+                    expression: "classSearchItem",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  placeholder: "Pesquise a Turma",
+                  "aria-label": "Recipient's username",
+                  "aria-describedby": "button-addon2",
+                },
+                domProps: { value: _vm.classSearchItem },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.classSearchItem = $event.target.value
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-group-append" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button", id: "button-addon2" },
+                    on: { click: _vm.searchClass },
+                  },
+                  [_vm._v("Pesquisar")]
+                ),
+              ]),
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _vm.enableClassUpdateForm
           ? _c("div", { staticClass: "form-row" }, [
@@ -79238,7 +79353,7 @@ var render = function () {
       _c("div", { staticClass: "form-row " }, [
         _c(
           "div",
-          { staticClass: "form-group col-12" },
+          { staticClass: "form-group" },
           [
             _c(
               "inertia-link",
@@ -79289,6 +79404,21 @@ var render = function () {
               ],
               1
             ),
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "icon",
+            attrs: { href: "/class/export/" + _vm.classConfigArray["id"] },
+          },
+          [
+            _c("font-awesome-icon", {
+              staticClass: "excel-icon",
+              attrs: { icon: ["fas", "file-excel"], size: "2x" },
+            }),
           ],
           1
         ),
@@ -79545,8 +79675,8 @@ var render = function () {
             "li",
             { staticClass: "breadcrumb-item" },
             [
-              _c("inertia-link", { attrs: { href: "/student" } }, [
-                _vm._v("Estudante"),
+              _c("inertia-link", { attrs: { href: "/class/" + _vm.classId } }, [
+                _vm._v("Inscrição"),
               ]),
             ],
             1
@@ -79898,6 +80028,17 @@ var render = function () {
                 },
                 [_vm._v("Turma")]
               ),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            { staticClass: "breadcrumb-item" },
+            [
+              _c("inertia-link", { attrs: { href: "/class/" + _vm.classId } }, [
+                _vm._v("Inscrição"),
+              ]),
             ],
             1
           ),
@@ -82001,6 +82142,12 @@ var render = function () {
                   ),
                 ])
               : _vm._e(),
+            _vm._v(" "),
+            _vm.$page.props.errors.name
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(_vm.$page.props.errors.name)),
+                ])
+              : _vm._e(),
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group col-md-4" }, [
@@ -82041,6 +82188,12 @@ var render = function () {
                     ],
                     1
                   ),
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.$page.props.errors.abbreviation
+              ? _c("div", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(_vm.$page.props.errors.abbreviation)),
                 ])
               : _vm._e(),
           ]),
@@ -82880,6 +83033,22 @@ var render = function () {
                         attrs: { href: "/student" },
                       },
                       [_vm._v("Estudante ")]
+                    ),
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  { staticClass: "nav-item" },
+                  [
+                    _c(
+                      "inertia-link",
+                      {
+                        staticClass: "nav-link dashboard-menu",
+                        attrs: { href: "/report" },
+                      },
+                      [_vm._v("Pauta ")]
                     ),
                   ],
                   1
@@ -84679,7 +84848,7 @@ var render = function () {
               staticClass: "breadcrumb-item active",
               attrs: { "aria-current": "page" },
             },
-            [_vm._v("Criar: " + _vm._s(_vm.form.apelido) + " ")]
+            [_vm._v("Criar: " + _vm._s(_vm.form.surname) + " ")]
           ),
         ]),
       ]
@@ -85132,11 +85301,13 @@ var render = function () {
             )
           : _vm._e(),
         _vm._v(" "),
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("Criar Utilizador")]
-        ),
+        !_vm.$page.props.flash.message
+          ? _c(
+              "button",
+              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+              [_vm._v("Criar Utilizador")]
+            )
+          : _vm._e(),
       ],
       1
     ),
