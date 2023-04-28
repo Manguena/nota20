@@ -16,11 +16,11 @@ class SetupController extends Controller
  * **/
 
     public function index(){
-        
-      //  $query=DB::table('users')->orderBy('email')->take(1)->get();
-      
-       // if (count($query)>=1) return view('nota20auth.userlogin');
-       // else return view('nota20auth.setup');
+
+       $query=DB::table('users')->orderBy('email')->take(1)->get();
+    
+       if (count($query)>=1) return redirect()->route('dashboard');
+        // else return view('nota20auth.setup');
         
         return view('nota20auth.setup');
     }
