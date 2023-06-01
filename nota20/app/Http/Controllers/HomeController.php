@@ -36,14 +36,13 @@ class HomeController extends Controller
     }
  /*****
   * CRIA O ROLE DO USUA'RIO ADMINISTRADOR 
-
   */
     public function createSuperAdminRole(){
 
             if(self::onlyOneUser() && self::checkNoRole()){
 
                 $superAdminRole= new Role();
-                $superAdminRole->name='superadmin';
+                $superAdminRole->name='superadmin';// It is wrong!!!!!!!!
                 $user=User::find(Auth::id());
                 
                 $user->roles()->save($superAdminRole);
@@ -62,7 +61,7 @@ class HomeController extends Controller
  public function onlyOneUser(){
       // vamos verificar se existe um usuario
     $query=DB::table('users')->orderBy('email')->take(2)->get();
-    dd($query);
+   // dd($query);
     return count($query)==1;
  }
 
