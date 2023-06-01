@@ -65,6 +65,7 @@ class User extends Authenticatable
         $user =Auth::user();
         return $user->id;
     }
+
     public function toSearchableArray()
     {
         $array = $this->toArray();

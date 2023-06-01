@@ -5,6 +5,8 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\DB;
+
 
 class UserPolicy
 {
@@ -26,13 +28,23 @@ public function create(User $user){
 }
 
 //Gate to edit user profiles
-public function edit(User $user, $listedUserIid){
-    $listedUserRole=User::find($listedUserIid)->roles()->get()[0]['name'];
-    $numberOfSuperAdminUsers=0;
-    
-    if ($listedUserRole=='superadmin') return false;
+public function edit(User $user, $listedUserId){
+    $roleOfTheSelectedUser=User::find($listedUserId)->roles()->get()[0]['name'];
+     //
+    $numberOfSuperAdminUsers=DB::table('role_user')
+        ->whereRaw('role_id= (select id from roles where name=?) 
+        ',[$roleOfTheSelectedUser])
+        ->count();
 
-     if ($user->currentUserRole()=='superadmin'){
+    if ($roleOfTheSelectedUser=='superadmin' && $numberOfSuperAdminUsers==3 && $listedUserId!=$user->id) {
+        return true;
+    }
+    
+    if ($roleOfTheSelectedUser=='superadmin'){
+        return false;
+    }
+
+    if ($user->currentUserRole()=='superadmin'){
         return true;
     }
 
