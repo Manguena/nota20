@@ -77,7 +77,7 @@
                 </div>
              </div>
              <button class="btn btn-primary" type="button" v-on:click="update">Actualizar</button>
-             <button class="btn btn-danger ml-3" v-if="userRole!=='superadmin'" type="button" v-on:click="showDeleteModal">Excluir</button>
+             <button class="btn btn-danger ml-3" v-if="form.role!=='superadmin'" type="button" v-on:click="showDeleteModal">Excluir</button>
         </form>
         <!---MODAL ASKING THE USER IF HE/SHE REALLY WANTS TO CHANGE THE USER PASSWORD--->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -206,7 +206,7 @@ export default {
                     }
                     if(ServerResponse.hasOwnProperty('role')){
                         that.newPwdError=response['data']['role'][0];
-                        console.log(ServerResponse);
+                        //console.log(ServerResponse);
                     //roleError
                     }
 
@@ -215,6 +215,7 @@ export default {
                }
             
             NProgress.done();
+          //  location.reload();
         })
         .catch(error=>{
             NProgress.done();
@@ -237,6 +238,7 @@ export default {
              $('#showdeletemodal').modal('show');
         },
         deleteUser(){
+            //if(this.)
             this.$inertia.delete(`/user/${this.user['0']['id']}`);
         },
 
