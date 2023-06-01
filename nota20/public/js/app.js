@@ -30656,7 +30656,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateGrade: function updateGrade() {
-      //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+      // this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
       var that = this;
       nprogress__WEBPACK_IMPORTED_MODULE_1___default().start();
       axios.patch("/class/grade/updategrade", this.studentGrade).then(function (response) {
@@ -34829,13 +34829,13 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             if (ServerResponse.hasOwnProperty('role')) {
-              that.newPwdError = response['data']['role'][0];
-              console.log(ServerResponse); //roleError
+              that.newPwdError = response['data']['role'][0]; //console.log(ServerResponse);
+              //roleError
             }
           }
         }
 
-        nprogress__WEBPACK_IMPORTED_MODULE_1___default().done();
+        nprogress__WEBPACK_IMPORTED_MODULE_1___default().done(); //  location.reload();
       })["catch"](function (error) {
         nprogress__WEBPACK_IMPORTED_MODULE_1___default().done();
         location.reload();
@@ -34857,6 +34857,7 @@ __webpack_require__.r(__webpack_exports__);
       $('#showdeletemodal').modal('show');
     },
     deleteUser: function deleteUser() {
+      //if(this.)
       this.$inertia["delete"]("/user/".concat(this.user['0']['id']));
     },
 
@@ -85853,7 +85854,7 @@ var render = function () {
         [_vm._v("Actualizar")]
       ),
       _vm._v(" "),
-      _vm.userRole !== "superadmin"
+      _vm.form.role !== "superadmin"
         ? _c(
             "button",
             {
