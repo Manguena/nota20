@@ -225,7 +225,6 @@ export default {
       },
       /*** THIS METHOD DISPLAY THE MODAL ASKING THE USER IF HE/SHE WANTES TO CHANGE THE USER PASSWORD* */
       showPasswordModal(){
-        console.log(`show password`);
           this.passwordModal;
           if(this.passwordModal){
             $('#exampleModal').modal('show');
