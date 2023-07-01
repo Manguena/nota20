@@ -170,7 +170,7 @@ pagination section
 
     public function store(Request $request){
 
-//     Gate::authorize('create-class');// gate to authorize admin users to create classes and store into the database
+// Gate::authorize('create-class');// gate to authorize admin users to create classes and store into the database
 
          $validator = Validator::make($request->all(), [
             'className' => [
