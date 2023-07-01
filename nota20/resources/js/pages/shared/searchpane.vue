@@ -62,7 +62,6 @@ export default {
             this.searchItemSpinner=true;
              axios.get(`${that.searchRoute}=${that.searchItem}`)
             .then((response)=>{
-
                if(response['data'].hasOwnProperty('searchItemData')){
                    that.searchResultArray=[
                        {   id: -1,
@@ -84,7 +83,8 @@ export default {
                
             })
             .catch((error)=>{
-                location.reload();
+                console.log(error);
+                //location.reload();->active
             })
         }
 

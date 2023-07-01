@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function isAdministrator(){
        $user =Auth::user();
-      return User::find($user->id)->roles()->get()[0]['name']=='superadmin'||User::find($user->id)->roles()->get()[0]['name']=='admin';
+      return User::find($user->id)->roles()->get()[0]['name']=='superadmin' || User::find($user->id)->roles()->get()[0]['name']=='admin';
     }
 
     public function currentUserRole(){

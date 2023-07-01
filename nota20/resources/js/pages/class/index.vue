@@ -284,8 +284,9 @@ export default {
                     that.subjectFeedbackSpinner=false
             })
             .catch(function (error) {
+               
                // $('#modal').modal('show');
-              location.reload();
+              location.reload(); 
              // console.log(error);
             })
             .then( (error) =>{
