@@ -28,7 +28,7 @@
             </div>
             
         <div class="main-buttom">
-          <small>Jordao Manguena 2022</small> 
+          <small>Jordao Manguena</small> 
         </div>
         </div>
         
