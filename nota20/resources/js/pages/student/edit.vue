@@ -41,8 +41,32 @@
              </div>
              
              <button class="btn btn-primary" type="button" v-on:click="update">Actualizar</button>
+             <button class="btn btn-danger" type="button" v-on:click="showDeleteModal">Delete</button>
 
         </form>
+        <!---MODAL ASKING THE USER IF HE/SHE REALLY WANTS TO CHANGE THE USER PASSWORD--->
+        <!----MODAL ASKING USER IF HE/SHE REALLY WANT TO MAKE A DELETE -->
+        <div class="modal fade" id="showdeletemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><span class="badge badge badge-danger"> <font-awesome-icon :icon="['fas', 'user-minus']" /> Excluir</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 Deseja excluir o estudante?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="button" v-on:click="deleteStudent" class="btn btn-primary" data-dismiss="modal">Sim</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!---MODAL ASKING USER IF HE/SHE REALLY WANT TO MAKE A DELETE---->
     </div>
 </template>
 <script>
@@ -112,7 +136,14 @@ export default {
             location.reload();
             //console.log(error);
         })
-      }
+      }, 
+      deleteStudent(){
+        //console.log(this.student[0]['id']);
+        this.$inertia.delete(`/student/${this.student[0]['id']}`);
+      },
+      showDeleteModal(){
+             $('#showdeletemodal').modal('show');
+        }
     },
     computed: {
         inputErrorSurname() {

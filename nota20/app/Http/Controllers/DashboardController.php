@@ -36,9 +36,11 @@ class DashboardController extends Controller
 
     if(self::onlyOneUser() && self::checkNoRole()){
 
-       $superAdminRole= new Role();
-       $superAdminRole->name='superadmin';
-
+       //$superAdminRole= new Role();
+       //$superAdminRole->name='superadmin';// very wrong
+       $superAdminRole=Role::where('name','superadmin')
+                      ->get();
+                      
         $user=User::find(Auth::id());
         
         $user->roles()->save($superAdminRole);

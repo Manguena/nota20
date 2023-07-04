@@ -104,7 +104,8 @@ export default {
        },
        updateGrade(){
         
-            //this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+           // this.$inertia.patch(`/class/grade/updategrade`, this.studentGrade);
+            
             let that=this;
             NProgress.start();
 

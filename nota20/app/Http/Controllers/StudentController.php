@@ -38,7 +38,6 @@ class StudentController extends Controller
 
 
     public function create(){
-        
         return Inertia::render('student/create');
     }
 
@@ -78,6 +77,7 @@ class StudentController extends Controller
         return Redirect::route('student.create')->with('message', $student->surname);
 
     }
+
     /**
      * Edit the current student
     */
@@ -224,6 +224,23 @@ public function search(Request $request){
         'queryString'=>''
     ]);
     
+}
+
+
+public function destroy($id){
+    $removedStudent=Student::find($id)->surname;
+
+    try{
+       Student::destroy($id); 
+    }
+    catch(\Exception $e){
+        return Redirect::route('student')->with('message', "Nao pode excluir estudante $removedStudent");
+    }
+    
+    
+    //DB::table('students')->where('id','=',$id)->delete();
+
+    return Redirect::route('student')->with('message', $removedStudent);
 }
 
 }

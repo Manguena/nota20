@@ -8,7 +8,7 @@
                 <ul v-bind:class="searchPaneUlError">
                     <div v-for="item in searchResultArray" :key="item.id">
                         <li v-on:click="getSearchItem(item.name,item.id)" class="clickedItem">
-                            <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />  {{item.name}}</label>
+                            <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />{{item.name}}</label>
                         </li>
                     </div>
                 </ul>
@@ -62,7 +62,6 @@ export default {
             this.searchItemSpinner=true;
              axios.get(`${that.searchRoute}=${that.searchItem}`)
             .then((response)=>{
-
                if(response['data'].hasOwnProperty('searchItemData')){
                    that.searchResultArray=[
                        {   id: -1,
@@ -84,7 +83,9 @@ export default {
                
             })
             .catch((error)=>{
-                location.reload();
+                if(error.response.status==401){
+                    location.reload();
+                }
             })
         }
 

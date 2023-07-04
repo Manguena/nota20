@@ -125,7 +125,7 @@ Route::delete('/course/{id}', [App\Http\Controllers\CourseController::class, 'de
 // get the page to create the subjects
 Route::get('/subject/{courseName}/{courseId}', [App\Http\Controllers\SubjectController::class, 'index'])->name('subject.index')->middleware('auth');// the user gets custom message
 //search levels for the subjects// CHANGE THIS, THIS SHOULD BE IN THE LEVEL CONTROLLER 
-Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth')->middleware('can:view-subjectPage');
+Route::get('/subject/search', [App\Http\Controllers\SubjectController::class, 'search'])->name('subject.search')->middleware('auth');//->middleware('can:view-subjectPage');->changed01.06.2023
 //store subject in its course
 Route::post('/subject', [App\Http\Controllers\SubjectController::class, 'store'])->name('subject.store')->middleware('auth')->middleware('can:view-subjectPage');
 //updates the subject
@@ -157,17 +157,17 @@ Route::get('/class/search/{searchItem}/{courseId}/{courseName}', [App\Http\Contr
 //page to create the class and list classes stored in the database
 Route::get('/class/{courseId}/{courseName}', [App\Http\Controllers\ClassController::class, 'index'])->name('class.index')->middleware('auth');
   //stores the classes into the database
-Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth','can:create, App\Models\Studentclass');
+Route::post('/class', [App\Http\Controllers\ClassController::class, 'store'])->name('class.store')->middleware('auth','can:create, App\Models\StudentClass');//
 //stores grades in the database
 Route::post('/class/grade', [App\Http\Controllers\ClassController::class, 'storeGrade'])->name('class.storeGrade')->middleware('auth');
 //Update the students' grade
-Route::patch('/class/grade/updategrade', [App\Http\Controllers\ClassController::class, 'updateGrade'])->name('class.updateGrade')->middleware('auth', 'can:update, App\Models\Studentclass');// uses the grade table (intermediate) uses the same policy as the class because of error committed by the developer
+Route::patch('/class/grade/updategrade', [App\Http\Controllers\ClassController::class, 'updateGrade'])->name('class.updateGrade')->middleware('auth', 'can:update, App\Models\StudentClass');// uses the grade table (intermediate) uses the same policy as the class because of error committed by the developer
 //update className
-Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth','can:update, App\Models\Studentclass');
+Route::patch('/class/{id}', [App\Http\Controllers\ClassController::class, 'update'])->name('class.update')->middleware('auth','can:update, App\Models\StudentClass');
 // remove student from  class
 Route::delete('/class/unenroll/{id}/{classId}/{studentSurname}', [App\Http\Controllers\ClassController::class, 'unenroll'])->name('class.unenroll')->middleware('auth');
 //Delete the class
-Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth', 'can:delete, App\Models\Studentclass');
+Route::delete('/class/{id}/{courseId}', [App\Http\Controllers\ClassController::class, 'destroy'])->name('class.destroy')->middleware('auth', 'can:delete, App\Models\StudentClass');
 //Load a classroom with enrolled students in it
 Route::get('/class/{classId}', [App\Http\Controllers\ClassController::class, 'show'])->name('class.show')->middleware('auth');
 //enroll a student in a class
@@ -193,6 +193,8 @@ Route::get('/student/edit/{id}', [App\Http\Controllers\StudentController::class,
 Route::patch('/student/{id}', [App\Http\Controllers\StudentController::class, 'update'])->name('student.update')->middleware('auth');
 //search students data
 Route::get('/student/search', [App\Http\Controllers\StudentController::class, 'search'])->name('student.search')->middleware('auth');
+//Removes a student from DB
+Route::delete('/student/{id}', [App\Http\Controllers\StudentController::class, 'destroy'])->name('student.destroy')->middleware('auth');
 
 /***---------------------------------------------------------------------------------------------------------------------------
  *                                                                                                                               *

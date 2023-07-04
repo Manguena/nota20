@@ -170,7 +170,7 @@ pagination section
 
     public function store(Request $request){
 
-//     Gate::authorize('create-class');// gate to authorize admin users to create classes and store into the database
+// Gate::authorize('create-class');// gate to authorize admin users to create classes and store into the database
 
          $validator = Validator::make($request->all(), [
             'className' => [
@@ -279,10 +279,14 @@ pagination section
         // insert the data into the database by looping the request from the front end
     foreach ($data as $value) {
        $grade=$value["grade"];
-       
-        if($value["grade"]==""){
+       if(strlen(trim($value['grade']))==0){
+        $grade=null;
+       }
+      
+       /* if($value["grade"]==""){
             $grade=null;
         }
+        **/
         
         
        $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$grade]);
@@ -354,6 +358,7 @@ pagination section
                 $value['grade']=null;
             }
 
+         
 
             DB::table('student_subject')
                 ->where('student_id',$value['id'])
