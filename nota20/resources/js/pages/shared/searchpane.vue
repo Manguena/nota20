@@ -8,7 +8,7 @@
                 <ul v-bind:class="searchPaneUlError">
                     <div v-for="item in searchResultArray" :key="item.id">
                         <li v-on:click="getSearchItem(item.name,item.id)" class="clickedItem">
-                            <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />  {{item.name}}</label>
+                            <label><font-awesome-icon :icon="['fas', 'search']" class="search-img" />{{item.name}}</label>
                         </li>
                     </div>
                 </ul>
@@ -83,8 +83,9 @@ export default {
                
             })
             .catch((error)=>{
-                console.log(error);
-                //location.reload();->active
+                if(error.response.status==401){
+                    location.reload();
+                }
             })
         }
 
