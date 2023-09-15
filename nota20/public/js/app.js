@@ -31003,7 +31003,8 @@ __webpack_require__.r(__webpack_exports__);
         that.subjectFeedbackSpinner = false;
       })["catch"](function (error) {
         // $('#modal').modal('show');
-        location.reload(); // console.log(error);
+        //   location.reload(); 
+        console.log(error);
       }).then(function (error) {
         that.searchItemName = null;
       });
@@ -85691,7 +85692,7 @@ var render = function () {
                 attrs: {
                   type: "text",
                   id: "searchbar",
-                  placeholder: "Pesquise o utilizador",
+                  placeholder: "Apelido",
                   "aria-label": "Text input with segmented dropdown button",
                 },
                 domProps: { value: _vm.form.searchbar },
