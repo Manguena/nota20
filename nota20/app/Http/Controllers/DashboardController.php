@@ -38,8 +38,11 @@ class DashboardController extends Controller
 
        //$superAdminRole= new Role();
        //$superAdminRole->name='superadmin';// very wrong
-       $superAdminRole=Role::where('name','superadmin')
-                      ->get();
+       $superId=Role::where('name','superadmin')
+                      ->get()
+                      ->toArray()[0]['id'];
+
+        $superAdminRole=Role::find($superId);
                       
         $user=User::find(Auth::id());
         
