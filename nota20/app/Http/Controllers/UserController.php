@@ -35,7 +35,12 @@ class UserController extends Controller
 
         if(array_key_exists('searchbar', $request->toArray())){// check if searchbar has an index
             if($request->toArray()['searchbar']!=null){// if a words is entered set maximum 20 results
-                        $query=User::search($request->searchbar)->paginate(30)->toArray();
+                        //$query=User::search($request->searchbar)->paginate(30)->toArray();
+                        $query=DB::table('users')
+                            ->select('*')
+                            ->whereRaw('LOCATE(?, surname)>0 ',[ $request->searchbar])
+                            ->paginate(30)
+                            ->toArray();
                     }else{// if a null search is executed by user, paginate with 15 items per page
                         
                        // $query=User::search($request->searchbar)->paginate(15)->toArray();
