@@ -20,7 +20,7 @@
                  v-on:keyup.enter="submit"
                  v-model="form.searchbar" 
                  class="form-control" 
-                 placeholder="Pesquise o utilizador" 
+                 placeholder="Apelido" 
                  aria-label="Text input with segmented dropdown button">
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary search-group-btn">
