@@ -65,7 +65,11 @@ pagination section
     
        $searchItem=$request->toArray()['searchItemData'];
       
-       $searchArray = Course::search($searchItem)->paginate(15);
+       //$searchArray = Course::search($searchItem)->paginate(15);
+       $searchArray=DB::table('courses')
+                    ->select('*')
+                    ->whereRaw('LOCATE(?, name)>0 ',[$searchItem])
+                    ->paginate(15);
         
        $searchConfigArray=$searchArray->toArray()['data'];
        
@@ -353,18 +357,24 @@ pagination section
 
        // loop the request and update the table in the DB
      foreach ($data as &$value) {
-            //if $value is empty, set it to null
-            if(strlen(trim($value['grade']))==0){
-                $value['grade']=null;
-            }
+           //if $value is empty, set it to null
+           if(strlen(trim($value['grade']))==0){
+            $value['grade']=null;
+        }
 
-         
-
+        if(($value['operation']=='update')){
             DB::table('student_subject')
-                ->where('student_id',$value['id'])
-                ->where('class_id',$value['class'])
-                ->where('subject_id',$value['subject'])
-                ->update(['grade'=>$value['grade']]);
+            ->where('student_id',$value['id'])
+            ->where('class_id',$value['class'])
+            ->where('subject_id',$value['subject'])
+            ->update(['grade'=>$value['grade']]);
+        
+        }
+        else{
+            $subject=Subject::find( $subjectId);
+            $subject->students()->attach($value['id'], ['class_id'=>$value['class'],'grade'=>$value['grade']]);
+
+        }
         }
 
         unset($value);// Break reference with the last element(Fom PHP.NET)
