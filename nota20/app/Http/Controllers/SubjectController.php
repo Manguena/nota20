@@ -58,7 +58,11 @@ class SubjectController extends Controller
     
        $searchItem=$request->toArray()['searchItemData'];
       
-       $searchArray = Level::search($searchItem)->paginate(15);
+       //$searchArray = Level::search($searchItem)->paginate(15);
+       $searchArray=DB::table('levels')
+       ->select('*')
+       ->whereRaw('LOCATE(?, name)>0 ',[$searchItem])
+       ->paginate(15);
         
        $searchConfigArray=$searchArray->toArray()['data'];
        
