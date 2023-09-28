@@ -62,7 +62,7 @@ class SubjectController extends Controller
        $searchArray=DB::table('levels')
        ->select('*')
        ->whereRaw('LOCATE(?, name)>0 ',[$searchItem])
-       ->paginate(15);
+       ->paginate(10);
         
        $searchConfigArray=$searchArray->toArray()['data'];
        
@@ -70,6 +70,7 @@ class SubjectController extends Controller
     }
 
     public function store(Request $request){
+      
       
         $validator = Validator::make($request->all(), [
             'subjectName' => [
@@ -83,19 +84,22 @@ class SubjectController extends Controller
             ]
         ]);
 
+        
          if ($validator->fails()){
             return response($validator->errors());
             }
         // save data into the database
-
+          
         // related to level movel
+        
         $subject= new Subject();
+            
         $subject->name=$request->subjectName;
         
         $level=Level::find($request->levelId);
-
+        
         $level->subjects()->save($subject);
-
+      //  dd('......');   
         //related to course model
         $course=new Course();
         $course= Course::find($request->courseId);// remos que adiquirir o id do curso
@@ -103,7 +107,7 @@ class SubjectController extends Controller
         
         $subject->course()->associate($course);
         $subject->save();
-
+            
         // ['id'=>$level->id, 'name'=>$level->name, 'order'=>$level->order]
         return response(['id'=>$subject->id, 'subject'=>$subject->name, 'level'=>$request->levelName]);
     }
