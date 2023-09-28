@@ -168,12 +168,14 @@ export default {
  
     // Submits the form
         submit(){
-        /* this.$inertia.post('/subject',
+        /****
+         console.log(this.searchItemName);
+        this.$inertia.post('/subject',
           {
                 subjectName:this.subjectName,
-                searchLevel:this.searchLevel,
-                levelId:this.levelId,
-                courseId:this.courseId
+                levelName:this.searchItemName,
+                levelId:this.searchItemId,
+                courseId:this.courseId    
             } 
           );***/
            
