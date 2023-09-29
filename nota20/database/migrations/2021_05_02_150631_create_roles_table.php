@@ -22,16 +22,10 @@ class CreateRolesTable extends Migration
 
 
          // Insert default data for user configuration in the database
-         $role = new Role;
-
-         $config->name='superadmin';
-         $config->save();
-
-         $config->name='admin';
-         $config->save();
-         
-         $config->name='standard';
-         $config->save(); 
+         DB::insert('insert into roles (name) values (?)', ['superadmin']);
+         DB::insert('insert into roles (name) values (?)', ['admin']);
+         DB::insert('insert into roles (name) values (?)', ['standard']);
+       
         }
 
     /**

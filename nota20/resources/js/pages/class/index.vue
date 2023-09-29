@@ -229,7 +229,6 @@ export default {
                 schoolYear:this.schoolYear
             } 
           );***/
-           
             let that=this;
             that.subjectFeedbackSpinner=true;
             axios.post('/class', {
@@ -240,6 +239,7 @@ export default {
                 schoolYear:that.schoolYear
             })
             .then(function (response) {
+                
                 //CHECK FOR ERROR MESSAGES
                 if(response['data'].hasOwnProperty('className') ){
                    
@@ -286,8 +286,8 @@ export default {
             .catch(function (error) {
                
                // $('#modal').modal('show');
-              location.reload(); 
-             // console.log(error);
+           //   location.reload(); 
+              console.log(error);
             })
             .then( (error) =>{
                that.searchItemName=null;

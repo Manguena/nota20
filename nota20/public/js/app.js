@@ -31003,7 +31003,8 @@ __webpack_require__.r(__webpack_exports__);
         that.subjectFeedbackSpinner = false;
       })["catch"](function (error) {
         // $('#modal').modal('show');
-        location.reload(); // console.log(error);
+        //   location.reload(); 
+        console.log(error);
       }).then(function (error) {
         that.searchItemName = null;
       });
@@ -34213,12 +34214,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Submits the form
     submit: function submit() {
-      /* this.$inertia.post('/subject',
+      /****
+       console.log(this.searchItemName);
+      this.$inertia.post('/subject',
         {
               subjectName:this.subjectName,
-              searchLevel:this.searchLevel,
-              levelId:this.levelId,
-              courseId:this.courseId
+              levelName:this.searchItemName,
+              levelId:this.searchItemId,
+              courseId:this.courseId    
           } 
         );***/
       var that = this;
@@ -85691,7 +85694,7 @@ var render = function () {
                 attrs: {
                   type: "text",
                   id: "searchbar",
-                  placeholder: "Pesquise o utilizador",
+                  placeholder: "Apelido",
                   "aria-label": "Text input with segmented dropdown button",
                 },
                 domProps: { value: _vm.form.searchbar },
