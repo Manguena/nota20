@@ -34260,7 +34260,6 @@ __webpack_require__.r(__webpack_exports__);
             level: response['data']['level']
           });
           that.subjectFeedbackSpinner = false;
-          location.reload(); // reload the window
         }
       })["catch"](function (error) {
         //location.reload();
