@@ -226,7 +226,7 @@ export default {
                        }
                    );
                 that.subjectFeedbackSpinner=false
-                location.reload();// reload the window
+                   
 
                }
 
