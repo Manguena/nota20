@@ -4,4 +4,7 @@
  Nota20 é um sistema de gestão académica adaptada a realidade moçambicana
  ## Público alvo
  Escolas, universidades e institutos
- 
+ ## Requisitos técnicos
+ * [Servidor web + PHP+ MySql (de preferencia AppServ)](https://www.appserv.org/en/)
+ * [Node Js](https://nodejs.org/en)
+ * [Composer PHP](https://getcomposer.org/Composer-Setup.exe)
