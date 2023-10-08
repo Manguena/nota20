@@ -2,6 +2,6 @@
 # Nota20 -Sistema de Gestao Escolar
  ## Descrição
  Nota20 é um sistema de gestão académica adaptada a realidade moçambicana
- ##Público alvo
+ ## Público alvo
  Escolas, universidades e institutos
  
