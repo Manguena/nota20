@@ -8,3 +8,6 @@
  * [Servidor web + PHP+ MySql (de preferencia AppServ)](https://www.appserv.org/en/)
  * [Node Js](https://nodejs.org/en)
  * [Composer PHP](https://getcomposer.org/Composer-Setup.exe)
+ * ## Preço
+ * O sistema é gratuito e não deve ser vendido, senao pelo desenvolver ou com autorização do mesmo
+   
