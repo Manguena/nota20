@@ -8,6 +8,10 @@
  * [Servidor web + PHP+ MySql (de preferencia AppServ)](https://www.appserv.org/en/)
  * [Node Js](https://nodejs.org/en)
  * [Composer PHP](https://getcomposer.org/Composer-Setup.exe)
+ ## Instalação
+ *Crie uma base de dados com o nome: nota20
+ * Faça Download da a aplicação a partir do Github
+ *
  * ## Preço
  * O sistema é gratuito e não deve ser vendido, senão pelo desenvolver ou com autorização do mesmo
    
