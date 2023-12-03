@@ -9,7 +9,7 @@
  * [Node Js](https://nodejs.org/en)
  * [Composer PHP](https://getcomposer.org/Composer-Setup.exe)
  ## Instalação
- * Crie uma base de dados com o nome: nota20
+ * Crie uma Base de Dados com o nome: nota20
  * Faça Download da a aplicação no formato .zip, a partir do Github
  * Faça extração da pasta nota20 para algum directorio. Por exemplo: E:\
  * Aceda o novo directório  através do CMD (Por exemplo: E:\nota20) e digite o codigo: npm install
