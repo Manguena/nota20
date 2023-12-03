@@ -13,7 +13,12 @@
  * Faça Download da a aplicação no formato .zip, a partir do Github
  * Faça extração da pasta nota20 para algum directorio. Por exemplo: E:\
  * Aceda o novo directório  através do CMD (Por exemplo: E:\nota20) e digite o codigo: npm install
- *  
+ * Crie uma cópia do ficheiro .env digitando o seguinte comando: cp .env.example .env
+ * Gere uma chave de encripção através do comando: php artisan migrate
+ * Migrar a base de dados: php artisan migrate
+ * ##Execute o sistema
+ * A partir do directorio que inclui a pasta nota20. Por exemplo: E:\nota20, digite o seguinte comando:
+ * php artisan serve
  * ## Preço
  * O sistema é gratuito e não deve ser vendido, senão pelo desenvolver ou com autorização do mesmo
    
