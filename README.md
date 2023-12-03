@@ -16,7 +16,7 @@
  * Crie uma cópia do ficheiro .env digitando o seguinte comando: cp .env.example .env
  * Gere uma chave de encripção através do comando: php artisan migrate
  * Migrar a base de dados: php artisan migrate
- ##Execute o sistema
+ ## Execute o sistema
  * A partir do directorio que inclui a pasta nota20. Por exemplo: E:\nota20, digite o seguinte comando:
  * php artisan serve
  * ## Preço
