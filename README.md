@@ -19,6 +19,6 @@
  ## Execute o sistema
  * A partir do directorio que inclui a pasta nota20. Por exemplo: E:\nota20, digite o seguinte comando:
    php artisan serve
- * ## Preço
+## Preço
  * O sistema é gratuito e não deve ser vendido, senão pelo desenvolver ou com autorização do mesmo
    
