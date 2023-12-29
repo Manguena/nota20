@@ -37,3 +37,5 @@ php artisan migrate
  * O sistema é gratuito e não deve ser vendido, senão pelo desenvolver ou com autorização do mesmo
 ## Contacto
 [Jordão Manguena](https://web.facebook.com/TechnoGeekyyy/)
+
+**Atenção**: Ao me contactar posso levar até 3 dias para responder a mensagem
