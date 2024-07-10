@@ -34259,8 +34259,9 @@ __webpack_require__.r(__webpack_exports__);
             subject: response['data']['subject'],
             level: response['data']['level']
           });
-          that.subjectFeedbackSpinner = false;
-          location.reload(); // reload the window
+          that.subjectFeedbackSpinner = false; // reload the window
+
+          location.reload();
         }
       })["catch"](function (error) {
         //location.reload();
@@ -78815,6 +78816,21 @@ var render = function () {
               ],
               1
             ),
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "icon",
+            attrs: { href: "/class/export/list/" + _vm.classConfigArray["id"] },
+          },
+          [
+            _c("font-awesome-icon", {
+              staticClass: "excel-icon",
+              attrs: { icon: ["fas", "file-excel"], size: "2x" },
+            }),
           ],
           1
         ),
