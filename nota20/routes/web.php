@@ -152,6 +152,8 @@ Route::get('/class/student/{id}/{className}', [App\Http\Controllers\ClassControl
 Route::get('/class/studentsearch/{id}/{className}', [App\Http\Controllers\ClassController::class, 'studentSearch'])->name('class.studentsearch')->middleware('auth');
 // Download the current class list
 Route::get('/class/export/{classId}', [App\Http\Controllers\ClassController::class, 'export'])->name('class.export')->middleware('auth');
+//Download the current classlist with grades
+Route::get('/class/export/list/{classId}', [App\Http\Controllers\ClassController::class, 'exportClassListWithGrade'])->name('class.exportClassListWithGrade')->middleware('auth');
 //search classes using a keywork
 Route::get('/class/search/{searchItem}/{courseId}/{courseName}', [App\Http\Controllers\ClassController::class, 'classSearch'])->name('class.classSearch')->middleware('auth');
 //page to create the class and list classes stored in the database
