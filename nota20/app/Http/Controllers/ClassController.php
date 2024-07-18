@@ -15,6 +15,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Exports\ClassListExport;
+use App\Exports\ClassListWithGradeExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClassController extends Controller
@@ -515,7 +516,12 @@ pagination section
     return Excel::download(new ClassListExport($classId), 'classlist.xlsx');
   }
 
-
+       /**
+ * Export the current class list with grades to excel
+  */
+  public function exportClassListWithGrade($classId){
+    return Excel::download(new ClassListWithGradeExport($classId), 'classgrade.xlsx');
+  }
 
 
     /***

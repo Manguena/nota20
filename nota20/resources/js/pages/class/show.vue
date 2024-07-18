@@ -34,8 +34,8 @@
                     </inertia-link>
                 </div>
             
+                <a class="icon" v-bind:href="'/class/export/list/'+classConfigArray['id']"><font-awesome-icon :icon="['fas', 'file-excel']" size="2x" class="excel-icon"/></a>
                 <a class="icon" v-bind:href="'/class/export/'+classConfigArray['id']"><font-awesome-icon :icon="['fas', 'file-excel']" size="2x" class="excel-icon"/></a>
-
             </div>
 
 
