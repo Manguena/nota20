@@ -5,7 +5,7 @@
  ## Público alvo
  Escolas, universidades e Institutos
  ## Requisitos técnicos
- * [Servidor web + PHP+ MySql (de preferencia AppServ)](https://www.appserv.org/en/)
+ * [Servidor web + PHP 8+ MySql (de preferencia xampp)](https://www.appserv.org/en/)
  * [Node Js](https://nodejs.org/en)
  * [Composer PHP](https://getcomposer.org/Composer-Setup.exe)
  ## Instalação
